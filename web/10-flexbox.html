@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10. Flexbox — основы · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 10</div>
+    <h1>Flexbox — основы</h1>
+    <div class="subtitle">как расставить элементы в ряд без боли</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>10
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>До Flexbox выстроить элементы в ряд было больно: float'ы, clearfix'ы, магические хаки. <strong>Flexbox</strong> решил это раз и навсегда. Сейчас это основной инструмент вёрстки.</p>
+
+    <h3>Главная идея</h3>
+    <p>Ты говоришь родителю: «стань flex-контейнером», а его дети автоматически выстраиваются в ряд (или в столбик) и распределяются по правилам, которые ты задаёшь.</p>
+    <pre>.container {
+  display: flex;
+}</pre>
+    <p>Всё. После этого дети <code>.container</code> встают в один ряд.</p>
+
+    <h3>Две оси</h3>
+    <p>У flex-контейнера есть две оси:</p>
+    <ul>
+      <li><strong>main axis</strong> (главная) — по умолчанию горизонтальная;</li>
+      <li><strong>cross axis</strong> (поперечная) — по умолчанию вертикальная.</li>
+    </ul>
+    <p>Всё управление — это «как распределить по главной» и «как выровнять по поперечной».</p>
+
+    <h3>flex-direction — куда ряд</h3>
+    <ul>
+      <li><code>row</code> (по умолчанию) — слева направо;</li>
+      <li><code>column</code> — сверху вниз;</li>
+      <li><code>row-reverse</code> — справа налево;</li>
+      <li><code>column-reverse</code> — снизу вверх.</li>
+    </ul>
+
+    <h3>justify-content — выравнивание по главной оси</h3>
+    <ul>
+      <li><code>flex-start</code> — прижать к началу;</li>
+      <li><code>flex-end</code> — прижать к концу;</li>
+      <li><code>center</code> — по центру;</li>
+      <li><code>space-between</code> — крайние по краям, между ними равные промежутки;</li>
+      <li><code>space-around</code> — равные отступы вокруг каждого;</li>
+      <li><code>space-evenly</code> — равные промежутки везде.</li>
+    </ul>
+
+    <h3>align-items — выравнивание по поперечной оси</h3>
+    <ul>
+      <li><code>stretch</code> (по умолчанию) — растянуть на всю высоту;</li>
+      <li><code>flex-start</code> — к верху;</li>
+      <li><code>flex-end</code> — к низу;</li>
+      <li><code>center</code> — по центру.</li>
+    </ul>
+
+    <h3>gap — промежутки между элементами</h3>
+    <pre>.container {
+  display: flex;
+  gap: 16px;
+}</pre>
+    <p><code>gap</code> — самый удобный способ задать отступы между flex-элементами. Раньше для этого использовали <code>margin</code> и мучились с крайними.</p>
+
+    <h3>flex-wrap — если не влезает</h3>
+    <p>По умолчанию элементы сжимаются в одну строку. <code>flex-wrap: wrap</code> разрешает переносить их на новую строку, если не хватает места.</p>
+    <pre>.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}</pre>
+    <p>Это база для адаптивных карточек.</p>
+
+    <h3>Свойства детей</h3>
+    <ul>
+      <li><code>flex: 1</code> — занять всё свободное место поровну с другими;</li>
+      <li><code>flex-grow</code> — как сильно растягиваться;</li>
+      <li><code>flex-shrink</code> — как сильно сжиматься;</li>
+      <li><code>flex-basis</code> — базовый размер до распределения;</li>
+      <li><code>align-self</code> — переопределить <code>align-items</code> для одного ребёнка.</li>
+    </ul>
+
+    <h3>Классический паттерн</h3>
+    <p>Отцентрировать что-то и по горизонтали, и по вертикали:</p>
+    <pre>.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}</pre>
+    <p>Раньше это было сложно. С Flexbox — три строки.</p>
+
+    <h3>Шпаргалка</h3>
+    <ul>
+      <li>Ряд — <code>display: flex;</code>.</li>
+      <li>Центр — <code>justify-content: center; align-items: center;</code>.</li>
+      <li>Промежутки — <code>gap: ...;</code>.</li>
+      <li>Перенос — <code>flex-wrap: wrap;</code>.</li>
+      <li>Равные ширины — <code>flex: 1;</code> у детей.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>почувствовать flex руками</strong> — это половина всей вёрстки.</p>
+
+    <ul>
+      <li>Создай файл <code>flexbox.html</code> + <code>style.css</code>.</li>
+      <li>Сделай контейнер <code>&lt;div class="row"&gt;</code> с тремя блоками внутри.</li>
+      <li>Поочерёдно применяй и записывай, что меняется:
+        <ul>
+          <li><code>display: flex;</code> — элементы встали в ряд;</li>
+          <li><code>gap: 16px;</code> — появились промежутки;</li>
+          <li><code>justify-content: center;</code> — по центру;</li>
+          <li><code>justify-content: space-between;</code> — по краям;</li>
+          <li><code>align-items: center;</code> — выровнялись по вертикали (сделай блоки разной высоты, чтобы было видно);</li>
+          <li><code>flex-direction: column;</code> — встали в столбик.</li>
+        </ul>
+      </li>
+      <li>Сделай <strong>навбар</strong>: слева логотип, справа меню из 3 ссылок. Через <code>justify-content: space-between;</code>. Это классика.</li>
+      <li>Сделай <strong>три карточки</strong> в ряд с <code>flex: 1</code> — они должны стать одинаковой ширины.</li>
+      <li>Сделай <strong>центрирование по центру экрана</strong>: один блок, <code>min-height: 100vh;</code>, и через flex — по центру и по горизонтали, и по вертикали.</li>
+      <li><strong>Главное:</strong> открой DevTools, найди flex-контейнер — там есть специальная «flex-панель», где можно тыкать <code>justify-content</code> мышкой. Попробуй, это ускоряет обучение.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="09-positioning.html">← предыдущая</a>
+    <a class="btn" href="11-flexbox-2.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 10 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-10";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

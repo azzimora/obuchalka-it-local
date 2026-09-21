@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>27. setTimeout и setInterval · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 27 · продвинутый js</div>
+    <h1>setTimeout и setInterval</h1>
+    <div class="subtitle">как заставить код подождать или повторяться</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>27
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>В прошлой теме мы говорили об асинхронности. Теперь — про два инструмента, которые с ней работают: <strong>setTimeout</strong> и <strong>setInterval</strong>.</p>
+
+    <h3>setTimeout — «сделай через N миллисекунд»</h3>
+    <p>Выполняет код один раз через указанное время. Миллисекунды — это 1/1000 секунды. То есть 1000 = 1 секунда.</p>
+
+    <pre>setTimeout(() => {
+  console.log("прошло 2 секунды");
+}, 2000);</pre>
+
+    <p><strong>Синтаксис:</strong> <code>setTimeout(функция, миллисекунды)</code>.</p>
+
+    <p>Функцию можно передать двумя способами:</p>
+    <pre>// стрелочная
+setTimeout(() => console.log("раз"), 1000);
+
+// обычная именованная
+function sayHi() {
+  console.log("привет");
+}
+setTimeout(sayHi, 1000);  // ← без скобок!</pre>
+
+    <p><strong>Важно:</strong> если написать <code>setTimeout(sayHi(), 1000)</code> — функция вызовется <em>сразу</em>, а таймер получит <code>undefined</code>. Нужно передавать <em>имя</em> функции, без скобок.</p>
+
+    <h3>Отмена таймера: clearTimeout</h3>
+    <p><code>setTimeout</code> возвращает <strong>id таймера</strong> — число, по которому его можно отменить.</p>
+
+    <pre>const id = setTimeout(() => {
+  console.log("это не выполнится");
+}, 5000);
+
+clearTimeout(id);  // отменили</pre>
+
+    <p>Полезно, когда пользователь делает что-то, что отменяет предыдущее действие. Например, закрыл окно — таймер не срабатывает.</p>
+
+    <h3>setInterval — «делай каждые N миллисекунд»</h3>
+    <p>Выполняет код <em>многократно</em> с указанным интервалом.</p>
+
+    <pre>setInterval(() => {
+  console.log("прошло 1 секунда");
+}, 1000);</pre>
+
+    <p>Этот код будет выводить строку каждую секунду, пока страница открыта. Бесконечно.</p>
+
+    <p><strong>Использование:</strong> часы на странице, обновление данных, анимации, счётчики.</p>
+
+    <h3>Остановка: clearInterval</h3>
+    <p>У <code>setInterval</code> тоже есть id. Чтобы остановить — <code>clearInterval(id)</code>.</p>
+
+    <pre>let seconds = 0;
+
+const id = setInterval(() => {
+  seconds++;
+  console.log(seconds);
+  
+  if (seconds >= 5) {
+    clearInterval(id);
+    console.log("остановлено");
+  }
+}, 1000);</pre>
+
+    <p>Этот код будет считать до 5, потом остановится сам.</p>
+
+    <h3>Практический пример: счётчик на странице</h3>
+    <pre>&lt;div id="timer"&gt;0&lt;/div&gt;
+&lt;button id="stop"&gt;стоп&lt;/button&gt;
+
+&lt;script&gt;
+  let count = 0;
+  const timerEl = document.getElementById("timer");
+  
+  const id = setInterval(() => {
+    count++;
+    timerEl.textContent = count;
+  }, 1000);
+  
+  document.getElementById("stop").addEventListener("click", () => {
+    clearInterval(id);
+  });
+&lt;/script&gt;</pre>
+
+    <p>На странице появится число, которое увеличивается каждую секунду. Кнопка «стоп» останавливает.</p>
+
+    <h3>Небольшой трюк: задержка перед действием</h3>
+    <p>Часто <code>setTimeout</code> используется, чтобы «подождать» перед выполнением. Например, показать сообщение и через 3 секунды его спрятать:</p>
+
+    <pre>function showMessage(text) {
+  const msg = document.createElement("div");
+  msg.textContent = text;
+  msg.className = "toast";
+  document.body.appendChild(msg);
+
+  setTimeout(() => {
+    msg.remove();
+  }, 3000);
+}</pre>
+
+    <h3>Debounce — важный приём</h3>
+    <p><strong>Debounce</strong> — это когда мы «откладываем» выполнение функции, пока пользователь не перестанет что-то делать. Например, чтобы не искать по каждой букве, а подождать, пока человек допишет слово.</p>
+
+    <pre>let debounceId;
+
+input.addEventListener("input", () => {
+  clearTimeout(debounceId);
+  
+  debounceId = setTimeout(() => {
+    console.log("ищем:", input.value);
+  }, 500);
+});</pre>
+
+    <p>Пока пользователь печатает — таймер сбрасывается и запускается заново. Функция выполнится только когда он остановится на 500 мс. Это основа «живого поиска».</p>
+
+    <h3>Важно помнить</h3>
+    <ul>
+      <li><code>setTimeout</code> — один раз через N мс.</li>
+      <li><code>setInterval</code> — повторяется каждые N мс.</li>
+      <li>Оба возвращают id для отмены: <code>clearTimeout(id)</code> / <code>clearInterval(id)</code>.</li>
+      <li>Функцию передавать без скобок: <code>setTimeout(fn, 1000)</code>, а не <code>setTimeout(fn(), 1000)</code>.</li>
+      <li>Время в миллисекундах: 1000 = 1 секунда.</li>
+      <li>Таймеры не блокируют код — это асинхронные операции.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>поиграть с таймерами и собрать пару мини-проектов</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>timers.html</code> с обычным каркасом. Открой через браузер, F12 → Console.</li>
+      <li><strong>Задание 1 — setTimeout.</strong> Напиши код, который выводит «прошло 3 секунды» через 3 секунды после запуска.</li>
+      <li><strong>Задание 2 — отмена.</strong> Создай <code>setTimeout</code> на 5 секунд, но сразу отмени его через <code>clearTimeout</code>. Убедись, что ничего не выводится.</li>
+      <li><strong>Задание 3 — счётчик на странице.</strong> Сделай на странице число и кнопку «старт». При клике число начинает увеличиваться каждую секунду. Добавь кнопку «стоп».</li>
+      <li><strong>Задание 4 — обратный отсчёт.</strong> Сделай число, которое <em>уменьшается</em> от 10 до 0. Когда дойдёт до 0 — вывести «пуск!» и остановить таймер.</li>
+      <li><strong>Задание 5 — мигающий элемент.</strong> Сделай блок, который каждые 500 мс меняет цвет фона (например, красный / синий). Добавь кнопку «стоп».</li>
+      <li><strong>Задание 6 — debounce.</strong> Сделай поле ввода. При вводе выводи в консоль текст не сразу, а через 500 мс после того, как пользователь перестал печатать.</li>
+      <li><strong>Бонус:</strong> сделай простые часы на странице — время обновляется каждую секунду. Подсказка: <code>new Date().toLocaleTimeString("ru-RU")</code>.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="счётчик, обратный отсчёт, debounce — удачные куски..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="26-async-intro.html">← предыдущая</a>
+    <a class="btn" href="28-promises.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 27 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-27";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

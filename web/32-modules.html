@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>32. Модули: import / export · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 32 · продвинутый js</div>
+    <h1>Модули: import / export</h1>
+    <div class="subtitle">как разбивать код на файлы</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>32
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>До этой темы весь JS жил в одном файле. Для маленьких проектов это нормально. Но когда код растёт — один файл на 1000 строк становится кашей. Ничего не найти, ничего не переиспользовать.</p>
+
+    <p><strong>Модули</strong> решают эту проблему: код разбивается на отдельные файлы, каждый со своей задачей.</p>
+
+    <h3>Как это работает</h3>
+    <p>Один файл <strong>экспортирует</strong> (отдаёт) что-то наружу. Другой файл <strong>импортирует</strong> (берёт) это к себе.</p>
+
+    <p>Аналогия: библиотека. Каждая книга — отдельный «модуль». Ты берёшь с полки нужную, а не всю библиотеку сразу.</p>
+
+    <h3>Экспорт</h3>
+    <p>Есть два вида экспорта.</p>
+
+    <p><strong>Named export</strong> — именованный. Можно экспортировать несколько вещей из одного файла:</p>
+    <pre>// math.js
+
+export function add(a, b) {
+  return a + b;
+}
+
+export function subtract(a, b) {
+  return a - b;
+}
+
+export const PI = 3.14159;</pre>
+
+    <p><strong>Default export</strong> — экспорт по умолчанию. Один на файл:</p>
+    <pre>// greet.js
+
+export default function greet(name) {
+  return `Привет, ${name}!`;
+}</pre>
+
+    <h3>Импорт</h3>
+    <p>Named-импорт:</p>
+    <pre>// main.js
+
+import { add, subtract, PI } from "./math.js";
+
+console.log(add(2, 3));      // 5
+console.log(subtract(5, 1)); // 4
+console.log(PI);             // 3.14159</pre>
+
+    <p>Default-импорт:</p>
+    <pre>// main.js
+
+import greet from "./greet.js";
+
+console.log(greet("Аня"));</pre>
+
+    <p><strong>Разница:</strong> named импортируется в <code>{ }</code>, default — без. Имя default-импорта можно выбрать любое, имя named-импорта должно совпадать с тем, что было экспортировано.</p>
+
+    <h3>Импорт всего сразу</h3>
+    <p>Можно импортировать все named-экспорты как объект:</p>
+    <pre>import * as math from "./math.js";
+
+console.log(math.add(2, 3));
+console.log(math.PI);</pre>
+
+    <h3>Переименование при импорте</h3>
+    <p>Иногда имя занято или неудобное — можно переименовать:</p>
+    <pre>import { add as sum, PI as pi } from "./math.js";
+
+console.log(sum(2, 3));</pre>
+
+    <h3>Как подключить модули в HTML</h3>
+    <p>Важно: для модулей нужно указать атрибут <code>type="module"</code> у тега script.</p>
+
+    <pre>&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</pre>
+
+    <p>Без этого браузер не поймёт <code>import</code> и <code>export</code>.</p>
+
+    <h3>Важное ограничение: локальные файлы</h3>
+    <p>Если просто открыть HTML-файл двойным кликом (через <code>file://</code>), модули <strong>не будут работать</strong> — браузер заблокирует их по соображениям безопасности.</p>
+
+    <p>Чтобы модули работали, нужен <strong>локальный сервер</strong>. Способы:</p>
+    <ul>
+      <li><strong>VS Code + расширение Live Server.</strong> Установи расширение Live Server, правой кнопкой по HTML → «Open with Live Server». Это самый простой способ.</li>
+      <li><strong>Командная строка:</strong> в папке с проектом напиши <code>python -m http.server</code> (если установлен Python) — и открой <code>http://localhost:8000</code>.</li>
+      <li><strong>Публикация на GitHub Pages / Netlify.</strong> Там сервер есть изначально.</li>
+    </ul>
+
+    <p>Это не проблема — просто особенность разработки. Все реальные проекты запускаются через сервер.</p>
+
+    <h3>Структура проекта с модулями</h3>
+    <p>Типичный проект выглядит так:</p>
+    <pre>my-project/
+├── index.html
+├── main.js              ← главный файл, который импортирует
+└── modules/
+    ├── api.js           ← запросы к API
+    ├── ui.js            ← работа с DOM
+    ├── utils.js         ← вспомогательные функции
+    └── storage.js       ← localStorage</pre>
+
+    <p>В каждом файле — своя зона ответственности. Главный <code>main.js</code> их связывает.</p>
+
+    <h3>Пример: разбиваем todo на модули</h3>
+    <p><strong>storage.js</strong> — сохранение:</p>
+    <pre>const KEY = "todos";
+
+export function load() {
+  return JSON.parse(localStorage.getItem(KEY) || "[]");
+}
+
+export function save(todos) {
+  localStorage.setItem(KEY, JSON.stringify(todos));
+}</pre>
+
+    <p><strong>ui.js</strong> — отрисовка:</p>
+    <pre>export function render(todos) {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  todos.forEach((todo, i) => {
+    const li = document.createElement("li");
+    li.textContent = todo;
+    list.appendChild(li);
+  });
+}</pre>
+
+    <p><strong>main.js</strong> — связка:</p>
+    <pre>import { load, save } from "./modules/storage.js";
+import { render } from "./modules/ui.js";
+
+let todos = load();
+render(todos);
+
+document.getElementById("add").addEventListener("click", () => {
+  const input = document.getElementById("input");
+  if (!input.value.trim()) return;
+  
+  todos.push(input.value.trim());
+  input.value = "";
+  save(todos);
+  render(todos);
+});</pre>
+
+    <p>Каждый файл делает одно. Легко найти, легко поменять, легко переиспользовать.</p>
+
+    <h3>Когда нужны модули</h3>
+    <ul>
+      <li>Проект больше 200–300 строк JS;</li>
+      <li>Есть повторяющиеся функции (например, работа с API);</li>
+      <li>Хочется разделить логику и интерфейс;</li>
+      <li>Над проектом работает несколько человек;</li>
+      <li>Планируется переиспользовать код в другом проекте.</li>
+    </ul>
+
+    <p>Для маленьких скриптов модули — лишнее. Не всё надо разбивать.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Модули — способ разбить код на файлы.</li>
+      <li><code>export</code> отдаёт, <code>import</code> берёт.</li>
+      <li>Named-экспорт: <code>export function name() {}</code>, импорт в <code>{ }</code>.</li>
+      <li>Default-экспорт: <code>export default function() {}</code>, импорт без <code>{ }</code>.</li>
+      <li>В HTML — <code>&lt;script type="module"&gt;</code>.</li>
+      <li>Модули работают только через локальный сервер (Live Server).</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>разбить проект на модули и запустить через локальный сервер</strong>.</p>
+
+    <ul>
+      <li>Создай папку <code>modules-practice</code>. Внутри:
+        <pre>modules-practice/
+├── index.html
+├── main.js
+└── modules/
+    ├── math.js
+    └── utils.js</pre>
+      </li>
+      <li><strong>Задание 1 — установи Live Server.</strong> Открой VS Code → Extensions → найди <strong>Live Server</strong> → установи. Теперь правой кнопкой по <code>index.html</code> → «Open with Live Server». Страница откроется по адресу вроде <code>http://127.0.0.1:5500</code>.</li>
+      <li><strong>Задание 2 — первый модуль.</strong> В <code>math.js</code> напиши:
+        <pre>export function add(a, b) { return a + b; }
+export function multiply(a, b) { return a * b; }
+export const PI = 3.14159;</pre>
+      </li>
+      <li><strong>Задание 3 — второй модуль.</strong> В <code>utils.js</code> напиши:
+        <pre>export function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+export default function greet(name) {
+  return `Привет, ${name}!`;
+}</pre>
+      </li>
+      <li><strong>Задание 4 — импорт в main.js.</strong> Напиши:
+        <pre>import { add, multiply, PI } from "./modules/math.js";
+import { capitalize } from "./modules/utils.js";
+import greet from "./modules/utils.js";
+
+console.log(add(2, 3));
+console.log(multiply(4, 5));
+console.log(PI);
+console.log(capitalize("привет"));
+console.log(greet("Аня"));</pre>
+      </li>
+      <li><strong>Задание 5 — подключение в HTML.</strong> В <code>index.html</code> внизу перед <code>&lt;/body&gt;</code>:
+        <pre>&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</pre>
+        Открой через Live Server. В консоли должны быть все выводы.
+      </li>
+      <li><strong>Задание 6 — проверь, что без сервера не работает.</strong> Открой <code>index.html</code> двойным кликом (не через Live Server). Открой консоль — увидишь ошибку CORS или модуля. Это нормально. Запомни это.</li>
+      <li><strong>Бонус — разбей todo на модули.</strong> Возьми свой todo из темы 24 и разбей на:
+        <ul>
+          <li><code>storage.js</code> — загрузка и сохранение;</li>
+          <li><code>ui.js</code> — отрисовка;</li>
+          <li><code>main.js</code> — связка.</li>
+        </ul>
+        Запусти через Live Server. Убедись, что работает точно так же.
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="установился ли Live Server, заработали ли модули..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="примеры экспорта и импорта, структура модулей..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="документация по модулям, статьи..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="31-api.html">← предыдущая</a>
+    <a class="btn" href="33-classes.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 32 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-32";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

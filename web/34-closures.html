@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>34. Замыкания и область видимости · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 34 · продвинутый js</div>
+    <h1>Замыкания и область видимости</h1>
+    <div class="subtitle">как функции «помнят» своё окружение</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>34
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Это одна из самых сложных тем в JavaScript. Но она важна: замыкания встречаются везде — в обработчиках событий, в модулях, в классах, в React.</p>
+
+    <p>Разберём по шагам.</p>
+
+    <h3>Область видимости (scope)</h3>
+    <p>Область видимости — это где переменная «видна». В JS три уровня:</p>
+    <ul>
+      <li><strong>Глобальная</strong> — доступна везде;</li>
+      <li><strong>Функциональная</strong> — видна только внутри функции;</li>
+      <li><strong>Блочная</strong> — видна только внутри <code>{ }</code> блока (<code>let</code> и <code>const</code>).</li>
+    </ul>
+
+    <pre>const global = "я видна везде";
+
+function example() {
+  const inFunction = "я видна только внутри функции";
+  console.log(global);     // ок
+  console.log(inFunction); // ок
+}
+
+example();
+console.log(global);     // ок
+// console.log(inFunction); // ошибка</pre>
+
+    <h3>let, const и var — разница</h3>
+    <p><code>let</code> и <code>const</code> — блочные. <code>var</code> — функциональная (устаревшая).</p>
+
+    <pre>if (true) {
+  let a = 1;
+  const b = 2;
+  var c = 3;
+}
+
+// console.log(a);  // ошибка — a только внутри блока
+// console.log(b);  // ошибка
+console.log(c);     // 3 — var «протекает» наружу</pre>
+
+    <p>Именно поэтому <code>var</code> больше не используют — он создаёт баги.</p>
+
+    <h3>Что такое замыкание</h3>
+    <p><strong>Замыкание</strong> — это функция, которая «помнит» переменные из места, где она была создана, даже если это место уже завершило работу.</p>
+
+    <p>Пример:</p>
+    <pre>function outer() {
+  const message = "привет";
+  
+  function inner() {
+    console.log(message);  // ← берёт message из outer
+  }
+  
+  return inner;
+}
+
+const fn = outer();  // outer выполнилась и завершилась
+fn();                // "привет" — хотя outer уже не работает!</pre>
+
+    <p>Функция <code>inner</code> «запомнила» переменную <code>message</code>, хотя <code>outer</code> уже завершилась. Это и есть замыкание.</p>
+
+    <h3>Зачем это нужно: счётчик</h3>
+    <p>Классический пример — счётчик, который не сбрасывается:</p>
+
+    <pre>function createCounter() {
+  let count = 0;
+  
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const counter1 = createCounter();
+console.log(counter1());  // 1
+console.log(counter1());  // 2
+console.log(counter1());  // 3
+
+const counter2 = createCounter();  // ← новый счётчик, своё count
+console.log(counter2());  // 1</pre>
+
+    <p>У каждого счётчика — своё <code>count</code>. Они не мешают друг другу. Это возможно именно благодаря замыканию.</p>
+
+    <h3>Приватные переменные через замыкание</h3>
+    <p>До появления приватных полей в классах (<code>#</code>), замыкания использовали для инкапсуляции:</p>
+
+    <pre>function createBank() {
+  let balance = 0;
+  
+  return {
+    deposit(amount) {
+      balance += amount;
+    },
+    withdraw(amount) {
+      if (amount > balance) {
+        return "недостаточно средств";
+      }
+      balance -= amount;
+    },
+    getBalance() {
+      return balance;
+    }
+  };
+}
+
+const bank = createBank();
+bank.deposit(100);
+bank.withdraw(30);
+console.log(bank.getBalance());  // 70
+// console.log(bank.balance);    // undefined — снаружи не достать</pre>
+
+    <p><code>balance</code> живёт внутри замыкания и недоступен снаружи. Работает как приватное поле.</p>
+
+    <h3>Замыкания в обработчиках событий</h3>
+    <p>Это то, где ты уже сталкивалась с замыканиями, даже не зная об этом:</p>
+
+    <pre>function createButton(label) {
+  const btn = document.createElement("button");
+  btn.textContent = label;
+  
+  btn.addEventListener("click", () => {
+    console.log(`нажата кнопка: ${label}`);  // ← замыкание на label
+  });
+  
+  return btn;
+}
+
+document.body.appendChild(createButton("старт"));
+document.body.appendChild(createButton("стоп"));</pre>
+
+    <p>У каждой кнопки — своя <code>label</code>, запомненная в замыкании.</p>
+
+    <h3>Классическая ловушка с циклом и var</h3>
+    <p>Старый баг, который многих путал:</p>
+
+    <pre>for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// выведет: 3, 3, 3
+// хотя ожидалось: 0, 1, 2</pre>
+
+    <p>Почему? Потому что <code>var</code> — функциональная, а не блочная. Все замыкания видят <em>одну и ту же</em> переменную <code>i</code>, которая к моменту выполнения стала 3.</p>
+
+    <p>Решение — использовать <code>let</code>:</p>
+    <pre>for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// выведет: 0, 1, 2</pre>
+
+    <p><code>let</code> создаёт новую переменную на каждую итерацию. Это одна из причин, почему <code>let</code> и <code>const</code> стали стандартом.</p>
+
+    <h3>Где замыкания используются на практике</h3>
+    <ul>
+      <li><strong>Счётчики и фабрики функций</strong> — <code>createCounter()</code>, <code>createButton()</code>.</li>
+      <li><strong>Приватные переменные</strong> — до появления <code>#</code> в классах.</li>
+      <li><strong>Обработчики событий</strong> — каждый запоминает своё.</li>
+      <li><strong>debounce и throttle</strong> — сохраняют таймер между вызовами.</li>
+      <li><strong>Модули</strong> — каждая «сборка» имеет своё окружение.</li>
+      <li><strong>React-хуки</strong> — <code>useState</code> работает через замыкание.</li>
+    </ul>
+
+    <h3>Важно не путать</h3>
+    <p>Замыкание — это <em>не</em> «функция внутри функции». Это <em>функция, которая запоминает переменные снаружи</em>. Если внутри функции не используется ничего снаружи — это просто функция, не замыкание.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Область видимости: глобальная, функциональная, блочная.</li>
+      <li><code>let</code> и <code>const</code> — блочные, <code>var</code> — функциональная (не использовать).</li>
+      <li>Замыкание — функция, которая помнит переменные снаружи.</li>
+      <li>Используется для счётчиков, приватности, обработчиков.</li>
+      <li>Ловушка с <code>var</code> и циклом решается через <code>let</code>.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>увидеть замыкания руками и научиться их использовать</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>closures.html</code> с обычным каркасом. Открой, F12 → Console.</li>
+      <li><strong>Задание 1 — первый счётчик.</strong> Напиши <code>createCounter()</code> из теории. Создай два счётчика, понажимай каждый. Убедись, что у них свои значения.
+      </li>
+      <li><strong>Задание 2 — счётчик с шагом.</strong> Сделай <code>createCounter(step)</code>, где каждая итерация прибавляет <code>step</code>. По умолчанию 1. Проверь с шагом 5.
+      </li>
+      <li><strong>Задание 3 — банк.</strong> Напиши <code>createBank()</code> с приватным балансом, методами <code>deposit</code>, <code>withdraw</code> (с проверкой), <code>getBalance</code>. Проверь, что <code>bank.balance</code> снаружи — <code>undefined</code>.
+      </li>
+      <li><strong>Задание 4 — фабрика кнопок.</strong> Напиши <code>createButton(label, color)</code>, которая создаёт кнопку с заданным текстом и цветом. При клике — консоль выводит название. Создай 3 кнопки на странице.
+      </li>
+      <li><strong>Задание 5 — ловушка с var.</strong> Напиши цикл <code>for (var i = 0; i < 3; i++)</code> с <code>setTimeout</code>, который выводит <code>i</code>. Посмотри результат. Замени <code>var</code> на <code>let</code> — снова посмотри. Запиши, что изменилось и почему.
+      </li>
+      <li><strong>Задание 6 — debounce через замыкание.</strong> Напиши функцию <code>debounce(fn, delay)</code>, которая возвращает новую функцию, выполняющую <code>fn</code> только через <code>delay</code> мс после последнего вызова. Используй её для поля ввода.
+      </li>
+      <li><strong>Бонус — throttle.</strong> Напиши <code>throttle(fn, limit)</code> — функция выполняется не чаще, чем раз в <code>limit</code> мс. Используй для скролла.
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="счётчики, банк, debounce, throttle..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="статьи про замыкания, видео, документация..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="33-classes.html">← предыдущая</a>
+    <a class="btn" href="35-errors.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 34 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-34";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python · обучалка</title>
+<link rel="stylesheet" href="../_shared/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="badge">направление</div>
+    <h1>Python</h1>
+    <div class="subtitle">с нуля до проектов · текстовый курс</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>Python
+  </div>
+
+  <div class="progress-panel">
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-text">0 / 14 пройдено</div>
+  </div>
+
+  <div class="toc" id="toc">
+
+    <a class="toc-item" data-lesson="py-01" href="01-install.html">
+      <span class="toc-num">01</span>
+      <span class="toc-title">Установка Python и VS Code</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-02" href="02-first-program.html">
+      <span class="toc-num">02</span>
+      <span class="toc-title">Первая программа и вывод данных</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-03" href="03-variables.html">
+      <span class="toc-num">03</span>
+      <span class="toc-title">Переменные и типы данных</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-04" href="04-input.html">
+      <span class="toc-num">04</span>
+      <span class="toc-title">Ввод данных от пользователя</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-05" href="05-text.html">
+      <span class="toc-num">05</span>
+      <span class="toc-title">Работа с текстом</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-06" href="06-conditions.html">
+      <span class="toc-num">06</span>
+      <span class="toc-title">Условный оператор if</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-07" href="07-logic.html">
+      <span class="toc-num">07</span>
+      <span class="toc-title">Логические операторы</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-08" href="08-for.html">
+      <span class="toc-num">08</span>
+      <span class="toc-title">Цикл for</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-09" href="09-while.html">
+      <span class="toc-num">09</span>
+      <span class="toc-title">Цикл while</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-10" href="10-lists.html">
+      <span class="toc-num">10</span>
+      <span class="toc-title">Списки</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-11" href="11-dictionaries.html">
+      <span class="toc-num">11</span>
+      <span class="toc-title">Словари</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-12" href="12-functions.html">
+      <span class="toc-num">12</span>
+      <span class="toc-title">Функции</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-13" href="13-modules.html">
+      <span class="toc-num">13</span>
+      <span class="toc-title">Модули random и math</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="py-14" href="14-projects.html">
+      <span class="toc-num">14</span>
+      <span class="toc-title">Контрольные проекты</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    <span class="mark">◈</span> Python · 14 тем <span class="mark">◈</span>
+  </div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  function refreshToc() {
+    let done = 0;
+    document.querySelectorAll(".toc-item").forEach(el => {
+      const id = el.dataset.lesson;
+      const d = state.lessons[id];
+      if (d && d.done) { el.classList.add("done"); done++; }
+      else if (d && hasContent(d)) { el.classList.add("progress"); }
+    });
+    updateProgressOnToc(14, done);
+  }
+  refreshToc();
+</script>
+</body>
+</html>

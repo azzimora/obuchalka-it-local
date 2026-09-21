@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI · обучалка</title>
+<link rel="stylesheet" href="../_shared/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="badge">направление</div>
+    <h1>AI</h1>
+    <div class="subtitle">8 тем · конспекты · домашки · заметки</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>AI
+  </div>
+
+  <div class="progress-panel">
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-text">0 / 8 пройдено</div>
+  </div>
+
+  <div class="toc" id="toc">
+
+    <a class="toc-item" data-lesson="ai-1" href="01-what-is-ai.html">
+      <span class="toc-num">01</span>
+      <span class="toc-title">Что такое AI</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-2" href="02-prompts.html">
+      <span class="toc-num">02</span>
+      <span class="toc-title">Промпт-инжиниринг</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-3" href="03-system-prompts.html">
+      <span class="toc-num">03</span>
+      <span class="toc-title">Системные промпты</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-4" href="04-datasets.html">
+      <span class="toc-num">04</span>
+      <span class="toc-title">Датасеты</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-5" href="05-agents.html">
+      <span class="toc-num">05</span>
+      <span class="toc-title">AI-агент</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-6" href="06-orchestrators.html">
+      <span class="toc-num">06</span>
+      <span class="toc-title">Оркестраторы</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-7" href="07-future.html">
+      <span class="toc-num">07</span>
+      <span class="toc-title">Будущее AI</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="ai-8" href="08-final-project.html">
+      <span class="toc-num">08</span>
+      <span class="toc-title">Итоговый проект</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    <span class="mark">◈</span> AI · 8 тем <span class="mark">◈</span>
+  </div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  function refreshToc() {
+    let done = 0;
+    document.querySelectorAll(".toc-item").forEach(el => {
+      const id = el.dataset.lesson;
+      const d = state.lessons[id];
+      if (d && d.done) {
+        el.classList.add("done");
+        done++;
+      } else if (d && hasContent(d)) {
+        el.classList.add("progress");
+      }
+    });
+    updateProgressOnToc(8, done);
+  }
+  refreshToc();
+</script>
+</body>
+</html>

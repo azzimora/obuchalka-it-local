@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14. Стилизация форм · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 14</div>
+    <h1>Стилизация форм</h1>
+    <div class="subtitle">как сделать поля красивыми и удобными</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>14
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>По умолчанию поля формы выглядят как из 90-х: серые, угловатые, со странными рамками. Но их можно полностью переодеть в CSS. Это, пожалуй, самая «благодарная» тема — результат виден сразу.</p>
+
+    <h3>Сброс стилей браузера</h3>
+    <p>Браузеры добавляют свои стили для форм. Первое, что делают, — «обнуляют» их:</p>
+    <pre>input, textarea, select, button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}</pre>
+    <p><code>font: inherit</code> — чтобы поля использовали тот же шрифт, что и страница. Иначе они «живут своей жизнью».</p>
+
+    <h3>Базовый вид поля</h3>
+    <pre>input, textarea, select {
+  width: 100%;
+  padding: 12px 14px;
+  background: #1a0f1e;
+  border: 1px solid rgba(255,142,199,0.2);
+  border-radius: 10px;
+  color: #f3e8f5;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}</pre>
+    <p>Обрати внимание на <code>transition</code> — это чтобы фокус появлялся плавно, а не резко.</p>
+
+    <h3>Состояние фокуса — :focus</h3>
+    <p>Когда человек кликает в поле, оно получает фокус. Это надо подсветить — иначе непонятно, куда ты пишешь.</p>
+    <pre>input:focus, textarea:focus, select:focus {
+  border-color: #ff8ec7;
+  box-shadow: 0 0 0 3px rgba(255,142,199,0.35);
+}</pre>
+    <p><code>box-shadow</code> с нулевым смещением работает как «свечение вокруг» — очень удобный приём.</p>
+
+    <h3>Плейсхолдер</h3>
+    <pre>::placeholder {
+  color: #a889b0;
+  opacity: 0.6;
+}</pre>
+    <p>По умолчанию он часто слишком яркий — приглуши, чтобы не путали с введённым текстом.</p>
+
+    <h3>Кнопка</h3>
+    <pre>button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ff8ec7, #c77dff);
+  color: #1a0f1d;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+button:hover {
+  box-shadow: 0 6px 20px rgba(255,142,199,0.35);
+}
+button:active {
+  transform: scale(0.97);
+}</pre>
+    <p><code>:hover</code> — при наведении; <code>:active</code> — в момент нажатия. Мелочь, но она делает интерфейс «живым».</p>
+
+    <h3>Чекбоксы и радио</h3>
+    <p>Стандартные чекбоксы плохо стилизуются. Обычно их <em>скрывают</em> и рисуют свой вид через псевдо-элементы. Простой способ:</p>
+    <pre>input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #a889b0;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #ff8ec7, #c77dff);
+  border-color: #ff8ec7;
+}
+input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a0f1d;
+  font-size: 0.85rem;
+}</pre>
+    <p><code>appearance: none</code> убирает стандартный вид — дальше рисуем как хотим.</p>
+
+    <h3>Сетка формы</h3>
+    <p>Формы удобно верстать через Grid или Flexbox:</p>
+    <pre>form {
+  display: grid;
+  gap: 16px;
+  max-width: 500px;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}</pre>
+    <p>Так два поля «Имя» и «Фамилия» встанут рядом, а остальные — друг под другом.</p>
+
+    <h3>Доступность — не забывай</h3>
+    <ul>
+      <li>Каждое поле должно иметь <code>&lt;label&gt;</code>;</li>
+      <li>Не убирай <code>outline</code> без замены — это ломает навигацию с клавиатуры;</li>
+      <li>Кнопка отмены/отправки — достаточно крупная, минимум 44×44px;</li>
+      <li>Цвет текста и фона — контрастные.</li>
+    </ul>
+
+    <h3>Что важно запомнить</h3>
+    <ul>
+      <li><code>font: inherit</code> — обязательно;</li>
+      <li><code>:focus</code> с <code>box-shadow</code> — обязательная подсветка;</li>
+      <li><code>transition</code> — чтобы всё было плавно;</li>
+      <li><code>appearance: none</code> — для кастомных чекбоксов;</li>
+      <li>Форма — это тоже Grid/Flexbox, не изобретай велосипед.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать красивую форму регистрации</strong> — такую, чтобы не стыдно показать.</p>
+
+    <ul>
+      <li>Создай файл <code>forms-styled.html</code> + <code>style.css</code>.</li>
+      <li>Сделай форму с полями: имя, email, пароль, город (select), о себе (textarea), чекбокс «согласен», кнопка «зарегистрироваться».</li>
+      <li>Сначала сбрось стили:
+        <pre>input, textarea, select, button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}</pre>
+      </li>
+      <li>Задай базовый вид полям: <code>padding</code>, <code>border</code>, <code>border-radius</code>, <code>background</code>. Фон и цвет — в стиле твоей обучалки (тёмная тема с розовым акцентом).</li>
+      <li>Добавь <code>:focus</code> с <code>box-shadow</code> — поле должно подсвечиваться розовым.</li>
+      <li>Затемни <code>::placeholder</code> — пусть он будет приглушённый, не мешает.</li>
+      <li>Сделай кнопку с градиентом, <code>:hover</code> (тень) и <code>:active</code> (сжатие).</li>
+      <li>Стилизуй чекбокс через <code>appearance: none</code> + <code>:checked</code> + <code>::after</code> с галочкой.</li>
+      <li>Сверстай форму через <code>display: grid; gap: 16px;</code>. А поля «имя» и «email» поставь в один ряд через <code>grid-template-columns: 1fr 1fr;</code>.</li>
+      <li><strong>Главное:</strong> сфокусируйся в каждом поле Tab'ом — должно быть видно, куда перешёл фокус. Если нет — верни <code>:focus</code>.</li>
+      <li><strong>Бонус:</strong> сделай <code>input:invalid</code> (например, email без @) — красную рамку. И <code>input:valid</code> — зелёную.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="13-grid-2.html">← предыдущая</a>
+    <a class="btn" href="15-tables-style.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 14 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-14";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15. Стилизация таблиц · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 15</div>
+    <h1>Стилизация таблиц</h1>
+    <div class="subtitle">border-collapse, зебры и адаптив</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>15
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Таблицы в HTML бывают двух видов: <em>таблицы данных</em> (расписание, цены, статистика) — и <em>таблицы для вёрстки</em>, которыми пользовались в 2005. Второе — зло, для вёрстки есть Grid и Flexbox. А вот первые — полезны и требуют стилизации.</p>
+
+    <h3>Структура таблицы</h3>
+    <pre>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Имя&lt;/th&gt;
+      &lt;th&gt;Возраст&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Аня&lt;/td&gt;
+      &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+    <ul>
+      <li><code>&lt;table&gt;</code> — сама таблица;</li>
+      <li><code>&lt;thead&gt;</code> — шапка;</li>
+      <li><code>&lt;tbody&gt;</code> — тело;</li>
+      <li><code>&lt;tr&gt;</code> — строка (table row);</li>
+      <li><code>&lt;th&gt;</code> — ячейка-заголовок (жирная, по центру);</li>
+      <li><code>&lt;td&gt;</code> — обычная ячейка (table data).</li>
+    </ul>
+
+    <h3>border-collapse — обязательно</h3>
+    <p>По умолчанию у каждой ячейки своя рамка, и между ними пустота. Убирается одной строкой:</p>
+    <pre>table {
+  border-collapse: collapse;
+  width: 100%;
+}</pre>
+    <p>Теперь рамки «склеиваются» и выглядят как единая сетка.</p>
+
+    <h3>Базовый стиль таблицы</h3>
+    <pre>table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,142,199,0.15);
+}
+th {
+  background: rgba(255,142,199,0.08);
+  color: #ffb8d9;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+tr:hover {
+  background: rgba(255,142,199,0.05);
+}</pre>
+
+    <h3>Зебра (zebra striping)</h3>
+    <p>Чередование фона строк помогает читать большие таблицы:</p>
+    <pre>tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}</pre>
+    <p><code>:nth-child(even)</code> — каждый чётный. Можно <code>odd</code> — каждый нечётный. Можно формулу: <code>nth-child(3n)</code> — каждый третий.</p>
+
+    <h3>Скруглённые углы у таблицы</h3>
+    <p>Напрямую <code>border-radius</code> у <code>&lt;table&gt;</code> не сработает, если у ячеек есть фон. Трюк — обернуть в контейнер:</p>
+    <pre>.table-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,142,199,0.15);
+}</pre>
+
+    <h3>Адаптив — самое важное</h3>
+    <p>Таблицы плохо работают на телефонах: они шире экрана. Два подхода:</p>
+
+    <p><strong>1. Горизонтальный скролл</strong> (простой и рабочий):</p>
+    <pre>.table-wrap {
+  overflow-x: auto;
+}</pre>
+    <p>На узком экране таблица скроллится вбок, но не ломается.</p>
+
+    <p><strong>2. Перестройка в карточки</strong> (сложнее, но красивее): через media-запрос каждой строке дают <code>display: block;</code> и ячейкам рисуют подписи из <code>data-label</code>. Это уже тема 18, пока достаточно первого способа.</p>
+
+    <h3>Выравнивание</h3>
+    <ul>
+      <li>Числа — по правому краю (<code>text-align: right</code>), так их легче сравнивать;</li>
+      <li>Текст — по левому;</li>
+      <li>Заголовки — по тому же краю, что и данные под ними.</li>
+    </ul>
+
+    <h3>Полезные мелочи</h3>
+    <ul>
+      <li><code>table-layout: fixed;</code> — ширина столбцов по первой строке, работает быстрее;</li>
+      <li><code>caption</code> — подпись таблицы, ставится сразу после <code>&lt;table&gt;</code>;</li>
+      <li><code>colspan</code> и <code>rowspan</code> — объединение ячеек по горизонтали и вертикали.</li>
+    </ul>
+
+    <h3>Что важно запомнить</h3>
+    <ul>
+      <li><code>border-collapse: collapse;</code> — обязательно;</li>
+      <li><code>nth-child(even)</code> — для зебры;</li>
+      <li>Обёртка с <code>overflow-x: auto</code> — спасение на телефоне;</li>
+      <li>Таблицы только для данных, не для вёрстки.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать красивую таблицу данных</strong>, которая работает и на телефоне.</p>
+
+    <ul>
+      <li>Создай файл <code>tables.html</code> + <code>style.css</code>.</li>
+      <li>Сделай таблицу с <code>&lt;thead&gt;</code> и <code>&lt;tbody&gt;</code>, минимум 5 строк. Например, «Мои любимые фильмы»: название, год, режиссёр, оценка.</li>
+      <li>Примени:
+        <ul>
+          <li><code>border-collapse: collapse;</code> — сразу;</li>
+          <li><code>width: 100%;</code>;</li>
+          <li><code>padding</code> у <code>th</code> и <code>td</code>;</li>
+          <li>стиль <code>th</code>: фон, цвет, uppercase;</li>
+          <li>рамку снизу у ячеек.</li>
+        </ul>
+      </li>
+      <li>Добавь <strong>зебру</strong>: <code>tbody tr:nth-child(even) { background: ...; }</code>.</li>
+      <li>Добавь <code>tr:hover</code> — при наведении строка подсвечивается.</li>
+      <li>Оберни таблицу в <code>&lt;div class="table-wrap"&gt;</code> с:
+        <ul>
+          <li><code>border-radius</code> — скругление;</li>
+          <li><code>overflow: hidden</code> — чтобы углы срезались;</li>
+          <li><code>overflow-x: auto</code> — для скролла на узких экранах.</li>
+        </ul>
+      </li>
+      <li>Числовые столбцы (год, оценка) выровняй по правому краю.</li>
+      <li><strong>Проверка адаптива:</strong> сузь окно до ширины телефона — таблица должна скроллиться вбок, а не вылезать за экран.</li>
+      <li><strong>Главное:</strong> сделай вторую таблицу с <code>colspan</code> или <code>rowspan</code> — например, «Расписание на неделю», где «Выходные» объединяют две строки. Это научит думать о структуре.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="14-forms-style.html">← предыдущая</a>
+    <a class="btn" href="16-transitions.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 15 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-15";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

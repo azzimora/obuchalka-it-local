@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>36. Итоговый проект · продвинутый JS</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .block h4 { font-size: 0.88rem; color: var(--pink-soft); margin: 12px 0 6px; font-weight: 600; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 36 · финал продвинутого JS</div>
+    <h1>Итоговый проект</h1>
+    <div class="subtitle">собрать всё: модули, async, API, классы, обработку ошибок</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>36
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Это финал продвинутого JS. Здесь нужно собрать всё, что было изучено, в одну настоящую работу. Не учебное упражнение, а проект, который можно показать.</p>
+
+    <p>Что должно быть использовано:</p>
+    <ul>
+      <li><strong>async / await</strong> — для запросов;</li>
+      <li><strong>fetch</strong> — для получения данных из API;</li>
+      <li><strong>обработка ошибок</strong> — try / catch, состояния загрузки;</li>
+      <li><strong>модули</strong> — код разбит на файлы;</li>
+      <li><strong>классы</strong> — хотя бы один, для логики;</li>
+      <li><strong>localStorage</strong> — для сохранения данных;</li>
+      <li><strong>debounce</strong> — если есть поиск;</li>
+      <li><strong>CSS</strong> — красиво, адаптивно, с анимациями.</li>
+    </ul>
+
+    <h3>Формат проекта</h3>
+    <p>Выбери одно из направлений — или придумай своё.</p>
+
+    <h4>Вариант 1 — Приложение с публичным API</h4>
+    <p>Страница, которая берёт данные из открытого API и красиво их показывает.</p>
+    <p><em>Примеры:</em></p>
+    <ul>
+      <li><strong>Погода</strong> — через Open-Meteo. Вводишь город, получаешь погоду на неделю.</li>
+      <li><strong>Поиск книг</strong> — через Google Books API. Вводишь название — список книг с обложками.</li>
+      <li><strong>Факты о котах</strong> — через Cat Fact. Кнопка «новый факт».</li>
+      <li><strong>Галерея фото</strong> — через Pexels или Unsplash. Поиск по ключевому слову.</li>
+      <li><strong>Пользователи GitHub</strong> — через GitHub API. Вводишь ник — карточка пользователя.</li>
+    </ul>
+
+    <h4>Вариант 2 — Личный трекер</h4>
+    <p>Приложение, которое что-то отслеживает и сохраняет.</p>
+    <p><em>Примеры:</em></p>
+    <ul>
+      <li><strong>Трекер привычек</strong> — отмечаешь, что сделано, видишь прогресс;</li>
+      <li><strong>Дневник тренировок</strong> — записываешь упражнения, видишь статистику;</li>
+      <li><strong>Список фильмов</strong> — добавляешь, отмечаешь просмотренные, ставишь оценки;</li>
+      <li><strong>Дневник настроения</strong> — каждый день отмечаешь настроение, видишь динамику.</li>
+    </ul>
+
+    <h4>Вариант 3 — Мини-игра</h4>
+    <p>Игра на JS с сохранением прогресса.</p>
+    <p><em>Примеры:</em></p>
+    <ul>
+      <li><strong>Викторина</strong> — вопросы, ответы, подсчёт очков, рейтинг;</li>
+      <li><strong>Угадай число</strong> — с подсказками и попытками;</li>
+      <li><strong>Мемори</strong> — карточки с парами, счётчик ходов;</li>
+      <li><strong>Змейка</strong> — классика на canvas;</li>
+      <li><strong>2048</strong> — с сохранением рекорда.</li>
+    </ul>
+
+    <h4>Вариант 4 — Своя идея</h4>
+    <p>Если есть что-то своё — что угодно. Главное, чтобы выполнялись требования.</p>
+
+    <h3>Требования к проекту</h3>
+
+    <p><strong>Структура:</strong></p>
+    <pre>my-project/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── main.js          # точка входа
+│   ├── api.js           # запросы к API (если есть)
+│   ├── storage.js       # работа с localStorage
+│   └── ui.js            # отрисовка
+└── README.md            # описание проекта</pre>
+
+    <p><strong>Что использовать обязательно:</strong></p>
+    <ul>
+      <li><code>type="module"</code> для скриптов;</li>
+      <li>минимум два модуля (main + один ещё);</li>
+      <li>хотя бы один класс;</li>
+      <li>async / await (если есть запросы);</li>
+      <li>try / catch для обработки ошибок;</li>
+      <li>localStorage для сохранения данных;</li>
+      <li>три состояния интерфейса: загрузка / успех / ошибка (если есть запросы).</li>
+    </ul>
+
+    <p><strong>Стиль и адаптив:</strong></p>
+    <ul>
+      <li>тёмная тема или своя;</li>
+      <li>адаптив — работает на телефоне;</li>
+      <li>минимум одна CSS-анимация;</li>
+      <li>hover-эффекты на кликабельных элементах;</li>
+      <li>шрифты не меньше 14px;</li>
+      <li>кликабельные зоны не меньше 40px.</li>
+    </ul>
+
+    <p><strong>Качество кода:</strong></p>
+    <ul>
+      <li>осмысленные имена переменных и функций;</li>
+      <li>одна функция — одна задача;</li>
+      <li>комментарии к сложным местам;</li>
+      <li>нет ошибок в консоли.</li>
+    </ul>
+
+    <h3>План работы</h3>
+    <p>Не пиши всё сразу. Так делают профессионалы:</p>
+    <ol>
+      <li><strong>Идея.</strong> Что это, для кого, зачем. Одна фраза.</li>
+      <li><strong>Структура.</strong> Какие файлы, какие функции, какой класс. На бумаге или в комментариях.</li>
+      <li><strong>HTML.</strong> Скелет страницы. Без стилей, без JS.</li>
+      <li><strong>CSS.</strong> Оформление. Тёмная тема, акценты, отступы.</li>
+      <li><strong>JS: логика без API.</strong> Если есть localStorage — сначала с ним. Проверь, что всё работает.</li>
+      <li><strong>JS: API.</strong> Если есть запросы — добавь fetch, состояния, обработку ошибок.</li>
+      <li><strong>Разбей на модули.</strong> Вынеси логику, API, отрисовку в отдельные файлы.</li>
+      <li><strong>Полировка.</strong> Анимации, hover, адаптив, мелочи.</li>
+      <li><strong>README.</strong> Опиши проект: что это, как запустить, что использовано.</li>
+    </ol>
+
+    <h3>Как проверить готовность</h3>
+    <p>Перед сдачей проверь:</p>
+    <ul>
+      <li>Проект открывается через Live Server без ошибок;</li>
+      <li>Все кнопки работают, всё кликабельно;</li>
+      <li>В консоли нет красных ошибок;</li>
+      <li>Данные сохраняются после перезагрузки (если есть localStorage);</li>
+      <li>Работает на телефоне (DevTools, Ctrl+Shift+M);</li>
+      <li>Загрузка и ошибки отображаются понятно;</li>
+      <li>Код разбит на модули, а не всё в одном файле;</li>
+      <li>Есть хотя бы один класс.</li>
+    </ul>
+
+    <h3>Куда двигаться дальше</h3>
+    <p>После этого проекта ты знаешь:</p>
+    <ul>
+      <li>HTML, CSS, JS на уверенном уровне;</li>
+      <li>асинхронность, API, модули, классы;</li>
+      <li>как организовать код в проекте.</li>
+    </ul>
+
+    <p>Что можно изучать дальше, если захочется:</p>
+    <ul>
+      <li><strong>React, Vue или Svelte</strong> — фреймворки для интерфейсов;</li>
+      <li><strong>TypeScript</strong> — JS с типами;</li>
+      <li><strong>Node.js</strong> — JS на сервере;</li>
+      <li><strong>Vite</strong> — современная сборка проектов;</li>
+      <li><strong>Git и GitHub</strong> — для работы в команде и портфолио.</li>
+    </ul>
+
+    <p><em>Это уже следующий уровень. Сначала — проект.</em></p>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать один полноценный проект целиком</strong>.</p>
+
+    <ul>
+      <li><strong>Выбери вариант:</strong>
+        <ul>
+          <li>приложение с API;</li>
+          <li>личный трекер;</li>
+          <li>мини-игра;</li>
+          <li>своя идея.</li>
+        </ul>
+      </li>
+      <li><strong>Создай структуру папок</strong> — index.html, css/, js/ с модулями, README.md.</li>
+      <li><strong>Пройди по шагам плана:</strong> идея → структура → HTML → CSS → логика → API → модули → полировка.</li>
+      <li><strong>Обязательно используй:</strong>
+        <ul>
+          <li>модули (<code>import / export</code>);</li>
+          <li>минимум один класс;</li>
+          <li>async / await (если есть запросы);</li>
+          <li>try / catch;</li>
+          <li>localStorage;</li>
+          <li>CSS-анимацию и адаптив.</li>
+        </ul>
+      </li>
+      <li><strong>Проверь готовность</strong> по списку выше. Особенно: нет ошибок в консоли, работает на телефоне, данные сохраняются.</li>
+      <li><strong>Напиши README.md</strong> — описание проекта, как запустить, что использовано. Это важно: без README проект выглядит незаконченным.</li>
+      <li><strong>Бонус:</strong> опубликуй на GitHub Pages или Netlify — получишь публичную ссылку. Это уже портфолио.</li>
+      <li><strong>В поле ниже</strong> запиши: что за проект, что получилось, что было сложно, что хотелось бы добавить.</li>
+    </ul>
+
+    <p><em>Проект можно делать несколько дней. Не торопись. Это финал — сделай так, чтобы было не стыдно показать.</em></p>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="какой проект выбран, почему, что было главным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="описание проекта, что сработало, что пришлось переделать..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="ключевые куски кода, структура модулей..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылка на проект</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылка на GitHub Pages, Netlify, или скриншоты..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">проект сдан</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="35-errors.html">← предыдущая</a>
+    <a class="btn" href="index.html">к оглавлению Web →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 36 · финал продвинутого JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-36";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ проект отмечен как сданный" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

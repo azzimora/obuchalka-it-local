@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>26. Асинхронность: что это и зачем · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 26 · продвинутый js</div>
+    <h1>Асинхронность: что это и зачем</h1>
+    <div class="subtitle">почему код иногда «ждёт» и как с этим жить</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>26
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>До этой темы весь JS, который мы писали, был <strong>синхронным</strong>. Это значит: код выполняется строка за строкой, сверху вниз. Каждая следующая строка ждёт, пока закончится предыдущая.</p>
+
+    <p>Для простых задач это нормально. Но есть вещи, которые занимают <em>время</em>:</p>
+    <ul>
+      <li>запрос к серверу (получить данные с сайта);</li>
+      <li>чтение файла с диска;</li>
+      <li>таймер («подожди 3 секунды»);</li>
+      <li>загрузка картинки.</li>
+    </ul>
+
+    <p>Если бы JS ждал каждую такую операцию, страница бы <strong>замирала</strong>. Кнопки не нажимались бы, анимации останавливались. Поэтому придумали <strong>асинхронность</strong>.</p>
+
+    <h3>Синхронный код: как это работает</h3>
+    <pre>console.log("1");
+console.log("2");
+console.log("3");</pre>
+    <p>Вывод:</p>
+    <pre>1
+2
+3</pre>
+    <p>Просто и предсказуемо. Каждая строка ждёт предыдущую.</p>
+
+    <h3>Что, если одна операция занимает время</h3>
+    <p>Представь, что вторая строка — это запрос к серверу, который идёт 2 секунды. Что будет?</p>
+    <pre>console.log("1");
+// ← здесь код ждёт 2 секунды, страница замерла
+console.log("2");
+console.log("3");</pre>
+    <p>Первая секунда — страница не отвечает. Кнопки не работают. Это <strong>плохо</strong>.</p>
+
+    <h3>Асинхронный код: как это работает</h3>
+    <p>Асинхронный JS не ждёт. Он <em>отправляет</em> задачу и идёт дальше, а когда результат готов — возвращается к нему.</p>
+
+    <p>Аналогия: ты заказываешь пиццу. Ты не стоишь у двери 30 минут — ты занимаешься своими делами, а когда курьер звонит, открываешь. Это асинхронность.</p>
+
+    <pre>console.log("1");
+
+setTimeout(() => {
+  console.log("2 (через 2 секунды)");
+}, 2000);
+
+console.log("3");</pre>
+
+    <p>Вывод:</p>
+    <pre>1
+3
+2 (через 2 секунды)</pre>
+
+    <p><strong>Обрати внимание:</strong> «3» вывелось <em>раньше</em>, чем «2», хотя в коде стоит позже. Потому что <code>setTimeout</code> не блокирует выполнение — он просто говорит: «через 2 секунды выполни вот это». А пока — код идёт дальше.</p>
+
+    <h3>Откуда взялось слово «асинхронный»</h3>
+    <p><strong>Синхронный</strong> — «в одно время». Всё по порядку, шаг за шагом.</p>
+    <p><strong>Асинхронный</strong> — «не в одно время». Код может отправить задачу и продолжить, не дожидаясь.</p>
+
+    <h3>Event Loop — как это устроено внутри</h3>
+    <p>У JS есть <strong>один поток</strong> — он может делать только одно дело за раз. Но есть <strong>Event Loop</strong> — механизм, который управляет очередью задач.</p>
+
+    <p>Упрощённо:</p>
+    <ul>
+      <li>Есть <strong>стек вызовов</strong> — где выполняется текущий код.</li>
+      <li>Есть <strong>очередь задач</strong> — где ждут асинхронные операции (таймеры, запросы).</li>
+      <li><strong>Event Loop</strong> следит: когда стек пуст, берёт первую задачу из очереди и выполняет её.</li>
+    </ul>
+
+    <pre>Стек: [console.log("1")]
+        ↓
+Стек пуст → Event Loop берёт из очереди
+        ↓
+Стек: [console.log("3")]
+        ↓
+Стек пуст → Event Loop берёт setTimeout
+        ↓
+Стек: [console.log("2 (через 2 секунды)")]</pre>
+
+    <p>Поэтому «3» выводится раньше «2»: <code>setTimeout</code> попадает в очередь, а не выполняется сразу.</p>
+
+    <h3>Где это встречается в реальной жизни</h3>
+    <ul>
+      <li><strong>fetch</strong> — запрос к серверу. Нельзя ждать, пока сервер ответит, иначе страница замрёт.</li>
+      <li><strong>setTimeout / setInterval</strong> — таймеры.</li>
+      <li><strong>addEventListener</strong> — обработчики кликов. Они <em>тоже</em> асинхронны: код не ждёт, когда ты кликнешь, он просто «слушает».</li>
+      <li><strong>localStorage</strong> — синхронный, но быстрый. А вот <strong>IndexedDB</strong> — уже асинхронный.</li>
+      <li><strong>Загрузка картинок и файлов</strong> — асинхронная.</li>
+    </ul>
+
+    <h3>Почему об этом важно знать</h3>
+    <p>Когда начнёшь работать с <code>fetch</code> (а это будет уже в теме 30), код будет выглядеть так:</p>
+
+    <pre>fetch("https://api.example.com/data")
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  });
+
+console.log("это выведется раньше!");</pre>
+
+    <p>Без понимания асинхронности это выглядит как магия. С пониманием — логично: <code>fetch</code> отправил запрос, пошёл дальше, а когда данные пришли — вызвал <code>.then()</code>.</p>
+
+    <h3>Что мы будем изучать дальше</h3>
+    <ul>
+      <li><strong>Тема 27</strong> — setTimeout и setInterval: таймеры.</li>
+      <li><strong>Тема 28</strong> — Promise: как работать с результатом, который будет позже.</li>
+      <li><strong>Тема 29</strong> — async / await: современный способ писать асинхронный код.</li>
+      <li><strong>Тема 30</strong> — fetch: запросы к серверу.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Синхронный код — строка за строкой. Асинхронный — не ждёт.</li>
+      <li>Асинхронность нужна, чтобы страница не замирала на время долгих операций.</li>
+      <li>setTimeout, fetch, addEventListener — асинхронные.</li>
+      <li>Event Loop управляет очередью задач: когда стек пуст, берёт следующую.</li>
+      <li>Асинхронный код может выполняться <em>не в том порядке</em>, в каком написан.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>увидеть своими глазами, что асинхронный код работает не по порядку</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>async-intro.html</code> с обычным каркасом. Внизу перед <code>&lt;/body&gt;</code> — <code>&lt;script&gt;</code>.</li>
+      <li>Открой страницу в браузере, нажми <strong>F12 → Console</strong>.</li>
+      <li><strong>Задание 1 — простой порядок.</strong> Напиши:
+        <pre>console.log("1");
+console.log("2");
+console.log("3");</pre>
+        Запиши, что вывелось. Убедись, что порядок 1, 2, 3.
+      </li>
+      <li><strong>Задание 2 — с таймером.</strong> Замени код на:
+        <pre>console.log("1");
+
+setTimeout(() => {
+  console.log("2 — через 2 секунды");
+}, 2000);
+
+console.log("3");</pre>
+        Запиши, в каком порядке вывелись строки. Подумай, почему «3» раньше «2».
+      </li>
+      <li><strong>Задание 3 — таймер 0 секунд.</strong> Замени <code>2000</code> на <code>0</code>:
+        <pre>console.log("1");
+
+setTimeout(() => {
+  console.log("2 — setTimeout с 0");
+}, 0);
+
+console.log("3");</pre>
+        Запиши, в каком порядке вывелись строки. <em>Сюрприз:</em> «2» всё равно выведется <strong>после</strong> «3», хотя задержка 0. Почему? Потому что <code>setTimeout</code> всегда попадает в очередь и ждёт, пока стек освободится. Запиши это в конспект.
+      </li>
+      <li><strong>Задание 4 — сравни с обычной функцией.</strong> Напиши:
+        <pre>function slow() {
+  console.log("начало");
+  // ничего тяжёлого, просто функция
+  console.log("конец");
+}
+
+console.log("A");
+slow();
+console.log("B");</pre>
+        Запиши порядок. Теперь замени вызов <code>slow()</code> на:
+        <pre>setTimeout(slow, 1000);</pre>
+        Запиши порядок. Сравни.
+      </li>
+      <li><strong>Задание 5 — подумай.</strong> Ответь на вопросы в конспекте:
+        <ul>
+          <li>Что такое синхронный код?</li>
+          <li>Что такое асинхронный код?</li>
+          <li>Почему «3» выводится раньше «2» в примере с setTimeout?</li>
+          <li>Почему нельзя сделать весь код синхронным?</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="порядок вывода в заданиях, что удивило..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="примеры кода из заданий, которые хочется сохранить..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="25-js-project.html">← предыдущая</a>
+    <a class="btn" href="27-timers.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 26 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-26";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

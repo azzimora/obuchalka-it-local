@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03. Списки в HTML · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 03</div>
+    <h1>Списки в HTML</h1>
+    <div class="subtitle">маркированные, нумерованные и вложенные</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>03
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Списки — один из самых частых элементов на любой странице. Меню, шаги, перечисления, оглавления — всё это списки. В HTML есть три вида.</p>
+
+    <h3>1. Маркированный список — <code>&lt;ul&gt;</code></h3>
+    <p><em>ul</em> = unordered list (неупорядоченный). Каждый пункт — <code>&lt;li&gt;</code> (list item).</p>
+    <pre>&lt;ul&gt;
+  &lt;li&gt;яблоко&lt;/li&gt;
+  &lt;li&gt;груша&lt;/li&gt;
+  &lt;li&gt;слива&lt;/li&gt;
+&lt;/ul&gt;</pre>
+    <p>Браузер нарисует точки перед пунктами.</p>
+
+    <h3>2. Нумерованный список — <code>&lt;ol&gt;</code></h3>
+    <p><em>ol</em> = ordered list (упорядоченный). Всё то же самое, но с цифрами.</p>
+    <pre>&lt;ol&gt;
+  &lt;li&gt;проснуться&lt;/li&gt;
+  &lt;li&gt;умыться&lt;/li&gt;
+  &lt;li&gt;сделать зарядку&lt;/li&gt;
+&lt;/ol&gt;</pre>
+
+    <h3>3. Вложенные списки</h3>
+    <p>Список можно вложить в список. Например, пункт «фрукты» содержит подпункты:</p>
+    <pre>&lt;ul&gt;
+  &lt;li&gt;фрукты
+    &lt;ul&gt;
+      &lt;li&gt;яблоко&lt;/li&gt;
+      &lt;li&gt;груша&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;овощи
+    &lt;ul&gt;
+      &lt;li&gt;морковь&lt;/li&gt;
+      &lt;li&gt;капуста&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</pre>
+    <p><strong>Важно:</strong> вложенный <code>&lt;ul&gt;</code> живёт <em>внутри</em> <code>&lt;li&gt;</code>, а не между <code>&lt;li&gt;</code>.</p>
+
+    <h3>Мелочи, которые пригодятся</h3>
+    <ul>
+      <li>У <code>&lt;ol&gt;</code> можно сменить тип нумерации через атрибут: <code>&lt;ol type="A"&gt;</code> — заглавные буквы, <code>type="I"</code> — римские цифры.</li>
+      <li>Можно начать нумерацию не с единицы: <code>&lt;ol start="5"&gt;</code>.</li>
+      <li>У <code>&lt;ul&gt;</code> тип маркера меняется через CSS, не через HTML.</li>
+    </ul>
+
+    <p><strong>Правило:</strong> внутри <code>&lt;ul&gt;</code> и <code>&lt;ol&gt;</code> могут лежать <em>только</em> <code>&lt;li&gt;</code>. Не текст напрямую, не другие теги — только пункты.</p>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>научиться строить списки любой сложности</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>lists.html</code> с обычным каркасом.</li>
+      <li>Сделай <strong>маркированный список</strong> из 5 любимых книг / фильмов / игр.</li>
+      <li>Сделай <strong>нумерованный список</strong> из 5 шагов какого-нибудь рецепта или утреннего ритуала.</li>
+      <li>Сделай <strong>вложенный список</strong>: например, «музыка» с подпунктами жанров, «учёба» с подпунктами предметов.</li>
+      <li>Поиграй с атрибутами: сделай <code>&lt;ol type="A"&gt;</code> и <code>&lt;ol start="10"&gt;</code>, посмотри разницу.</li>
+      <li><strong>Проверка на внимательность:</strong> попробуй написать текст прямо внутри <code>&lt;ul&gt;</code>, без <code>&lt;li&gt;</code>. Посмотри, что будет — и запомни это правило.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="02-special-symbols.html">← предыдущая</a>
+    <a class="btn" href="04-links-images.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 03 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-03";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>21. JavaScript — основы · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 21</div>
+    <h1>JavaScript — основы</h1>
+    <div class="subtitle">переменные, типы, условия, циклы, функции</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>21
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>HTML — структура, CSS — внешность, <strong>JavaScript</strong> — поведение. Это язык программирования, который делает страницу живой: реагирует на клики, считает, меняет содержимое, общается с сервером.</p>
+
+    <p>Это не «разметка», как HTML, и не «стили», как CSS. Это полноценный язык, и учиться ему — как учиться новому разговору.</p>
+
+    <h3>Как подключить</h3>
+    <p>Внутри HTML, перед закрывающим <code>&lt;/body&gt;</code>:</p>
+    <pre>&lt;script&gt;
+  console.log("привет");
+&lt;/script&gt;</pre>
+    <p>Или отдельным файлом (правильно для проектов):</p>
+    <pre>&lt;script src="js/script.js"&gt;&lt;/script&gt;</pre>
+    <p><strong>Важно:</strong> скрипт подключается в конце <code>&lt;body&gt;</code>, а не в <code>&lt;head&gt;</code> — чтобы HTML успел загрузиться до того, как JS начнёт с ним работать.</p>
+
+    <h3>console.log — твой лучший друг</h3>
+    <p>Выводит что угодно в консоль браузера (F12 → Console). Это способ «посмотреть, что происходит внутри».</p>
+    <pre>console.log("привет, мир");
+console.log(2 + 2);</pre>
+
+    <h3>Переменные</h3>
+    <p>Контейнеры для значений. Два ключевых слова:</p>
+    <pre>let age = 17;        // можно менять
+const name = "Аня";  // нельзя переприсвоить</pre>
+    <p>Правило современного JS: <strong>по умолчанию используй <code>const</code></strong>, а <code>let</code> — только если значение будет меняться. Старое <code>var</code> не используй.</p>
+
+    <h3>Типы данных</h3>
+    <ul>
+      <li><strong>string</strong> — строка: <code>"привет"</code>, <code>'JS'</code>, <code>`шаблон`</code>;</li>
+      <li><strong>number</strong> — число: <code>42</code>, <code>3.14</code>, <code>-7</code>;</li>
+      <li><strong>boolean</strong> — <code>true</code> / <code>false</code>;</li>
+      <li><strong>null</strong> — «пусто, но намеренно»;</li>
+      <li><strong>undefined</strong> — «значение не задано»;</li>
+      <li><strong>object</strong> — объект: <code>{ name: "Аня", age: 17 }</code>;</li>
+      <li><strong>array</strong> — массив: <code>[1, 2, 3]</code>.</li>
+    </ul>
+
+    <h3>Шаблонные строки</h3>
+    <p>Обратные кавычки позволяют вставлять значения прямо в текст:</p>
+    <pre>const name = "Аня";
+console.log(`Привет, ${name}!`);</pre>
+    <p>Гораздо удобнее, чем склеивать через <code>+</code>.</p>
+
+    <h3>Операторы</h3>
+    <ul>
+      <li>Арифметика: <code>+ - * / %</code> (<code>%</code> — остаток от деления);</li>
+      <li>Сравнение: <code>===</code> (строгое равно), <code>!==</code>, <code>&gt;</code>, <code>&lt;</code>;</li>
+      <li>Логика: <code>&amp;&amp;</code> (и), <code>||</code> (или), <code>!</code> (не).</li>
+    </ul>
+    <p><strong>Всегда используй <code>===</code>, а не <code>==</code></strong> — второе делает странные преобразования типов.</p>
+
+    <h3>Условия</h3>
+    <pre>if (age >= 18) {
+  console.log("совершеннолетний");
+} else if (age >= 14) {
+  console.log("подросток");
+} else {
+  console.log("ребёнок");
+}</pre>
+
+    <p>Тернарный оператор — короткая запись:</p>
+    <pre>const status = age >= 18 ? "взрослый" : "ребёнок";</pre>
+
+    <h3>Циклы</h3>
+    <p><strong>for</strong> — когда знаешь, сколько раз:</p>
+    <pre>for (let i = 0; i &lt; 5; i++) {
+  console.log(i); // 0, 1, 2, 3, 4
+}</pre>
+
+    <p><strong>while</strong> — пока условие истинно:</p>
+    <pre>let i = 0;
+while (i &lt; 5) {
+  console.log(i);
+  i++;
+}</pre>
+
+    <p><strong>for...of</strong> — пройтись по массиву:</p>
+    <pre>const fruits = ["яблоко", "груша", "слива"];
+for (const fruit of fruits) {
+  console.log(fruit);
+}</pre>
+
+    <h3>Функции</h3>
+    <p>Кусок кода, который можно вызвать по имени.</p>
+
+    <p><strong>Обычная функция:</strong></p>
+    <pre>function greet(name) {
+  return `Привет, ${name}!`;
+}
+console.log(greet("Аня"));</pre>
+
+    <p><strong>Стрелочная функция</strong> (современный стиль):</p>
+    <pre>const greet = (name) => `Привет, ${name}!`;</pre>
+    <p>Если одно выражение — можно без <code>return</code> и без фигурных скобок. Если один параметр — можно без круглых.</p>
+
+    <p><strong>Функция без параметров:</strong></p>
+    <pre>const sayHi = () => console.log("привет");</pre>
+
+    <h3>Массивы</h3>
+    <pre>const nums = [1, 2, 3, 4, 5];
+console.log(nums.length);    // 5
+console.log(nums[0]);        // 1
+nums.push(6);                // добавить в конец
+nums.pop();                  // убрать последний</pre>
+
+    <p>Методы, которые используются постоянно:</p>
+    <ul>
+      <li><code>map</code> — преобразовать каждый элемент;</li>
+      <li><code>filter</code> — оставить только подходящие;</li>
+      <li><code>find</code> — найти один;</li>
+      <li><code>forEach</code> — пройтись по всем;</li>
+      <li><code>includes</code> — проверить наличие.</li>
+    </ul>
+    <pre>const nums = [1, 2, 3, 4, 5];
+const doubled = nums.map(n => n * 2);        // [2, 4, 6, 8, 10]
+const even = nums.filter(n => n % 2 === 0);  // [2, 4]</pre>
+
+    <h3>Объекты</h3>
+    <pre>const user = {
+  name: "Аня",
+  age: 17,
+  city: "Москва"
+};
+console.log(user.name);
+user.age = 18; // можно менять свойства</pre>
+
+    <h3>Что важно запомнить</h3>
+    <ul>
+      <li><code>const</code> по умолчанию, <code>let</code> если меняется;</li>
+      <li><code>===</code> вместо <code>==</code>;</li>
+      <li><code>console.log()</code> — твой способ смотреть внутрь;</li>
+      <li>Шаблонные строки через обратные кавычки <code>`...${...}`</code>;</li>
+      <li>Стрелочные функции — современный стиль;</li>
+      <li><code>map</code>, <code>filter</code>, <code>find</code>, <code>forEach</code> — выучи наизусть.</li>
+    </ul>
+
+    <p><strong>И главное:</strong> JS невозможно выучить «читая». Только писать. Открывай консоль F12 и пробуй каждую строчку из этой темы руками. Это в 10 раз эффективнее, чем просто читать.</p>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>познакомиться с JS руками через консоль</strong>. Пока без HTML — только чистый язык.</p>
+
+    <ul>
+      <li>Создай файл <code>js-basics.html</code> с обычным каркасом. Внизу перед <code>&lt;/body&gt;</code> — <code>&lt;script&gt;</code> блок.</li>
+      <li>Открой страницу в браузере, нажми <strong>F12 → Console</strong>. Это твоя рабочая среда.</li>
+      <li><strong>Упражнение 1 — переменные:</strong>
+        <pre>const name = "твоё имя";
+let age = твой возраст;
+console.log(`Меня зовут ${name}, мне ${age} лет`);</pre>
+      </li>
+      <li><strong>Упражнение 2 — вычисления:</strong> посчитай <code>2 + 2</code>, <code>10 % 3</code>, <code>2 ** 8</code> (степень). Выведи в консоль.</li>
+      <li><strong>Упражнение 3 — условия:</strong> напиши <code>if</code>, который проверяет возраст и выводит «ребёнок / подросток / взрослый». Поиграй со значением age.</li>
+      <li><strong>Упражнение 4 — цикл:</strong> выведи в консоль числа от 1 до 20 через <code>for</code>. Потом — только чётные.</li>
+      <li><strong>Упражнение 5 — функция:</strong> напиши функцию <code>sum(a, b)</code>, которая возвращает сумму. Вызови её с разными числами.</li>
+      <li><strong>Упражнение 6 — массив:</strong> сделай массив из 5 чисел. Найди сумму через <code>forEach</code>. Потом сделай новый массив с удвоенными через <code>map</code>.</li>
+      <li><strong>Упражнение 7 — filter:</strong> из массива чисел оставь только те, что больше 10.</li>
+      <li><strong>Упражнение 8 — объект:</strong> сделай объект <code>me</code> с полями имя, возраст, город, любимый язык. Выведи красивой строкой через шаблонные кавычки.</li>
+      <li><strong>Главное:</strong> в консоли можно писать код прямо руками. Попробуй <code>2 + 2</code>, <code>"a" + "b"</code>, <code>[1,2,3].length</code>. Играйся — это лучший способ понять.</li>
+      <li><strong>Бонус — FizzBuzz:</strong> классическая задача. Выведи числа от 1 до 30. Если число делится на 3 — «Fizz», на 5 — «Buzz», на 15 — «FizzBuzz», иначе — само число. Если получится — ты уже программист.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="20-multipage.html">← предыдущая</a>
+    <a class="btn" href="22-js-dom.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 21 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-21";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

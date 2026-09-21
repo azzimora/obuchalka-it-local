@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>28. Promise: обещания · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 28 · продвинутый js</div>
+    <h1>Promise: обещания</h1>
+    <div class="subtitle">как работать с результатом, который будет позже</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>28
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p><strong>Promise</strong> (обещание) — это объект, который представляет результат операции, которая ещё не завершилась, но завершится в будущем.</p>
+
+    <p><em>Аналогия:</em> ты заказала пиццу. Курьер сказал: «привезу через 30 минут». Это обещание. Оно ещё не выполнено, но ты знаешь: либо привезут, либо нет. Ты можешь заниматься своими делами, а когда курьер позвонит — отреагировать.</p>
+
+    <p>Promise работает так же: функция запускает долгую операцию, сразу возвращает «обещание», а ты можешь «подписаться» — что делать, когда результат придёт.</p>
+
+    <h3>Три состояния Promise</h3>
+    <ul>
+      <li><strong>pending</strong> — «в процессе». Ещё ничего неизвестно.</li>
+      <li><strong>fulfilled</strong> — «выполнено». Всё получилось, есть результат.</li>
+      <li><strong>rejected</strong> — «отклонено». Что-то пошло не так, есть ошибка.</li>
+    </ul>
+
+    <p>Promise может перейти только из pending в fulfilled <em>или</em> rejected — один раз. Назад пути нет.</p>
+
+    <h3>Создание Promise</h3>
+    <pre>const promise = new Promise((resolve, reject) => {
+  // тут делаем что-то долгое
+  const success = true;
+  
+  if (success) {
+    resolve("всё ок");        // выполнено
+  } else {
+    reject("что-то сломалось"); // отклонено
+  }
+});</pre>
+
+    <p><code>resolve</code> — вызов, когда всё хорошо. <code>reject</code> — когда ошибка. Обе — функции, которые передаются автоматически.</p>
+
+    <h3>Как получить результат: .then() и .catch()</h3>
+    <pre>promise
+  .then(result => {
+    console.log("успех:", result);  // "всё ок"
+  })
+  .catch(error => {
+    console.log("ошибка:", error);
+  });</pre>
+
+    <p><code>.then()</code> — что делать при успехе. <code>.catch()</code> — что делать при ошибке. <code>.finally()</code> — что делать в любом случае (необязательно).</p>
+
+    <h3>Пример: таймер как Promise</h3>
+    <pre>function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(`прошло ${ms} миллисекунд`);
+    }, ms);
+  });
+}
+
+wait(2000).then(message => {
+  console.log(message);  // "прошло 2000 миллисекунд"
+});</pre>
+
+    <p>Функция <code>wait</code> возвращает Promise. Мы «подписываемся» через <code>.then()</code> — и получаем результат, когда он готов.</p>
+
+    <h3>Цепочки .then()</h3>
+    <p>Promise можно выстраивать в цепочку. Каждый <code>.then()</code> возвращает новый Promise.</p>
+
+    <pre>wait(1000)
+  .then(() => {
+    console.log("шаг 1");
+    return wait(1000);
+  })
+  .then(() => {
+    console.log("шаг 2");
+    return wait(1000);
+  })
+  .then(() => {
+    console.log("шаг 3 — готово");
+  });</pre>
+
+    <p>Код выполнится по очереди: 1 секунда → «шаг 1», ещё 1 секунда → «шаг 2», ещё 1 секунда → «шаг 3».</p>
+
+    <h3>Promise.all() и Promise.race()</h3>
+
+    <p><strong>Promise.all()</strong> — ждёт, когда <em>все</em> Promise завершатся, потом отдаёт массив результатов.</p>
+    <pre>Promise.all([wait(1000), wait(2000), wait(1500)])
+  .then(results => {
+    console.log(results);
+    // все три закончились, время — 2 секунды (самый долгий)
+  });</pre>
+    <p>Работает параллельно. Если хотя бы один Promise отклонён — <code>all</code> тоже отклоняется.</p>
+
+    <p><strong>Promise.race()</strong> — отдаёт результат <em>первого</em> завершившегося Promise.</p>
+    <pre>Promise.race([wait(1000), wait(2000)])
+  .then(result => {
+    console.log(result);  // "прошло 1000 миллисекунд"
+  });</pre>
+
+    <h3>Promise в реальной жизни</h3>
+    <p>Самый частый пример — <strong>fetch</strong> для запросов к серверу. Он возвращает Promise:</p>
+
+    <pre>fetch("https://api.example.com/data")
+  .then(response => response.json())
+  .then(data => {
+    console.log("данные:", data);
+  })
+  .catch(error => {
+    console.log("ошибка:", error);
+  });</pre>
+
+    <p>Это будет тема 30. Пока просто знай: <code>fetch</code> — это Promise.</p>
+
+    <h3>Главное правило</h3>
+    <p>Promise — это <strong>не сам результат</strong>, это <em>обещание</em> результата. Ты не можешь «прочитать» значение Promise сразу. Ты только подписываешься: «когда придёт — сделай вот это».</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Promise — объект, представляющий результат будущей операции.</li>
+      <li>Три состояния: pending → fulfilled / rejected.</li>
+      <li>Создаётся через <code>new Promise((resolve, reject) => ...)</code>.</li>
+      <li>Результат получается через <code>.then()</code>, ошибка — через <code>.catch()</code>.</li>
+      <li>Цепочки <code>.then()</code> выполняются по порядку.</li>
+      <li><code>Promise.all()</code> — все сразу, <code>Promise.race()</code> — первый завершившийся.</li>
+      <li>fetch возвращает Promise — это основа работы с API.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>поработать с Promise руками</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>promises.html</code> с обычным каркасом. Открой, F12 → Console.</li>
+      <li><strong>Задание 1 — простой Promise.</strong> Напиши:
+        <pre>const p = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("готово"), 2000);
+});
+
+p.then(result => console.log(result));</pre>
+        Убедись, что «готово» появляется через 2 секунды.
+      </li>
+      <li><strong>Задание 2 — с ошибкой.</strong> Сделай Promise, который через 1 секунду отклоняется с сообщением «что-то пошло не так». Обработай через <code>.catch()</code>.</li>
+      <li><strong>Задание 3 — функция wait.</strong> Напиши функцию <code>wait(ms)</code>, которая возвращает Promise, разрешающийся через <code>ms</code> миллисекунд. Используй её в трёх разных вызовах.</li>
+      <li><strong>Задание 4 — цепочка.</strong> Выстрой цепочку из трёх <code>wait</code> по 1 секунде каждый. В каждом <code>.then()</code> выводи номер шага. Убедись, что порядок правильный.</li>
+      <li><strong>Задание 5 — Promise.all.</strong> Запусти параллельно <code>wait(1000)</code>, <code>wait(2000)</code>, <code>wait(1500)</code> через <code>Promise.all</code>. Засеки время — должно быть около 2 секунд, а не 4.5. Подумай, почему.</li>
+      <li><strong>Задание 6 — мини-проект.</strong> Сделай на странице кнопку. При клике показывается «загрузка...», через 2 секунды меняется на «готово». Используй Promise.
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="примеры с Promise, цепочки, Promise.all..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="27-timers.html">← предыдущая</a>
+    <a class="btn" href="29-async-await.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 28 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-28";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

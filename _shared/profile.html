@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мой кабинет · обучалка</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .cabinet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 20px;
+  }
+  @media (max-width: 900px) {
+    .cabinet { grid-template-columns: 1fr; }
+  }
+
+  /* ── карточки ── */
+  .card-block {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-block::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--pink), var(--purple));
+  }
+
+  /* ── профиль ── */
+  .avatar-block {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+  .avatar {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--pink);
+    object-fit: cover;
+    background: var(--bg-soft);
+    flex-shrink: 0;
+    box-shadow: 0 0 20px var(--pink-glow);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .avatar:hover { transform: scale(1.05); }
+  .avatar-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .field input, .field textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+  .field input:focus, .field textarea:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 3px var(--pink-glow);
+  }
+
+  /* ── помодоро ── */
+  .deco {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.35;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .deco img {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--line);
+  }
+  .deco-text {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: var(--pink-soft);
+    letter-spacing: 1px;
+    text-transform: lowercase;
+    line-height: 1.2;
+  }
+  .card-block:hover .deco { opacity: 0.7; }
+
+  .timer-ring {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 20px auto 16px;
+  }
+  .timer-ring svg {
+    transform: rotate(-90deg);
+    width: 200px;
+    height: 200px;
+  }
+  .ring-bg { stroke: rgba(255,255,255,0.06); }
+  .ring-fg {
+    stroke: url(#timerGrad);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s linear;
+  }
+  .timer-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .timer-time {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--pink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-mode {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .timer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-p {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--pink-soft);
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-p:hover {
+    border-color: var(--pink);
+    background: var(--card-hover);
+    box-shadow: 0 0 12px var(--pink-glow);
+  }
+  .btn-p.primary {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #1a0f1d;
+    font-weight: 600;
+    border-color: var(--pink);
+  }
+
+  .timer-settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+  }
+  .timer-settings label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .timer-settings input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  .timer-settings input:focus { border-color: var(--pink); }
+
+  /* ── статистика ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--pink);
+    line-height: 1.2;
+  }
+  .stat-label {
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .progress-line { margin-bottom: 16px; }
+  .progress-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--pink), var(--purple));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--pink-glow);
+  }
+  .progress-text {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── календарь активности ── */
+  .calendar-title {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .calendar-title span:last-child {
+    color: var(--pink-soft);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.72rem;
+  }
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .day {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    transition: all 0.2s;
+    position: relative;
+    cursor: help;
+  }
+  .day:hover {
+    transform: scale(1.3);
+    border-color: var(--pink);
+    z-index: 2;
+  }
+  .day.level-1 { background: rgba(255,142,199,0.2); border-color: rgba(255,142,199,0.3); }
+  .day.level-2 { background: rgba(255,142,199,0.5); border-color: rgba(255,142,199,0.6); }
+  .day.level-3 { background: rgba(255,142,199,0.85); border-color: var(--pink); }
+  .day.level-4 { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); }
+  .day.today {
+    border: 2px solid var(--pink-soft);
+    box-shadow: 0 0 8px var(--pink-glow);
+  }
+
+  /* ── бэкап ── */
+  .backup-block {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--line);
+  }
+  .backup-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .backup-info {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .backup-info.warn { color: var(--warn); }
+  .backup-info.ok { color: var(--ok); }
+
+  /* напоминание сверху */
+  .backup-reminder {
+    display: none;
+    background: rgba(255,209,142,0.1);
+    border: 1px solid var(--warn);
+    border-left: 3px solid var(--warn);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+    color: var(--text);
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .backup-reminder.show { display: flex; }
+
+  #avatarInput, #importBackup { display: none; }
+
+    /* ── мои материалы ── */
+  .mat-item {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .mat-item:hover { border-color: rgba(255,142,199,0.4); }
+  .mat-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mat-num {
+    font-family: monospace;
+    font-size: 0.72rem;
+    color: var(--pink);
+    font-weight: 700;
+    min-width: 28px;
+  }
+  .mat-title { flex: 1; font-size: 0.9rem; }
+  .mat-icons {
+    display: flex;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .mat-icons span.on { color: var(--pink); }
+  .mat-arrow {
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: transform 0.3s;
+    width: 16px;
+    text-align: center;
+  }
+  .mat-item.open .mat-arrow { transform: rotate(90deg); color: var(--pink); }
+  .mat-body {
+    display: none;
+    padding: 0 16px 14px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .mat-item.open .mat-body { display: block; }
+  .mat-section { margin-bottom: 12px; }
+  .mat-section:last-child { margin-bottom: 0; }
+  .mat-label {
+    font-size: 0.68rem;
+    color: var(--pink-soft);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+  }
+  .mat-text {
+    white-space: pre-wrap;
+    color: var(--text);
+    font-size: 0.86rem;
+    padding: 8px 10px;
+    background: var(--bg);
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+  .mat-link {
+    color: var(--ok);
+    text-decoration: none;
+    display: block;
+    padding: 2px 0;
+    font-size: 0.82rem;
+    word-break: break-all;
+  }
+  .mat-link:hover { text-decoration: underline; }
+  .mat-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px 20px;
+    font-size: 0.88rem;
+  }
+  .mat-modified {
+    font-size: 0.68rem;
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="badge">мой кабинет</div>
+    <h1>Мой кабинет</h1>
+    <div class="subtitle">профиль · помодоро · статистика</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>мой кабинет
+  </div>
+
+  <!-- напоминание о бэкапе -->
+  <div class="backup-reminder" id="backupReminder">
+    <span id="backupReminderText">давно не сохраняла бэкап</span>
+    <div style="display:flex; gap:8px;">
+      <button class="btn" id="reminderSave">сохранить сейчас</button>
+      <button class="btn" id="reminderLater">потом</button>
+    </div>
+  </div>
+
+  <div class="cabinet">
+
+    <!-- ЛЕВАЯ: ПРОФИЛЬ -->
+    <div class="card-block">
+      <div class="avatar-block">
+        <div>
+          <img class="avatar" id="avatar" src="" alt="аватар">
+          <div class="avatar-hint">клик — сменить</div>
+        </div>
+        <div style="flex: 1;">
+          <div class="field">
+            <label class="field-label">имя</label>
+            <input id="userName" type="text" placeholder="как тебя зовут?" maxlength="40">
+          </div>
+        </div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*">
+
+      <div class="field">
+        <label class="field-label">о себе</label>
+        <textarea id="userAbout" rows="2" placeholder="пара слов о себе, о цели учёбы..." maxlength="200"></textarea>
+      </div>
+    </div>
+
+    <!-- ПРАВАЯ: ПОМОДОРО -->
+    <div class="card-block">
+      <div class="deco">
+        <img src="https://i.pinimg.com/736x/17/13/6b/17136bde00fdc0d61ab2c894cca3bedd.jpg" alt="">
+        <div class="deco-text">hello,<br>world</div>
+      </div>
+
+      <div class="timer-ring">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff8ec7"/>
+              <stop offset="100%" stop-color="#c77dff"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="100" cy="100" r="90" fill="none" stroke-width="7"/>
+          <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90" fill="none" stroke-width="7"
+                  stroke-dasharray="565.49" stroke-dashoffset="565.49"/>
+        </svg>
+        <div class="timer-center">
+          <div class="timer-time" id="timerTime">25:00</div>
+          <div class="timer-mode" id="timerMode">работа</div>
+        </div>
+      </div>
+
+      <div class="timer-buttons">
+        <button class="btn-p primary" id="btnStart">старт</button>
+        <button class="btn-p" id="btnPause">пауза</button>
+        <button class="btn-p" id="btnReset">сброс</button>
+      </div>
+
+      <div class="timer-settings">
+        <div>
+          <label>работа (мин)</label>
+          <input id="inputWork" type="number" min="1" max="120" value="25">
+        </div>
+        <div>
+          <label>перерыв (мин)</label>
+          <input id="inputBreak" type="number" min="1" max="60" value="5">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- СТАТИСТИКА -->
+  <div class="card-block" style="margin-top: 24px;">
+    <div style="font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 16px;">◈ статистика</div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-num" id="statStreak">0</div>
+        <div class="stat-label">дней подряд</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statPomos">0</div>
+        <div class="stat-label">помидоров всего</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statMinutes">0</div>
+        <div class="stat-label">минут в работе</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statDays">0</div>
+        <div class="stat-label">дней занятий</div>
+      </div>
+    </div>
+
+    <div class="progress-line">
+      <div class="progress-bar"><div class="progress-fill" id="profProgressFill"></div></div>
+      <div class="progress-text" id="profProgressText">0 / 33 пройдено</div>
+    </div>
+
+    <div class="calendar-title">
+      <span>◈ активность за 30 дней</span>
+      <span id="calendarSummary">0 дней</span>
+    </div>
+    <div class="calendar" id="calendar"></div>
+  </div>
+
+  <!-- БЭКАП -->
+  <div class="card-block" style="margin-top: 24px;">
+    <div style="font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px;">◈ бэкап</div>
+    <div class="backup-info" id="backupInfo">последний бэкап: никогда</div>
+    <div class="backup-buttons">
+      <button class="btn" id="btnExport">↓ сохранить backup</button>
+      <button class="btn" id="btnImport">↑ импорт backup</button>
+      <input type="file" id="importBackup" accept=".json">
+    </div>
+  </div>
+  <!-- МОИ МАТЕРИАЛЫ -->
+  <div class="card-block" style="margin-top: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+      <div style="font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase;">◈ мои материалы</div>
+      <button class="btn" id="btnExportTxt">↓ скачать всё в TXT</button>
+    </div>
+    <div id="materialsList"></div>
+  </div>
+
+  <div class="footer">
+    <span class="mark">◈</span> всё сохраняется локально · не забудь делать бэкап <span class="mark">◈</span>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   ПРОФИЛЬ
+   ═══════════════════════════════════════════ */
+const PROFILE_KEY = "local-adaptation-profile";
+
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { name: "", about: "", avatar: "" };
+}
+function saveProfile(p) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch {}
+}
+
+let profile = loadProfile();
+
+const avatarEl = document.getElementById("avatar");
+const avatarInput = document.getElementById("avatarInput");
+const userNameEl = document.getElementById("userName");
+const userAboutEl = document.getElementById("userAbout");
+
+const DEFAULT_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
+    <rect width="90" height="90" fill="#1e1224"/>
+    <circle cx="45" cy="35" r="16" fill="#ff8ec7" opacity="0.7"/>
+    <ellipse cx="45" cy="72" rx="24" ry="14" fill="#c77dff" opacity="0.7"/>
+  </svg>`
+);
+
+function renderProfile() {
+  avatarEl.src = profile.avatar || DEFAULT_AVATAR;
+  userNameEl.value = profile.name || "";
+  userAboutEl.value = profile.about || "";
+}
+
+avatarEl.addEventListener("click", () => avatarInput.click());
+
+avatarInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) { toast("◦ нужна картинка"); return; }
+  compressImage(file, 400, 0.85).then(dataUrl => {
+    profile.avatar = dataUrl;
+    saveProfile(profile);
+    renderProfile();
+    toast("◦ аватар обновлён");
+  }).catch(() => toast("◦ не получилось обработать файл"));
+});
+
+function compressImage(file, maxSize, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = Math.round(height * maxSize / width);
+            width = maxSize;
+          } else {
+            width = Math.round(width * maxSize / height);
+            height = maxSize;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+let saveTimer;
+function autoSaveProfile() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    profile.name = userNameEl.value.trim();
+    profile.about = userAboutEl.value.trim();
+    saveProfile(profile);
+    toast("◦ сохранено");
+  }, 500);
+}
+userNameEl.addEventListener("input", autoSaveProfile);
+userAboutEl.addEventListener("input", autoSaveProfile);
+
+/* ═══════════════════════════════════════════
+   ПОМОДОРО
+   ═══════════════════════════════════════════ */
+const POMO_KEY = "local-adaptation-pomodoro";
+
+function loadPomo() {
+  try {
+    const raw = localStorage.getItem(POMO_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { work: 25, break: 5 };
+}
+function savePomo() {
+  try { localStorage.setItem(POMO_KEY, JSON.stringify(pomo)); } catch {}
+}
+
+let pomo = loadPomo();
+
+const inputWork = document.getElementById("inputWork");
+const inputBreak = document.getElementById("inputBreak");
+inputWork.value = pomo.work;
+inputBreak.value = pomo.break;
+
+inputWork.addEventListener("change", () => {
+  pomo.work = Math.max(1, Math.min(120, Number(inputWork.value) || 25));
+  inputWork.value = pomo.work;
+  savePomo();
+  if (!running) resetTimer();
+});
+inputBreak.addEventListener("change", () => {
+  pomo.break = Math.max(1, Math.min(60, Number(inputBreak.value) || 5));
+  inputBreak.value = pomo.break;
+  savePomo();
+});
+
+let running = false;
+let mode = "work";
+let timeLeft = pomo.work * 60;
+let intervalId = null;
+
+const timerTime = document.getElementById("timerTime");
+const timerMode = document.getElementById("timerMode");
+const ringFg = document.getElementById("ringFg");
+const CIRC = 2 * Math.PI * 90;
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function updateTimerDisplay() {
+  timerTime.textContent = formatTime(timeLeft);
+  timerMode.textContent = mode === "work" ? "работа" : "перерыв";
+  const total = (mode === "work" ? pomo.work : pomo.break) * 60;
+  const offset = CIRC - (CIRC * (timeLeft / total));
+  ringFg.style.strokeDashoffset = offset;
+}
+
+function resetTimer() {
+  running = false;
+  clearInterval(intervalId);
+  intervalId = null;
+  mode = "work";
+  timeLeft = pomo.work * 60;
+  updateTimerDisplay();
+}
+
+function startTimer() {
+  if (running) return;
+  running = true;
+  intervalId = setInterval(tick, 1000);
+}
+
+function pauseTimer() {
+  running = false;
+  clearInterval(intervalId);
+  intervalId = null;
+}
+
+function tick() {
+  timeLeft--;
+  if (timeLeft <= 0) { finishSession(); return; }
+  updateTimerDisplay();
+}
+
+function finishSession() {
+  pauseTimer();
+  playBeep();
+  if (mode === "work") {
+    markActivity("pomos", 1);
+    markActivity("minutes", pomo.work);
+    toast("◦ работа окончена — перерыв!");
+    mode = "break";
+    timeLeft = pomo.break * 60;
+  } else {
+    toast("◦ перерыв окончен — к работе!");
+    mode = "work";
+    timeLeft = pomo.work * 60;
+  }
+  updateTimerDisplay();
+  updateStats();
+  setTimeout(startTimer, 1000);
+}
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = "sine";
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.8);
+    setTimeout(() => {
+      const ctx2 = new (window.AudioContext || window.webkitAudioContext)();
+      const osc2 = ctx2.createOscillator();
+      const gain2 = ctx2.createGain();
+      osc2.connect(gain2);
+      gain2.connect(ctx2.destination);
+      osc2.frequency.value = 1100;
+      osc2.type = "sine";
+      gain2.gain.setValueAtTime(0.3, ctx2.currentTime);
+      gain2.gain.exponentialRampToValueAtTime(0.001, ctx2.currentTime + 0.8);
+      osc2.start(ctx2.currentTime);
+      osc2.stop(ctx2.currentTime + 0.8);
+    }, 300);
+  } catch {}
+}
+
+document.getElementById("btnStart").addEventListener("click", startTimer);
+document.getElementById("btnPause").addEventListener("click", pauseTimer);
+document.getElementById("btnReset").addEventListener("click", () => {
+  if (confirm("сбросить таймер?")) resetTimer();
+});
+
+/* ═══════════════════════════════════════════
+   СТАТИСТИКА
+   ═══════════════════════════════════════════ */
+function updateStats() {
+  const dates = Object.keys(activity);
+  let totalPomos = 0, totalMinutes = 0;
+  dates.forEach(d => {
+    totalPomos += activity[d].pomos || 0;
+    totalMinutes += activity[d].minutes || 0;
+  });
+
+  document.getElementById("statStreak").textContent = getStreak();
+  document.getElementById("statPomos").textContent = totalPomos;
+  document.getElementById("statMinutes").textContent = totalMinutes;
+  document.getElementById("statDays").textContent = dates.length;
+
+  // прогресс уроков
+  const done = Object.values(state.lessons || {}).filter(l => l.done).length;
+  const total = 33;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById("profProgressFill").style.width = pct + "%";
+  document.getElementById("profProgressText").textContent = `${done} / ${total} пройдено · Web + AI`;
+}
+
+/* ── календарь 30 дней ── */
+function renderCalendar() {
+  const cal = document.getElementById("calendar");
+  cal.innerHTML = "";
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+
+  let activeDays = 0;
+
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const data = activity[key];
+
+    const el = document.createElement("div");
+    el.className = "day";
+    if (key === todayStr) el.classList.add("today");
+
+    if (data) {
+      activeDays++;
+      const score = (data.pomos || 0) + (data.lessons || 0) + (data.edits || 0);
+      if (score >= 5) el.classList.add("level-4");
+      else if (score >= 3) el.classList.add("level-3");
+      else if (score >= 2) el.classList.add("level-2");
+      else if (score >= 1) el.classList.add("level-1");
+    }
+
+    const dateStr = d.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+    let tooltip = dateStr;
+    if (data) {
+      const parts = [];
+      if (data.pomos) parts.push(`${data.pomos} помидор`);
+      if (data.minutes) parts.push(`${data.minutes} мин`);
+      if (data.lessons) parts.push(`${data.lessons} уроков`);
+      if (data.edits) parts.push(`${data.edits} правок`);
+      if (parts.length) tooltip += " · " + parts.join(", ");
+      else tooltip += " · была активность";
+    } else {
+      tooltip += " · пусто";
+    }
+    el.title = tooltip;
+
+    cal.appendChild(el);
+  }
+
+  document.getElementById("calendarSummary").textContent = `${activeDays} из 30 дней`;
+}
+
+/* ═══════════════════════════════════════════
+   БЭКАП
+   ═══════════════════════════════════════════ */
+function gatherAllData() {
+  const data = {
+    version: "v1",
+    exported: new Date().toISOString(),
+    state: state,
+    activity: activity,
+    profile: profile,
+    pomodoro: pomo,
+    lessonsMeta: {}
+  };
+  // на всякий — собираем всё, что есть в localStorage с нашим префиксом
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith("local-adaptation-") && !["local-adaptation-v1","local-adaptation-activity","local-adaptation-profile","local-adaptation-pomodoro","local-adaptation-theme","local-adaptation-lastbackup"].includes(k)) {
+      try { data.lessonsMeta[k] = JSON.parse(localStorage.getItem(k)); } catch {}
+    }
+  }
+  return data;
+}
+
+function exportBackup() {
+  const data = gatherAllData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `obuchalka-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  setLastBackup();
+  updateBackupInfo();
+  hideReminder();
+  toast("◦ бэкап сохранён");
+}
+
+function importBackup(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const replace = confirm(
+        "Заменить всё текущее содержимым файла?\n\n" +
+        "OK — заменить (текущее будет потеряно)\n" +
+        "Отмена — объединить (текущее останется, добавится недостающее)"
+      );
+
+      if (data.state) {
+        if (replace) {
+          state = data.state;
+        } else {
+          Object.entries(data.state.lessons || {}).forEach(([k, v]) => {
+            if (!state.lessons[k]) state.lessons[k] = v;
+          });
+        }
+        saveState();
+      }
+      if (data.activity) {
+        if (replace) activity = data.activity;
+        else {
+          Object.entries(data.activity).forEach(([k, v]) => {
+            if (!activity[k]) activity[k] = v;
+          });
+        }
+        saveActivity(activity);
+      }
+      if (data.profile && replace) {
+        profile = data.profile;
+        saveProfile(profile);
+        renderProfile();
+      }
+      if (data.pomodoro && replace) {
+        pomo = data.pomodoro;
+        savePomo();
+        inputWork.value = pomo.work;
+        inputBreak.value = pomo.break;
+      }
+
+      updateStats();
+      renderCalendar();
+      toast("◦ импорт выполнен");
+    } catch {
+      toast("◦ не удалось прочитать файл");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
+function updateBackupInfo() {
+  const info = document.getElementById("backupInfo");
+  const days = daysSinceBackup();
+  if (days === Infinity) {
+    info.textContent = "последний бэкап: никогда";
+    info.className = "backup-info warn";
+  } else if (days === 0) {
+    info.textContent = "последний бэкап: сегодня";
+    info.className = "backup-info ok";
+  } else {
+    info.textContent = `последний бэкап: ${days} ${declOfNum(days, ["день","дня","дней"])} назад`;
+    info.className = days >= 3 ? "backup-info warn" : "backup-info";
+  }
+}
+
+function declOfNum(n, forms) {
+  n = Math.abs(n) % 100;
+  const n1 = n % 10;
+  if (n > 10 && n < 20) return forms[2];
+  if (n1 > 1 && n1 < 5) return forms[1];
+  if (n1 === 1) return forms[0];
+  return forms[2];
+}
+
+function showReminderIfNeeded() {
+  const days = daysSinceBackup();
+  if (days >= 3 && days !== Infinity) {
+    const r = document.getElementById("backupReminder");
+    document.getElementById("backupReminderText").textContent =
+      `прошло ${days} ${declOfNum(days, ["день","дня","дней"])} с последнего бэкапа — не забудь сохранить`;
+    r.classList.add("show");
+  } else if (days === Infinity) {
+    // ни одного бэкапа никогда — показываем мягко
+    const r = document.getElementById("backupReminder");
+    document.getElementById("backupReminderText").textContent =
+      "ты ещё ни разу не сохраняла бэкап — сделай, чтобы не потерять прогресс";
+    r.classList.add("show");
+  }
+}
+
+function hideReminder() {
+  document.getElementById("backupReminder").classList.remove("show");
+}
+
+document.getElementById("btnExport").addEventListener("click", exportBackup);
+document.getElementById("btnImport").addEventListener("click", () => document.getElementById("importBackup").click());
+document.getElementById("importBackup").addEventListener("change", importBackup);
+document.getElementById("reminderSave").addEventListener("click", exportBackup);
+document.getElementById("reminderLater").addEventListener("click", hideReminder);
+
+/* ═══════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════ */
+renderProfile();
+updateTimerDisplay();
+updateStats();
+renderCalendar();
+updateBackupInfo();
+showReminderIfNeeded();
+
+/* ═══════════════════════════════════════════
+   МОИ МАТЕРИАЛЫ
+   ═══════════════════════════════════════════ */
+const LESSONS_META = [
+  // Web
+  { id: "web-01", num: "01", title: "Структура HTML и первые теги", group: "Web" },
+  { id: "web-02", num: "02", title: "Специальные символы и блочные элементы", group: "Web" },
+  { id: "web-03", num: "03", title: "Списки в HTML", group: "Web" },
+  { id: "web-04", num: "04", title: "Ссылки и изображения", group: "Web" },
+  { id: "web-05", num: "05", title: "Формы", group: "Web" },
+  { id: "web-06", num: "06", title: "Введение в CSS", group: "Web" },
+  { id: "web-07", num: "07", title: "Каскадность и основные свойства", group: "Web" },
+  { id: "web-08", num: "08", title: "Блочная модель", group: "Web" },
+  { id: "web-09", num: "09", title: "Позиционирование элементов", group: "Web" },
+  { id: "web-10", num: "10", title: "Flexbox — основы", group: "Web" },
+  { id: "web-11", num: "11", title: "Flexbox — продолжение", group: "Web" },
+  { id: "web-12", num: "12", title: "CSS Grid — основы", group: "Web" },
+  { id: "web-13", num: "13", title: "CSS Grid — продолжение", group: "Web" },
+  { id: "web-14", num: "14", title: "Стилизация форм", group: "Web" },
+  { id: "web-15", num: "15", title: "Стилизация таблиц", group: "Web" },
+  { id: "web-16", num: "16", title: "Transitions и Transform", group: "Web" },
+  { id: "web-17", num: "17", title: "Animations и @keyframes", group: "Web" },
+  { id: "web-18", num: "18", title: "Адаптивный дизайн", group: "Web" },
+  { id: "web-19", num: "19", title: "Одностраничный сайт", group: "Web" },
+  { id: "web-20", num: "20", title: "Многостраничный сайт", group: "Web" },
+  { id: "web-21", num: "21", title: "JavaScript — основы", group: "Web" },
+  { id: "web-22", num: "22", title: "DOM — работа со страницей", group: "Web" },
+  { id: "web-23", num: "23", title: "События", group: "Web" },
+  { id: "web-24", num: "24", title: "Хранение данных в браузере", group: "Web" },
+  { id: "web-25", num: "25", title: "Мини-проект на JavaScript", group: "Web" },
+  // AI
+  { id: "ai-1", num: "01", title: "Что такое AI", group: "AI" },
+  { id: "ai-2", num: "02", title: "Промпт-инжиниринг", group: "AI" },
+  { id: "ai-3", num: "03", title: "Системные промпты", group: "AI" },
+  { id: "ai-4", num: "04", title: "Датасеты", group: "AI" },
+  { id: "ai-5", num: "05", title: "AI-агент", group: "AI" },
+  { id: "ai-6", num: "06", title: "Оркестраторы", group: "AI" },
+  { id: "ai-7", num: "07", title: "Будущее AI", group: "AI" },
+  { id: "ai-8", num: "08", title: "Итоговый проект", group: "AI" }
+];
+
+function renderMaterials() {
+  const wrap = document.getElementById("materialsList");
+  if (!wrap) return;
+
+  const withContent = LESSONS_META
+    .map(meta => {
+      const data = (state.lessons && state.lessons[meta.id]) || {};
+      return { meta, data };
+    })
+    .filter(({ data }) => {
+      return (data.note && data.note.trim()) ||
+             (data.practice && data.practice.trim()) ||
+             (data.result && data.result.trim()) ||
+             (data.link && data.link.trim());
+    })
+    .sort((a, b) => {
+      const ta = a.data.modified ? new Date(a.data.modified).getTime() : 0;
+      const tb = b.data.modified ? new Date(b.data.modified).getTime() : 0;
+      return tb - ta;
+    });
+
+  if (!withContent.length) {
+    wrap.innerHTML = `<div class="mat-empty">пока пусто — заходи в уроки и записывай конспекты<br>здесь они появятся автоматически</div>`;
+    return;
+  }
+
+  wrap.innerHTML = "";
+
+  withContent.forEach(({ meta, data }) => {
+    const el = document.createElement("div");
+    el.className = "mat-item";
+
+    const hasNote = data.note && data.note.trim();
+    const hasPractice = data.practice && data.practice.trim();
+    const hasResult = data.result && data.result.trim();
+    const hasLink = data.link && data.link.trim();
+
+    const icons = `
+      <span class="${hasNote ? 'on' : ''}" title="конспект">📝</span>
+      <span class="${hasPractice ? 'on' : ''}" title="домашка">✏️</span>
+      <span class="${hasResult ? 'on' : ''}" title="результат">🏆</span>
+      <span class="${hasLink ? 'on' : ''}" title="ссылки">🔗</span>
+    `;
+
+    const modified = data.modified
+      ? `<span class="mat-modified">· ${new Date(data.modified).toLocaleDateString("ru-RU", { day: "numeric", month: "short" })}</span>`
+      : "";
+
+    let body = "";
+
+    if (hasNote) {
+      body += `<div class="mat-section">
+        <div class="mat-label">📝 конспект</div>
+        <div class="mat-text">${esc(data.note)}</div>
+      </div>`;
+    }
+    if (hasPractice) {
+      body += `<div class="mat-section">
+        <div class="mat-label">✏️ домашка</div>
+        <div class="mat-text">${esc(data.practice)}</div>
+      </div>`;
+    }
+    if (hasResult) {
+      body += `<div class="mat-section">
+        <div class="mat-label">🏆 результат</div>
+        <div class="mat-text">${esc(data.result)}</div>
+      </div>`;
+    }
+    if (hasLink) {
+      const links = data.link.split(/\s+/).filter(s => /^https?:\/\//i.test(s));
+      body += `<div class="mat-section">
+        <div class="mat-label">🔗 ссылки</div>
+        ${links.map(u => `<a class="mat-link" href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`).join("")}
+      </div>`;
+    }
+
+    el.innerHTML = `
+      <div class="mat-head" onclick="this.parentElement.classList.toggle('open')">
+        <span class="mat-num">${meta.group === "AI" ? "AI·" : ""}${meta.num}</span>
+        <span class="mat-title">${esc(meta.title)}</span>
+        <span class="mat-icons">${icons}</span>
+        <span class="mat-arrow">▸</span>
+      </div>
+      <div class="mat-body">${body}</div>
+    `;
+
+    wrap.appendChild(el);
+  });
+}
+
+/* ── экспорт в TXT ── */
+function exportTxt() {
+  let txt = "";
+  txt += "═══════════════════════════════════════════════\n";
+  txt += "   ОБУЧАЛКА · МОИ КОНСПЕКТЫ И ДОМАШКИ\n";
+  txt += "   экспорт: " + new Date().toLocaleString("ru-RU") + "\n";
+  txt += "═══════════════════════════════════════════════\n\n";
+
+  let hasAnything = false;
+
+  LESSONS_META.forEach(meta => {
+    const data = (state.lessons && state.lessons[meta.id]) || {};
+    const hasNote = data.note && data.note.trim();
+    const hasPractice = data.practice && data.practice.trim();
+    const hasResult = data.result && data.result.trim();
+    const hasLink = data.link && data.link.trim();
+
+    if (!hasNote && !hasPractice && !hasResult && !hasLink) return;
+
+    hasAnything = true;
+
+    txt += "\n───────────────────────────────────────────────\n";
+    txt += `${meta.group.toUpperCase()} · ${meta.num}. ${meta.title}\n`;
+    txt += `статус: ${data.done ? "✓ пройдено" : "не пройдено"}\n`;
+    txt += "───────────────────────────────────────────────\n\n";
+
+    if (hasNote) {
+      txt += "📝 КОНСПЕКТ:\n";
+      txt += data.note + "\n\n";
+    }
+    if (hasPractice) {
+      txt += "✏️ ДОМАШКА:\n";
+      txt += data.practice + "\n\n";
+    }
+    if (hasResult) {
+      txt += "🏆 РЕЗУЛЬТАТ:\n";
+      txt += data.result + "\n\n";
+    }
+    if (hasLink) {
+      txt += "🔗 ССЫЛКИ:\n";
+      txt += data.link + "\n\n";
+    }
+  });
+
+  if (!hasAnything) {
+    toast("◦ пока нечего экспортировать");
+    return;
+  }
+
+  txt += "\n═══════════════════════════════════════════════\n";
+  txt += "   конец экспорта\n";
+  txt += "═══════════════════════════════════════════════\n";
+
+  const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `obuchalka-konspekty-${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("◦ TXT сохранён");
+}
+
+const btnTxt = document.getElementById("btnExportTxt");
+if (btnTxt) btnTxt.addEventListener("click", exportTxt);
+
+renderMaterials();
+
+
+window.addEventListener("focus", () => {
+  updateStats();
+  renderCalendar();
+  updateBackupInfo();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07. Будущее AI · AI</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-prompts { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">AI · тема 07</div>
+    <h1>Будущее AI</h1>
+    <div class="subtitle">тренды, рынок труда, этика и ответственное использование</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">AI</a><span>›</span>07
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>AI меняется быстрее, чем успевают обновляться учебники. Вот главные тренды 2025–2026, которые важно понимать.</p>
+
+    <h3>Тренд 1 — мультиагентные системы становятся нормой</h3>
+    <ul>
+      <li>Ещё год назад агенты были экспериментом для энтузиастов. Сейчас — стандартный инструмент в компаниях.</li>
+      <li>Вместо одного «умного ассистента» строят команды: агент-исследователь, агент-аналитик, агент-редактор работают параллельно.</li>
+      <li>Такие системы решают задачи, которые раньше занимали у команды людей несколько дней.</li>
+    </ul>
+
+    <h3>Тренд 2 — MCP стал стандартом подключения инструментов</h3>
+    <ul>
+      <li>MCP-протокол от <em>Anthropic</em> быстро стал стандартом индустрии. В декабре 2025 Anthropic передала его в Agentic AI Foundation под управление Linux Foundation, чтобы стандарт развивался независимо.</li>
+      <li>Большинство крупных сервисов уже имеют MCP-серверы: Google Drive, GitHub, Notion, браузеры, IDE.</li>
+      <li>Это значит, что AI-агент может работать с любым из них без специальной интеграции.</li>
+    </ul>
+
+    <h3>Тренд 3 — AI выходит за пределы экрана</h3>
+    <ul>
+      <li>Раньше AI жил в браузерной вкладке. Сейчас встраивается в смартфоны, умные устройства, производственные системы.</li>
+      <li>Apple Intelligence, Google Gemini в Android — это агенты, которые могут управлять приложениями, отправлять письма, делать покупки от твоего имени.</li>
+    </ul>
+
+    <h3>Тренд 4 — vibe coding: AI пишет код, человек ставит задачи</h3>
+    <ul>
+      <li>Cursor, GitHub Copilot, Claude в IDE изменили программирование.</li>
+      <li>Разработчик всё меньше пишет код вручную — описывает задачу, AI предлагает решение, разработчик проверяет.</li>
+      <li>Инструменты вроде Devin могут сами: прочитать багу, найти проблему, исправить, написать тесты, создать pull request.</li>
+    </ul>
+
+    <h3>Тренд 5 — «AI-сотрудники» входят в компании</h3>
+    <ul>
+      <li>Компании нанимают AI-агентов как виртуальных сотрудников: почта, доступ к системам, ответственность за задачи.</li>
+      <li>Не устаёт, не берёт отпуск, работает 24/7. Несколько крупных компаний уже публично заявили о таких экспериментах.</li>
+    </ul>
+
+    <h3>Что меняется на рынке труда</h3>
+    <p>Это самый острый вопрос, который задают про AI. Честный ответ: AI меняет рынок, но не так, как многие думают.</p>
+
+    <p><strong>Что автоматизируется прямо сейчас:</strong></p>
+    <ul>
+      <li>рутинный анализ данных — составить отчёт из таблицы, найти паттерны;</li>
+      <li>шаблонный текст — стандартные письма, описания продуктов, базовые статьи;</li>
+      <li>базовое программирование — написать простую функцию, найти очевидную ошибку;</li>
+      <li>перевод текстов стандартного уровня;</li>
+      <li>обработка однотипных документов — заявления, формы, счета.</li>
+    </ul>
+
+    <p><strong>Что не автоматизируется — пока и, скорее всего, надолго:</strong></p>
+    <ul>
+      <li>критическое мышление в условиях неопределённости;</li>
+      <li>лидерство и управление людьми;</li>
+      <li>доверие и личные отношения;</li>
+      <li>контекст реального мира — понять ситуацию «на месте»;</li>
+      <li>творческое направление — AI генерирует контент, но кто-то должен решить, зачем и для кого;</li>
+      <li>этические решения с серьёзными последствиями.</li>
+    </ul>
+
+    <p><strong>Новые профессии, которые растут:</strong></p>
+    <ul>
+      <li>AI-инженер — строит, настраивает и поддерживает AI-системы;</li>
+      <li>prompt-дизайнер — разрабатывает и оптимизирует промпты для бизнес-задач;</li>
+      <li>AI-аудитор — проверяет AI-системы на безопасность, предвзятость, ошибки;</li>
+      <li>специалист по этике AI — определяет, как компания должна использовать AI;</li>
+      <li>AI Product Manager — управляет разработкой AI-продуктов.</li>
+    </ul>
+
+    <p><strong>Главный вывод:</strong> не «AI заберёт работу», а «люди, умеющие работать с AI, заберут работу у тех, кто не умеет».</p>
+
+    <h3>Этические риски</h3>
+    <p>AI — мощный инструмент, и, как любой мощный инструмент, он несёт риски.</p>
+
+    <p><strong>Deepfake.</strong> Синтетические видео и аудио, где человек говорит или делает то, чего никогда не делал. Уже используется для мошенничества, политических манипуляций, дискредитации людей. Главная проблема — мы теряем способность доверять видео и аудио как доказательствам.</p>
+
+    <p><strong>Авторство и интеллектуальная собственность.</strong> Кто автор, если текст написал AI по твоему промпту? Однозначных ответов пока нет ни в законах, ни в обществе.</p>
+
+    <p><strong>Конфиденциальность.</strong> Когда отправляешь запрос в публичный AI-сервис, данные уходят на серверы компании. Большинство используют их для улучшения моделей, если не отключить настройку. Правило: не отправляй пароли, личные документы, коммерческие секреты. Для конфиденциальных задач — локальные модели.</p>
+
+    <p><strong>Галлюцинации в серьёзных контекстах.</strong> Опасно, когда AI даёт медицинские, юридические, финансовые советы. Всегда проверяй у специалиста.</p>
+
+    <p><strong>Предвзятость (bias).</strong> Если датасет был предвзятым — модель усвоила это. Например, AI для найма, обученный на исторических данных компании, где большинство нанятых были мужчинами, будет склонна ниже оценивать резюме женщин.</p>
+
+    <h3>Кто несёт ответственность</h3>
+    <p>Самый сложный вопрос. Агент ошибся и нанёс вред — кто отвечает?</p>
+    <ul>
+      <li>Разработчик агента?</li>
+      <li>Компания, которая его развернула?</li>
+      <li>Пользователь, который дал задачу?</li>
+      <li>Создатели базовой модели?</li>
+    </ul>
+    <p>Ни одна правовая система мира пока не дала чёткого ответа. Именно поэтому принцип <strong>human-in-the-loop</strong> (человек в петле) так важен: для серьёзных действий агент должен спрашивать подтверждение у человека.</p>
+
+    <h3>Как думать об AI ответственно</h3>
+    <ul>
+      <li><strong>Проверяй важную информацию.</strong> Используй AI как черновик или отправную точку, но проверяй факты в надёжных источниках.</li>
+      <li><strong>Думай, кому принадлежат твои данные.</strong> Прежде чем вставить что-то в AI-сервис — подумай, комфортно ли, что это прочитают другие.</li>
+      <li><strong>Сохраняй критическое мышление.</strong> AI удобен, но не безошибочен. Если ответ кажется странным — проверь.</li>
+      <li><strong>Думай о последствиях для других.</strong> Автоматизированный контент может распространяться быстрее, чем ты думаешь.</li>
+      <li><strong>Помни о цели.</strong> AI — инструмент. Инструмент хорош ровно настолько, насколько осмысленна цель.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Пять трендов: мультиагентные системы, MCP, AI вне экрана, vibe coding, AI-сотрудники.</li>
+      <li>Рынок труда меняется: рутина автоматизируется, критическое мышление и лидерство — нет.</li>
+      <li>Главный вывод: люди, умеющие работать с AI, обгоняют тех, кто не умеет.</li>
+      <li>Риски: deepfake, авторство, конфиденциальность, галлюцинации, bias.</li>
+      <li>Human-in-the-loop — ключевой принцип для серьёзных решений.</li>
+      <li>Ответственное использование: проверять, думать о данных, сохранять критическое мышление.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сформировать свою позицию по AI и разобрать этические сценарии</strong>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — выбери главный тренд.</strong><br>
+        Прочитай пять трендов и выбери один, который кажется самым важным лично для тебя. Объясни почему. Сохрани в конспект.
+      </li>
+      <li><strong>Задание 2 — манифест ответственного использования AI.</strong><br>
+        Напиши 5–7 личных правил, конкретных и своих. Примеры:
+        <ul>
+          <li>«я всегда проверяю факты, которые дал AI, если они важны для решения»;</li>
+          <li>«я не отправляю в AI-сервисы чужие персональные данные без разрешения»;</li>
+          <li>«я указываю, когда текст написан с помощью AI, если это важно для читателя».</li>
+        </ul>
+        Сохрани в поле «промпты» или в конспект.
+      </li>
+      <li><strong>Задание 3 — разбери этический сценарий.</strong><br>
+        Выбери один:
+        <ul>
+          <li><strong>Сценарий А.</strong> Школьник использует AI для сочинения. AI написал текст, школьник немного отредактировал и сдал как своё. Учитель не знает. Оценка — отлично.</li>
+          <li><strong>Сценарий Б.</strong> Компания использует AI для отбора резюме. AI отклоняет 80% кандидатов автоматически. Позже выясняется, что AI систематически снижал оценку кандидатам с именами, типичными для определённых национальностей.</li>
+        </ul>
+        Ответь: кто пострадал? Как это можно было предотвратить? Что должна сделать школа / компания, когда выяснилось?
+      </li>
+      <li><strong>Задание 4 — профессия и AI.</strong><br>
+        Выбери профессию: журналист, врач, программист, учитель, дизайнер, юрист, водитель, переводчик. Ответь:
+        <ul>
+          <li>Что в этой профессии AI уже автоматизирует сейчас?</li>
+          <li>Что останется за человеком через 10 лет?</li>
+          <li>Как нужно измениться специалисту, чтобы оставаться ценным?</li>
+        </ul>
+      </li>
+      <li><strong>Задание 5 — рефлексия по всему модулю.</strong><br>
+        Свободный текст. Ответь на вопросы, которые интересны:
+        <ul>
+          <li>Что из всего модуля удивило больше всего?</li>
+          <li>Что уже попробовано или планируется попробовать на практике?</li>
+          <li>Что беспокоит в развитии AI?</li>
+          <li>Какую профессию, связанную с AI, можно было бы представить для себя?</li>
+          <li>Изменилось ли отношение к AI после этого модуля?</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что попробовала на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось, что удивило..."></textarea>
+    </div>
+
+    <div class="field field-prompts">
+      <div class="field-label"><span>💬 манифест и разбор сценариев</span><span class="status-saved" id="saved-prompts">сохранено ✓</span></div>
+      <textarea id="in-prompts" placeholder="манифест ответственного использования, разбор этических сценариев, рефлексия..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="видео, статьи, детекторы deepfake, по одной ссылке на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="06-orchestrators.html">← предыдущая</a>
+    <a class="btn" href="08-final-project.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> AI · тема 07 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "ai-7";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    prompts: document.getElementById("in-prompts"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "prompts") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

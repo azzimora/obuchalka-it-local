@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30. fetch: запросы к серверу · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .block table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85rem; }
+  .block th, .block td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .block th { color: var(--purple-soft); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 30 · продвинутый js</div>
+    <h1>fetch: запросы к серверу</h1>
+    <div class="subtitle">как получать данные из интернета</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>30
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p><strong>fetch</strong> — это встроенная функция JS для отправки запросов на сервер. С её помощью страница может получить данные из интернета, не перезагружаясь.</p>
+
+    <p>Это то, что делает современные сайты «живыми»: погода обновляется, лента подгружается, поиск работает без перезагрузки — всё через fetch.</p>
+
+    <h3>Базовый синтаксис</h3>
+    <pre>fetch("https://api.example.com/data")
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.log("ошибка:", error);
+  });</pre>
+
+    <p>Что происходит по шагам:</p>
+    <ul>
+      <li><code>fetch(url)</code> — отправляет запрос. Возвращает Promise.</li>
+      <li><code>.then(response => ...)</code> — когда сервер ответил, получаем объект <code>response</code>.</li>
+      <li><code>response.json()</code> — читает тело ответа как JSON. Тоже возвращает Promise.</li>
+      <li>Второй <code>.then(data => ...)</code> — когда JSON разобран, получаем готовые данные.</li>
+      <li><code>.catch()</code> — если что-то пошло не так.</li>
+    </ul>
+
+    <h3>С async / await — читается лучше</h3>
+    <pre>async function loadData() {
+  try {
+    const response = await fetch("https://api.example.com/data");
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log("ошибка:", error);
+  }
+}
+
+loadData();</pre>
+
+    <p>Современный код пишется именно так. Оба варианта рабочие, но этот проще.</p>
+
+    <h3>Что такое API</h3>
+    <p><strong>API</strong> (Application Programming Interface) — это «точка входа», через которую программы общаются друг с другом. Веб-API — это адрес в интернете, по которому можно запросить данные и получить их в формате JSON.</p>
+
+    <p>Примеры публичных API, которые можно использовать бесплатно:</p>
+    <ul>
+      <li><strong>JSONPlaceholder</strong> — <code>jsonplaceholder.typicode.com</code> — тестовые данные (посты, пользователи, комментарии);</li>
+      <li><strong>Cat Fact</strong> — <code>catfact.ninja/fact</code> — случайные факты о котах;</li>
+      <li><strong>Dog CEO</strong> — <code>dog.ceo/api/breeds/image/random</code> — случайные фото собак;</li>
+      <li><strong>Open-Meteo</strong> — <code>api.open-meteo.com</code> — погода (без ключа);</li>
+      <li><strong>GitHub API</strong> — <code>api.github.com</code> — информация о пользователях и репозиториях.</li>
+    </ul>
+
+    <h3>Пример: случайный факт о коте</h3>
+    <pre>async function getCatFact() {
+  const response = await fetch("https://catfact.ninja/fact");
+  const data = await response.json();
+  console.log(data.fact);
+}
+
+getCatFact();</pre>
+
+    <p>Сервер возвращает JSON вида:</p>
+    <pre>{
+  "fact": "Кошки спят около 70% своей жизни.",
+  "length": 38
+}</pre>
+    <p>Мы берём <code>data.fact</code> — и получаем текст.</p>
+
+    <h3>HTTP-методы</h3>
+    <p>Запросы бывают разные. Основные:</p>
+    <table>
+      <tr>
+        <th>Метод</th>
+        <th>Что делает</th>
+      </tr>
+      <tr>
+        <td>GET</td>
+        <td>Получить данные (по умолчанию)</td>
+      </tr>
+      <tr>
+        <td>POST</td>
+        <td>Отправить новые данные</td>
+      </tr>
+      <tr>
+        <td>PUT / PATCH</td>
+        <td>Обновить существующие данные</td>
+      </tr>
+      <tr>
+        <td>DELETE</td>
+        <td>Удалить данные</td>
+      </tr>
+    </table>
+
+    <p>По умолчанию <code>fetch</code> использует GET. Для других методов нужно указать их в параметрах:</p>
+
+    <pre>fetch("https://api.example.com/posts", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    title: "Новый пост",
+    body: "Текст поста"
+  })
+})
+  .then(response => response.json())
+  .then(data => console.log(data));</pre>
+
+    <h3>Проверка статуса ответа</h3>
+    <p><code>fetch</code> не отклоняется при ошибках на сервере (например, 404). Он отклоняется только при <em>сетевых</em> ошибках. Поэтому надо проверять статус вручную:</p>
+
+    <pre>async function loadData() {
+  const response = await fetch("https://api.example.com/data");
+  
+  if (!response.ok) {
+    throw new Error(`Ошибка: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  return data;
+}</pre>
+
+    <p><code>response.ok</code> — <code>true</code>, если статус 200–299. Иначе <code>false</code>.</p>
+
+    <p>Коды статусов, которые полезно знать:</p>
+    <ul>
+      <li><strong>200</strong> — OK, всё хорошо;</li>
+      <li><strong>404</strong> — не найдено;</li>
+      <li><strong>500</strong> — ошибка сервера;</li>
+      <li><strong>401 / 403</strong> — нет доступа.</li>
+    </ul>
+
+    <h3>Пример: вывод данных на страницу</h3>
+    <pre>&lt;button id="load"&gt;загрузить факт&lt;/button&gt;
+&lt;p id="fact"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("load").addEventListener("click", async () => {
+    const factEl = document.getElementById("fact");
+    factEl.textContent = "загрузка...";
+    
+    try {
+      const response = await fetch("https://catfact.ninja/fact");
+      const data = await response.json();
+      factEl.textContent = data.fact;
+    } catch (error) {
+      factEl.textContent = "не удалось загрузить";
+      console.log(error);
+    }
+  });
+&lt;/script&gt;</pre>
+
+    <h3>CORS — что это и почему иногда не работает</h3>
+    <p>Браузер по умолчанию запрещает странице делать запросы к <em>другим</em> сайтам, если те не разрешили. Это называется <strong>CORS</strong> (Cross-Origin Resource Sharing).</p>
+
+    <p>Если API не настроен на разрешение запросов откуда угодно — fetch вернёт ошибку CORS. Это не твоя ошибка, это политика безопасности браузера.</p>
+
+    <p>Публичные API (те, что я перечислила выше) обычно настроены правильно — с ними всё будет работать.</p>
+
+    <h3>fetch в реальной жизни</h3>
+    <p>Почти любой современный сайт использует fetch:</p>
+    <ul>
+      <li>загрузка комментариев под постом;</li>
+      <li>обновление ленты в соцсети;</li>
+      <li>поиск с подсказками;</li>
+      <li>отправка формы без перезагрузки;</li>
+      <li>загрузка картинок и видео;</li>
+      <li>чат в реальном времени.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>fetch</code> отправляет HTTP-запросы из JS.</li>
+      <li>Возвращает Promise. Читается через <code>.then()</code> или <code>async / await</code>.</li>
+      <li>Тело ответа читается через <code>response.json()</code>.</li>
+      <li>Методы: GET (по умолчанию), POST, PUT, DELETE.</li>
+      <li>Проверяй <code>response.ok</code> — fetch не отклоняется при 404 или 500.</li>
+      <li>CORS — политика безопасности браузера. Публичные API работают без проблем.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать запросы к настоящим API и вывести данные на страницу</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>fetch.html</code> с обычным каркасом.</li>
+      <li><strong>Задание 1 — первый запрос.</strong> Открой консоль (F12). Напиши:
+        <pre>fetch("https://catfact.ninja/fact")
+  .then(r => r.json())
+  .then(data => console.log(data.fact));</pre>
+        Убедись, что в консоли появляется случайный факт о коте. Обнови страницу — факт будет другой.
+      </li>
+      <li><strong>Задание 2 — через async / await.</strong> Перепиши задание 1 через async-функцию с <code>await</code> и <code>try / catch</code>.
+      </li>
+      <li><strong>Задание 3 — на странице.</strong> Сделай кнопку «получить факт» и параграф. При клике факт загружается и выводится в параграф. Пока идёт загрузка — показывай «загрузка...».
+      </li>
+      <li><strong>Задание 4 — другое API.</strong> Используй <code>https://dog.ceo/api/breeds/image/random</code>. Ответ будет вида <code>{"message": "url картинки", "status": "success"}</code>. Сделай кнопку — при клике подгружается и показывается случайная картинка собаки через <code>&lt;img&gt;</code>.
+      </li>
+      <li><strong>Задание 5 — список.</strong> Запроси <code>https://jsonplaceholder.typicode.com/posts</code> — это массив из 100 постов. Выведи на страницу первые 10: заголовок и текст. Используй <code>forEach</code> и <code>createElement</code>.
+      </li>
+      <li><strong>Задание 6 — с проверкой ошибки.</strong> Сделай запрос к несуществующему URL (например, <code>https://jsonplaceholder.typicode.com/nonexistent</code>). Проверь <code>response.ok</code> и выведи понятное сообщение об ошибке.
+      </li>
+      <li><strong>Бонус:</strong> добавь ко всем запросам состояние загрузки — пока данные не пришли, показывай «загрузка...». После — данные или ошибку.
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="примеры fetch, работа с API, вывод на страницу..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="публичные API, статьи, документация..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="29-async-await.html">← предыдущая</a>
+    <a class="btn" href="31-api.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 30 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-30";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

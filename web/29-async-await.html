@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>29. async / await · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 29 · продвинутый js</div>
+    <h1>async / await</h1>
+    <div class="subtitle">современный способ писать асинхронный код</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>29
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Promise — это хорошо, но цепочки <code>.then()</code> читать неудобно, особенно когда их много. Поэтому придумали <strong>async / await</strong> — синтаксис, который делает асинхронный код похожим на обычный, синхронный.</p>
+
+    <p><strong>async / await</strong> — это не замена Promise. Это «обёртка» над ним, которая читается проще.</p>
+
+    <h3>Сравни</h3>
+    <p><strong>С Promise:</strong></p>
+    <pre>function loadData() {
+  return fetch("/api/data")
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      return data;
+    })
+    .catch(error => {
+      console.log("ошибка:", error);
+    });
+}</pre>
+
+    <p><strong>С async / await:</strong></p>
+    <pre>async function loadData() {
+  try {
+    const response = await fetch("/api/data");
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("ошибка:", error);
+  }
+}</pre>
+
+    <p>Второй вариант читается как обычный код: «получи ответ, потом преобразуй, потом выведи». Никаких цепочек.</p>
+
+    <h3>Как это работает</h3>
+    <p>Два ключевых слова:</p>
+    <ul>
+      <li><strong>async</strong> — ставится перед функцией. Говорит: «эта функция асинхронная, она возвращает Promise».</li>
+      <li><strong>await</strong> — ставится перед Promise. Говорит: «подожди результат, прежде чем идти дальше».</li>
+    </ul>
+
+    <pre>async function example() {
+  const result = await somePromise();
+  console.log(result);  // выполнится после того, как Promise разрешится
+}</pre>
+
+    <p><strong>Важно:</strong> <code>await</code> работает только внутри <code>async</code>-функции. Вне её — синтаксическая ошибка.</p>
+
+    <h3>Что возвращает async-функция</h3>
+    <p>Всегда возвращает Promise. Даже если внутри возвращается обычное значение.</p>
+
+    <pre>async function greet() {
+  return "привет";
+}
+
+greet().then(msg => console.log(msg));  // "привет"</pre>
+
+    <p>Поэтому <code>async</code>-функцию можно использовать там же, где Promise: с <code>.then()</code>, <code>Promise.all()</code> и т.д.</p>
+
+    <h3>Обработка ошибок: try / catch</h3>
+    <p>Вместо <code>.catch()</code> используется обычный <code>try / catch</code> — как в синхронном коде.</p>
+
+    <pre>async function loadUser() {
+  try {
+    const response = await fetch("/api/user");
+    const user = await response.json();
+    return user;
+  } catch (error) {
+    console.log("не получилось:", error);
+    return null;
+  }
+}</pre>
+
+    <p>Если что-то упадёт на любом <code>await</code> — управление перейдёт в <code>catch</code>.</p>
+
+    <h3>Последовательное выполнение</h3>
+    <p>Один из главных плюсов: код читается сверху вниз.</p>
+
+    <pre>async function process() {
+  const a = await step1();
+  console.log("шаг 1 готов");
+  
+  const b = await step2(a);
+  console.log("шаг 2 готов");
+  
+  const c = await step3(b);
+  console.log("шаг 3 готов");
+  
+  return c;
+}</pre>
+
+    <p>Понятно, что происходит. Никаких «а где тут .then?».</p>
+
+    <h3>Параллельное выполнение</h3>
+    <p>Если операции <em>не зависят</em> друг от друга, можно запустить их параллельно и подождать все сразу через <code>Promise.all</code>:</p>
+
+    <pre>async function loadAll() {
+  const [users, posts, comments] = await Promise.all([
+    fetch("/api/users").then(r => r.json()),
+    fetch("/api/posts").then(r => r.json()),
+    fetch("/api/comments").then(r => r.json())
+  ]);
+  
+  console.log(users, posts, comments);
+}</pre>
+
+    <p>Три запроса идут одновременно. Ждём все. Это быстрее, чем последовательно.</p>
+
+    <h3>Чего не делать</h3>
+    <p>Не стоит использовать <code>await</code> в цикле, если можно сделать иначе:</p>
+
+    <pre>// медленно: каждая итерация ждёт предыдущую
+for (const id of ids) {
+  const user = await fetchUser(id);
+  users.push(user);
+}
+
+// быстро: все запросы параллельно
+const users = await Promise.all(
+  ids.map(id => fetchUser(id))
+);</pre>
+
+    <p>Первый вариант выполняет запросы по очереди. Второй — сразу все.</p>
+
+    <h3>Promise vs async / await: когда что</h3>
+    <ul>
+      <li><strong>async / await</strong> — почти всегда. Читается лучше, ошибки ловятся проще.</li>
+      <li><strong>Promise</strong> — когда нужно передать «обещание» куда-то без ожидания, или когда работаешь с короткой цепочкой.</li>
+      <li><strong>Promise.all</strong> — внутри async-функций, для параллельных операций.</li>
+    </ul>
+
+    <p>На практике современный JS на 90% пишется на async / await.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>async</code> — перед функцией. <code>await</code> — перед Promise.</li>
+      <li><code>await</code> работает только внутри <code>async</code>-функции.</li>
+      <li>Ошибки ловятся через <code>try / catch</code>.</li>
+      <li>async-функция всегда возвращает Promise.</li>
+      <li>Для параллельных операций — <code>Promise.all</code> внутри async-функции.</li>
+      <li>Не используй <code>await</code> в цикле, если можно сделать параллельно.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>переписать код с Promise на async / await и почувствовать разницу</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>async-await.html</code> с обычным каркасом. Открой, F12 → Console.</li>
+      <li><strong>Задание 1 — базовый async / await.</strong> Напиши:
+        <pre>function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function run() {
+  console.log("старт");
+  await wait(2000);
+  console.log("прошло 2 секунды");
+  await wait(1000);
+  console.log("ещё 1 секунда");
+}
+
+run();</pre>
+        Убедись, что всё выполняется по порядку.
+      </li>
+      <li><strong>Задание 2 — перепиши с Promise.</strong> Возьми любое задание из темы 28 (с <code>.then()</code>) и перепиши его через <code>async / await</code>. Сравни, как читается.
+      </li>
+      <li><strong>Задание 3 — try / catch.</strong> Сделай async-функцию, которая через <code>await</code> ждёт Promise, который отклоняется. Поймай ошибку через <code>try / catch</code>.
+      </li>
+      <li><strong>Задание 4 — последовательно vs параллельно.</strong> Сделай три <code>wait</code> по 1 секунде. Сначала последовательно через три <code>await</code> — засеки время. Потом через <code>Promise.all</code> — засеки время. Запиши оба результата, объясни разницу.
+      </li>
+      <li><strong>Задание 5 — мини-проект.</strong> Кнопка. При клике: показать «загрузка...», подождать 2 секунды через async / await, показать «готово». Обработать случай, если что-то пошло не так (через try / catch).
+      </li>
+      <li><strong>Бонус:</strong> сделай функцию <code>loadData()</code>, которая имитирует загрузку нескольких данных (три <code>wait</code> с разными временами) и выводит «все данные загружены» после завершения.
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="примеры с async / await, try / catch, Promise.all..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="28-promises.html">← предыдущая</a>
+    <a class="btn" href="30-fetch.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 29 · продвинутый JS <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-29";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

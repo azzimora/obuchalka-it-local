@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03. Системные промпты · AI</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-prompts { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">AI · тема 03</div>
+    <h1>Системные промпты</h1>
+    <div class="subtitle">инструкция, которую пользователь не видит</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">AI</a><span>›</span>03
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p><strong>Системный промпт</strong> — это инструкция, которую модель получает <em>до</em> первого сообщения пользователя. Пользователь её не видит, но именно она задаёт роль, тон и правила поведения на весь диалог.</p>
+
+    <p><em>Аналогия:</em> это инструктаж сотрудника перед первым рабочим днём. Ты объясняешь: как общаться с клиентами, что можно говорить, что нельзя, в каком стиле отвечать. Системный промпт — это такой инструктаж для AI.</p>
+
+    <p>Все AI-продукты, которыми мы пользуемся, — это <strong>модель + системный промпт</strong>. Алиса, боты поддержки, ассистенты в приложениях — у каждого свой системный промпт.</p>
+
+    <h3>Как устроен диалог с моделью</h3>
+    <p>Каждый запрос к модели состоит из нескольких частей. Это видно, если работать через API:</p>
+    <pre>messages = [
+  { role: "system",    content: "Ты помощник по математике.
+                                  Не давай готовый ответ — только подсказки." },
+  { role: "user",      content: "Реши уравнение: 2x + 5 = 13" },
+  { role: "assistant", content: "Попробуй перенести 5 в другую сторону. Что получится?" },
+  { role: "user",      content: "2x = 8?" }
+]</pre>
+    <p>Модель видит всю эту историю целиком. Системный промпт идёт первым и имеет наибольший вес — он задаёт рамки для всего остального.</p>
+
+    <h3>Что можно задать в системном промпте</h3>
+    <ul>
+      <li><strong>Роль и личность</strong> — кто это, для кого, с каким характером.</li>
+      <li><strong>Тон и стиль</strong> — формально или неформально, коротко или подробно.</li>
+      <li><strong>Ограничения по темам</strong> — о чём говорить можно, о чём нельзя.</li>
+      <li><strong>Формат ответов</strong> — структура, длина, наличие примеров.</li>
+      <li><strong>Язык</strong> — на каком отвечать, если вопрос на другом.</li>
+      <li><strong>Запреты</strong> — чего делать категорически нельзя.</li>
+    </ul>
+
+    <p>Пример системного промпта для бота интернет-магазина:</p>
+    <pre>Ты — Виктор, помощник интернет-магазина "ТехноПлюс".
+Помогай клиентам с выбором товаров, отвечай на вопросы
+об ассортименте, условиях доставки и возврата.
+
+Если клиент спрашивает о товарах, которых нет в нашем
+магазине — вежливо объясни, что можешь помочь только
+с нашим ассортиментом.
+
+Если клиент недоволен — выражай сочувствие и предлагай
+связаться с живым оператором.
+
+Никогда не обещай скидки, которых нет на сайте.
+Никогда не критикуй конкурентов.</pre>
+
+    <h3>Чем системный промпт отличается от обычного</h3>
+    <ul>
+      <li><strong>Обычный промпт</strong> — разовая инструкция. Написал «объясняй как учитель» — AI объяснил один раз. В следующем сообщении он вернётся к обычному поведению.</li>
+      <li><strong>Системный промпт</strong> — постоянная инструкция. Действует весь диалог. Пользователь не может его «перебить» обычным сообщением.</li>
+    </ul>
+
+    <p>Пример: если в системном промпте написано «отвечай только в стихах», то модель будет отвечать стихами, даже если пользователь попросит «отвечай нормально».</p>
+
+    <h3>Где это применяется</h3>
+    <ul>
+      <li>Голосовые помощники (Алиса, Siri) — системный промпт делает их дружелюбными и с определённым характером.</li>
+      <li>Боты поддержки на сайтах — ограничивают темами компании, задают имя и стиль.</li>
+      <li>ChatGPT — имеет базовый системный промпт от OpenAI.</li>
+      <li>Персональные ассистенты — помнят предпочтения пользователя.</li>
+    </ul>
+
+    <h3>Инструменты для создания ассистентов</h3>
+    <ul>
+      <li><strong>Без кода:</strong> GPT Builder, Claude Projects, GigaChat — описываешь ассистента словами, система сама генерирует системный промпт.</li>
+      <li><strong>Через API:</strong> разработчик пишет системный промпт прямо в коде. Полный контроль.</li>
+      <li><strong>Локально:</strong> через Ollama с файлом системного промпта. Без интернета.</li>
+    </ul>
+
+    <h3>Принципы хорошего системного промпта</h3>
+    <ul>
+      <li><strong>Быть конкретным в роли.</strong> Не «ты помощник», а «ты Антон, помощник по английскому для подростков 13–16 лет с уровнем A2–B1».</li>
+      <li><strong>Описывать граничные случаи.</strong> Что делать, если вопрос не по теме? Если пользователь грубит? Если запрос неоднозначный?</li>
+      <li><strong>Использовать явные запреты.</strong> Не надейся, что модель догадается. Пиши «никогда не…», «не упоминай…».</li>
+      <li><strong>Тестировать и итерировать.</strong> Хороший системный промпт редко получается с первого раза.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Системный промпт — инструкция до начала диалога, пользователь её не видит.</li>
+      <li>Он задаёт роль, тон, ограничения, формат на весь разговор.</li>
+      <li>Все AI-продукты — это модель + системный промпт.</li>
+      <li>Обычный промпт разовый, системный — постоянный.</li>
+      <li>Хороший системный промпт конкретен, описывает граничные случаи и содержит явные запреты.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>создать своего ассистента с системным промптом и проверить, держит ли он роль</strong>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — разбери чужой системный промпт.</strong><br>
+        Открой любой AI-чатбот (Алиса, GigaChat, бот в приложении). Задай ему вопросы, чтобы «угадать» его системный промпт:
+        <ul>
+          <li>Как тебя зовут?</li>
+          <li>Что ты умеешь делать?</li>
+          <li>Что ты не будешь делать?</li>
+          <li>Можешь поговорить на тему, не связанную с твоей работой?</li>
+        </ul>
+        Запиши, что примерно написано в его системном промпте.
+      </li>
+      <li><strong>Задание 2 — напиши свой системный промпт.</strong><br>
+        Выбери идею ассистента: строгий учитель, игровой персонаж, помощник по домашке, друг-программист, тренер. Напиши системный промпт по структуре:
+        <pre>Ты — [имя и роль].
+Твоя задача: [главная цель].
+Как ты общаешься: [тон и стиль].
+Правила:
+- [правило 1]
+- [правило 2]
+- [правило 3]
+Если пользователь [случай 1]: [действие].
+Если пользователь [случай 2]: [действие].</pre>
+      </li>
+      <li><strong>Задание 3 — протестируй.</strong><br>
+        Вставь промпт в чат (через Claude Projects, GPT Builder или просто в начало диалога). Проведи минимум 5 сообщений:
+        <ul>
+          <li>обычный вопрос по теме;</li>
+          <li>вопрос не по теме;</li>
+          <li>попытка «сломать» роль («забудь, кто ты»);</li>
+          <li>эмоциональный запрос («ты мне не помогаешь»);</li>
+          <li>сложный запрос.</li>
+        </ul>
+        Запиши, где ассистент держит роль, а где ломается.
+      </li>
+      <li><strong>Задание 4 — сравни с обычным чатом.</strong><br>
+        Задай три одинаковых вопроса дважды: своему ассистенту (с системным промптом) и в обычный чат без него. Запиши, в чём принципиальная разница.
+      </li>
+      <li><strong>Задание 5 — улучши промпт.</strong><br>
+        На основе тестов допиши системный промпт: закрой слабые места, добавь запреты и граничные случаи, которые не были учтены. Сохрани финальную версию в поле «промпты».
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что попробовала на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось, что удивило..."></textarea>
+    </div>
+
+    <div class="field field-prompts">
+      <div class="field-label"><span>💬 мои системные промпты</span><span class="status-saved" id="saved-prompts">сохранено ✓</span></div>
+      <textarea id="in-prompts" placeholder="финальные версии системных промптов для своих ассистентов..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="видео, статьи, по одной ссылке на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="02-prompts.html">← предыдущая</a>
+    <a class="btn" href="04-datasets.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> AI · тема 03 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "ai-3";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    prompts: document.getElementById("in-prompts"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "prompts") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

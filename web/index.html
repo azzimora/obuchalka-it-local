@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web · обучалка</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .part-divider {
+    margin: 30px 0 16px;
+    padding: 12px 0;
+    border-top: 1px dashed var(--line);
+    text-align: center;
+    position: relative;
+  }
+  .part-divider span {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 16px;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .part-divider.pink span { color: var(--pink-soft); }
+  .part-divider.purple span { color: var(--purple-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="badge">направление</div>
+    <h1>Web</h1>
+    <div class="subtitle">HTML · CSS · JavaScript · продвинутый JS</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>Web
+  </div>
+
+  <div class="progress-panel">
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-text">0 / 35 пройдено</div>
+  </div>
+
+  <div class="toc" id="toc">
+
+    <!-- ═══════════ ЧАСТЬ 1. HTML ═══════════ -->
+    <div class="part-divider pink"><span>часть 1 · html</span></div>
+
+    <a class="toc-item" data-lesson="web-01" href="01-html-structure.html">
+      <span class="toc-num">01</span>
+      <span class="toc-title">Структура HTML и первые теги</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-02" href="02-special-symbols.html">
+      <span class="toc-num">02</span>
+      <span class="toc-title">Специальные символы и блочные элементы</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-03" href="03-lists.html">
+      <span class="toc-num">03</span>
+      <span class="toc-title">Списки в HTML</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-04" href="04-links-images.html">
+      <span class="toc-num">04</span>
+      <span class="toc-title">Ссылки и изображения</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-05" href="05-forms.html">
+      <span class="toc-num">05</span>
+      <span class="toc-title">Формы</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+    <!-- ═══════════ ЧАСТЬ 2. CSS ═══════════ -->
+    <div class="part-divider purple"><span>часть 2 · css</span></div>
+
+    <a class="toc-item" data-lesson="web-06" href="06-css-intro.html">
+      <span class="toc-num">06</span>
+      <span class="toc-title">Введение в CSS</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-07" href="07-cascade.html">
+      <span class="toc-num">07</span>
+      <span class="toc-title">Каскадность и основные свойства</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-08" href="08-box-model.html">
+      <span class="toc-num">08</span>
+      <span class="toc-title">Блочная модель</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-09" href="09-positioning.html">
+      <span class="toc-num">09</span>
+      <span class="toc-title">Позиционирование элементов</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-10" href="10-flexbox.html">
+      <span class="toc-num">10</span>
+      <span class="toc-title">Flexbox — основы</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-11" href="11-flexbox-2.html">
+      <span class="toc-num">11</span>
+      <span class="toc-title">Flexbox — продолжение</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-12" href="12-grid.html">
+      <span class="toc-num">12</span>
+      <span class="toc-title">CSS Grid — основы</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-13" href="13-grid-2.html">
+      <span class="toc-num">13</span>
+      <span class="toc-title">CSS Grid — продолжение</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-14" href="14-forms-style.html">
+      <span class="toc-num">14</span>
+      <span class="toc-title">Стилизация форм</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-15" href="15-tables-style.html">
+      <span class="toc-num">15</span>
+      <span class="toc-title">Стилизация таблиц</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-16" href="16-transitions.html">
+      <span class="toc-num">16</span>
+      <span class="toc-title">Transitions и Transform</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-17" href="17-animations.html">
+      <span class="toc-num">17</span>
+      <span class="toc-title">Animations и @keyframes</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-18" href="18-responsive.html">
+      <span class="toc-num">18</span>
+      <span class="toc-title">Адаптивный дизайн</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-19" href="19-onepage.html">
+      <span class="toc-num">19</span>
+      <span class="toc-title">Одностраничный сайт</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-20" href="20-multipage.html">
+      <span class="toc-num">20</span>
+      <span class="toc-title">Многостраничный сайт</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+    <!-- ═══════════ ЧАСТЬ 3. JS ОСНОВЫ ═══════════ -->
+    <div class="part-divider"><span>часть 3 · javascript</span></div>
+
+    <a class="toc-item" data-lesson="web-21" href="21-js-basics.html">
+      <span class="toc-num">21</span>
+      <span class="toc-title">JavaScript — основы</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-22" href="22-js-dom.html">
+      <span class="toc-num">22</span>
+      <span class="toc-title">DOM — работа со страницей</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-23" href="23-js-events.html">
+      <span class="toc-num">23</span>
+      <span class="toc-title">События</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-24" href="24-js-storage.html">
+      <span class="toc-num">24</span>
+      <span class="toc-title">Хранение данных в браузере</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-25" href="25-js-project.html">
+      <span class="toc-num">25</span>
+      <span class="toc-title">Мини-проект на JavaScript</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+    <!-- ═══════════ ЧАСТЬ 4. ПРОДВИНУТЫЙ JS ═══════════ -->
+    <div class="part-divider purple"><span>часть 4 · продвинутый js</span></div>
+
+    <a class="toc-item" data-lesson="web-26" href="26-async-intro.html">
+      <span class="toc-num">26</span>
+      <span class="toc-title">Асинхронность: что это и зачем</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-27" href="27-timers.html">
+      <span class="toc-num">27</span>
+      <span class="toc-title">setTimeout и setInterval</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-28" href="28-promises.html">
+      <span class="toc-num">28</span>
+      <span class="toc-title">Promise: обещания</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-29" href="29-async-await.html">
+      <span class="toc-num">29</span>
+      <span class="toc-title">async / await</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-30" href="30-fetch.html">
+      <span class="toc-num">30</span>
+      <span class="toc-title">fetch: запросы к серверу</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-31" href="31-api.html">
+      <span class="toc-num">31</span>
+      <span class="toc-title">Работа с API на практике</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-32" href="32-modules.html">
+      <span class="toc-num">32</span>
+      <span class="toc-title">Модули: import / export</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-33" href="33-classes.html">
+      <span class="toc-num">33</span>
+      <span class="toc-title">Классы и ООП</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-34" href="34-closures.html">
+      <span class="toc-num">34</span>
+      <span class="toc-title">Замыкания и область видимости</span>
+      <span class="toc-check">✓</span>
+    </a>
+    <a class="toc-item" data-lesson="web-35" href="35-errors.html">
+      <span class="toc-num">35</span>
+      <span class="toc-title">Обработка ошибок: try / catch</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+    <a class="toc-item" data-lesson="web-36" href="36-js-advanced-project.html">
+      <span class="toc-num">36</span>
+      <span class="toc-title">Итоговый проект · продвинутый JS</span>
+      <span class="toc-check">✓</span>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    <span class="mark">◈</span> Web · 35 тем · HTML + CSS + JS + продвинутый JS <span class="mark">◈</span>
+  </div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  function refreshToc() {
+    let done = 0;
+    document.querySelectorAll(".toc-item").forEach(el => {
+      const id = el.dataset.lesson;
+      const d = state.lessons[id];
+      if (d && d.done) { el.classList.add("done"); done++; }
+      else if (d && hasContent(d)) { el.classList.add("progress"); }
+    });
+    updateProgressOnToc(35, done);
+  }
+  refreshToc();
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04. Датасеты · AI</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .block table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85rem; }
+  .block th, .block td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .block th { color: var(--purple-soft); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-prompts { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">AI · тема 04</div>
+    <h1>Датасеты</h1>
+    <div class="subtitle">откуда знания, персонализация, RAG и fine-tuning</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">AI</a><span>›</span>04
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>На первой теме мы уже касались датасетов. Теперь — подробнее: откуда у модели знания, почему разные модели ведут себя по-разному, и как добавить модели <em>свои</em> данные.</p>
+
+    <h3>Откуда у модели знания</h3>
+    <p>Когда общаешься с ChatGPT или Claude, кажется, что они «всё знают». Но знания имеют конкретный источник и конкретные границы.</p>
+
+    <ul>
+      <li><strong>Common Crawl</strong> — архив всего интернета. Специальные программы (краулеры) обходят сайты и сохраняют текст: форумы, блоги, новости, энциклопедии. Петабайты текста. Отсюда — большая часть датасета.</li>
+      <li><strong>Книги и научные статьи</strong> — качественнее интернета в среднем. Дают модели богатый язык, логику изложения, точную терминологию.</li>
+      <li><strong>Код</strong> — репозитории с GitHub. Именно поэтому модели умеют программировать.</li>
+      <li><strong>Специализированные датасеты</strong> — данные, отобранные вручную под конкретную область: медицина, право, диалоги.</li>
+    </ul>
+
+    <p><strong>Чем лучше и чище датасет — тем умнее модель.</strong> Мусорный датасет даёт плохую модель, сколько бы вычислений ни потратили.</p>
+
+    <h3>Почему разные AI-продукты ведут себя по-разному</h3>
+    <p>Если все модели учились на похожих данных — почему GigaChat, ChatGPT и медицинский бот такие разные? Причин пять, и они работают вместе.</p>
+
+    <ul>
+      <li><strong>Разные базовые модели.</strong> GPT-4, Claude, Gemini, YandexGPT — это разные архитектуры, обученные на разных данных с разными методами.</li>
+      <li><strong>Разное дообучение.</strong> После базового обучения модель может пройти дополнительный этап на конкретной области. GigaChat дообучался на русскоязычных данных — поэтому он лучше понимает русский контекст.</li>
+      <li><strong>Разные системные промпты.</strong> Один и тот же GPT-4 может быть детским помощником или юридическим консультантом — в зависимости от системного промпта.</li>
+      <li><strong>RLHF</strong> — обучение с подкреплением на основе обратной связи людей. Живые люди оценивают ответы модели, и она учится быть полезнее и безопаснее.</li>
+      <li><strong>Дата отсечения.</strong> Разные модели обучались на данных до разных дат, поэтому знают о мире разное.</li>
+    </ul>
+
+    <h3>Три уровня персонализации</h3>
+    <p>Как добавить модели <em>свои</em> знания? Есть три уровня — от простого к сложному.</p>
+
+    <p><strong>Уровень 1 — Контекст сессии.</strong><br>
+    Просто вставить нужную информацию прямо в чат.</p>
+    <pre>Вот контекст моего проекта:
+- Я делаю сайт для школьной выставки роботов
+- Стек: HTML, CSS, немного JavaScript
+- Аудитория: ученики и родители, не технари
+
+Помоги придумать структуру главной страницы.</pre>
+    <p>Плюсы: быстро, бесплатно. Минусы: всё исчезает после закрытия чата.</p>
+
+    <p><strong>Уровень 2 — Долгосрочная память.</strong><br>
+    Некоторые инструменты сохраняют информацию между сессиями. ChatGPT Memory, Claude Projects — модель помнит предпочтения и материалы проекта.</p>
+
+    <p><strong>Уровень 3 — RAG (Retrieval-Augmented Generation).</strong><br>
+    Это «личный блокнот для AI». Ты даёшь модели доступ к своим документам, и она отвечает, опираясь на них.</p>
+
+    <p>Как работает RAG:</p>
+    <pre>Ты загружаешь документы (PDF, таблицы, заметки)
+        ↓
+Система разбивает их на фрагменты и индексирует
+        ↓
+Ты задаёшь вопрос — система находит нужные фрагменты
+        ↓
+Фрагменты добавляются в контекст к вопросу
+        ↓
+Модель отвечает, опираясь на твои документы</pre>
+
+    <p>RAG решает главную проблему галлюцинаций: модель не «придумывает», а опирается на реальные документы.</p>
+
+    <h3>Fine-tuning — дообучение</h3>
+    <p>Самый мощный, но и самый дорогой уровень персонализации.</p>
+
+    <p><em>Аналогия:</em> ChatGPT — это выпускник университета с широким кругозором. Fine-tuning — это ординатура по кардиологии. После неё он становится кардиологом — не просто «знает немного о сердце», а настоящий специалист.</p>
+
+    <p>Что нужно для fine-tuning:</p>
+    <ul>
+      <li>датасет пар «вопрос — идеальный ответ» по нужной теме (обычно тысячи примеров);</li>
+      <li>вычислительные ресурсы (дорого);</li>
+      <li>технические знания.</li>
+    </ul>
+
+    <p>Так созданы специализированные модели: медицинские, юридические, для написания кода.</p>
+
+    <h3>Промпт vs RAG vs Fine-tuning</h3>
+    <table>
+      <tr>
+        <th>Метод</th>
+        <th>Плюсы</th>
+        <th>Минусы</th>
+        <th>Когда использовать</th>
+      </tr>
+      <tr>
+        <td>Промпт</td>
+        <td>Быстро, бесплатно</td>
+        <td>Нужно вставлять каждый раз, ограничен окном</td>
+        <td>Одноразовые задачи, тесты</td>
+      </tr>
+      <tr>
+        <td>RAG</td>
+        <td>Большие документы, точные ответы, обновляемые данные</td>
+        <td>Требует настройки</td>
+        <td>Базы знаний, документация, боты поддержки</td>
+      </tr>
+      <tr>
+        <td>Fine-tuning</td>
+        <td>Глубокое усвоение стиля и знаний</td>
+        <td>Дорого, долго, при обновлении — переобучать</td>
+        <td>Специализированные продукты</td>
+      </tr>
+    </table>
+
+    <h3>Как компании строят AI-продукты</h3>
+    <p>В реальных продуктах методы <em>сочетаются</em>.</p>
+
+    <p><strong>Медицинский AI-ассистент:</strong></p>
+    <ul>
+      <li>базовая модель;</li>
+      <li>fine-tuning на медицинских текстах;</li>
+      <li>RAG с актуальными клиническими рекомендациями;</li>
+      <li>системный промпт: строгое ограничение тем, обязательные предупреждения.</li>
+    </ul>
+
+    <p><strong>Бот службы поддержки:</strong></p>
+    <ul>
+      <li>базовая модель;</li>
+      <li>RAG с базой знаний компании;</li>
+      <li>системный промпт: роль, тон, запреты.</li>
+    </ul>
+
+    <p><strong>Персональный ассистент:</strong></p>
+    <ul>
+      <li>базовая модель;</li>
+      <li>память: помнит предпочтения;</li>
+      <li>системный промпт: личный стиль.</li>
+    </ul>
+
+    <p>В каждом случае базовая модель одна. Разница — в комбинации инструментов поверх неё.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Знания модели — из датасета: интернет, книги, код, специализированные данные.</li>
+      <li>Разные модели ведут себя по-разному из-за архитектуры, дообучения, системных промптов, RLHF и даты отсечения.</li>
+      <li>Три уровня персонализации: контекст → память → RAG → fine-tuning.</li>
+      <li>RAG — «личный блокнот», решает проблему галлюцинаций.</li>
+      <li>Fine-tuning — дорого, но даёт глубокую специализацию.</li>
+      <li>В реальных продуктах методы комбинируются.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>увидеть своими глазами, как данные влияют на поведение модели</strong>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — сравни две модели.</strong><br>
+        Открой GigaChat и YandexGPT (или любые две доступные модели). Задай обеим один и тот же вопрос про российские реалии: «Что такое ЕГЭ и как к нему лучше готовиться?» Потом — вопрос с культурным контекстом: «Посоветуй, как провести майские праздники с семьёй в России». Сравни ответы. Запиши, чувствуется ли разница в данных, на которых обучалась каждая модель.
+      </li>
+      <li><strong>Задание 2 — симуляция RAG вручную.</strong><br>
+        Придумай «компанию» с уникальными данными (название, курсы, цены, особенности). Пример:
+        <pre>КосмоШкола — онлайн-школа программирования для детей 8-14 лет.
+Курсы:
+- Scratch для начинающих (8-10 лет) — 5000 руб/мес
+- Python базовый (10-12 лет) — 7000 руб/мес
+- Python продвинутый (12-14 лет) — 9000 руб/мес
+Занятия 2 раза в неделю. Первый урок бесплатно.
+Возврат в течение 7 дней.</pre>
+        <strong>Шаг 1:</strong> задай вопрос без контекста: «Сколько стоят курсы программирования в КосмоШколе?» — модель либо галлюцинирует, либо скажет «не знаю».
+        <br><strong>Шаг 2:</strong> вставь контекст в промпт и задай тот же вопрос. Сравни ответы. Запиши вывод.
+      </li>
+      <li><strong>Задание 3 — спроектируй AI-продукт.</strong><br>
+        Придумай AI-помощника для школьной библиотеки. Ответь на вопросы:
+        <ul>
+          <li>Какие задачи он должен решать?</li>
+          <li>Какой уровень персонализации нужен: промпт, RAG или fine-tuning?</li>
+          <li>Напиши системный промпт (3–5 правил).</li>
+          <li>Какие данные нужны для RAG?</li>
+        </ul>
+      </li>
+      <li><strong>Задание 4 — карточка пользователя.</strong><br>
+        Напиши «карточку пользователя» — что персональный ассистент должен знать о тебе:
+        <pre>Имя:
+Возраст:
+Интересы:
+Уровень в программировании:
+Цели:
+Предпочтения (коротко/подробно, с примерами/без):</pre>
+        Вставь карточку в начало диалога с AI и задай три вопроса. Проверь, учитывает ли модель профиль.
+      </li>
+      <li><strong>Задание 5 — датасет для fine-tuning.</strong><br>
+        Выбери задачу (подготовка к олимпиадам, английский через диалоги, помощь с Python). Напиши 5 пар «вопрос пользователя — идеальный ответ ассистента», которые точно соответствуют стилю и задаче. Сохрани в поле «промпты».
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что попробовала на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось, что удивило..."></textarea>
+    </div>
+
+    <div class="field field-prompts">
+      <div class="field-label"><span>💬 промпты и примеры данных</span><span class="status-saved" id="saved-prompts">сохранено ✓</span></div>
+      <textarea id="in-prompts" placeholder="карточка пользователя, датасет для fine-tuning, удачные промпты..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="видео, статьи, по одной ссылке на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="03-system-prompts.html">← предыдущая</a>
+    <a class="btn" href="05-agents.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> AI · тема 04 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "ai-4";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    prompts: document.getElementById("in-prompts"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "prompts") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

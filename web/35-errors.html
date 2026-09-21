@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>35. Обработка ошибок: try / catch · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .block table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85rem; }
+  .block th, .block td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .block th { color: var(--purple-soft); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 35 · продвинутый js · финал</div>
+    <h1>Обработка ошибок: try / catch</h1>
+    <div class="subtitle">как сделать код устойчивым к сбоям</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>35
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Ошибки случаются. Пользователь ввёл не то, сервер не ответил, файл не найден, интернет пропал. Хороший код умеет с этим работать — а не падать.</p>
+
+    <p>В этой теме — как ловить ошибки и что с ними делать.</p>
+
+    <h3>Что такое ошибка в JS</h3>
+    <p>Когда в коде что-то не так, JS создаёт объект <strong>Error</strong> и «выбрасывает» его (throw). Если никто не поймал — программа останавливается, и в консоли появляется красное сообщение.</p>
+
+    <pre>console.log(undefinedVariable);
+// ReferenceError: undefinedVariable is not defined</pre>
+
+    <h3>try / catch</h3>
+    <p>Конструкция, которая ловит ошибки:</p>
+
+    <pre>try {
+  // код, где может быть ошибка
+  console.log(undefinedVariable);
+} catch (error) {
+  // что делать, если ошибка
+  console.log("поймана ошибка:", error.message);
+}
+
+console.log("программа продолжает работать");</pre>
+
+    <p>Если в <code>try</code> что-то падает — управление переходит в <code>catch</code>. Программа не останавливается.</p>
+
+    <h3>finally — выполняется всегда</h3>
+    <pre>try {
+  console.log("в try");
+} catch (error) {
+  console.log("в catch");
+} finally {
+  console.log("в finally — всегда");
+}</pre>
+
+    <p><code>finally</code> полезен, когда надо что-то «прибрать» — независимо от того, была ошибка или нет.</p>
+
+    <h3>Объект Error</h3>
+    <p>У ошибки есть полезные свойства:</p>
+    <ul>
+      <li><code>error.message</code> — текст ошибки;</li>
+      <li><code>error.name</code> — тип ошибки;</li>
+      <li><code>error.stack</code> — стек вызовов (где именно упало).</li>
+    </ul>
+
+    <pre>try {
+  null.foo;
+} catch (error) {
+  console.log(error.name);     // "TypeError"
+  console.log(error.message);  // "Cannot read properties of null"
+}</pre>
+
+    <h3>Типы ошибок</h3>
+    <table>
+      <tr>
+        <th>Название</th>
+        <th>Когда бывает</th>
+      </tr>
+      <tr>
+        <td>ReferenceError</td>
+        <td>Переменная не существует</td>
+      </tr>
+      <tr>
+        <td>TypeError</td>
+        <td>Действие с неподходящим типом</td>
+      </tr>
+      <tr>
+        <td>SyntaxError</td>
+        <td>Ошибка в синтаксисе (обычно ловится при загрузке)</td>
+      </tr>
+      <tr>
+        <td>RangeError</td>
+        <td>Число вне допустимого диапазона</td>
+      </tr>
+      <tr>
+        <td>Custom Error</td>
+        <td>Своя ошибка через throw</td>
+      </tr>
+    </table>
+
+    <h3>throw — выбросить свою ошибку</h3>
+    <p>Иногда нужно сообщить об ошибке самому:</p>
+
+    <pre>function divide(a, b) {
+  if (b === 0) {
+    throw new Error("делить на ноль нельзя");
+  }
+  return a / b;
+}
+
+try {
+  console.log(divide(10, 0));
+} catch (error) {
+  console.log("ошибка:", error.message);  // "делить на ноль нельзя"
+}</pre>
+
+    <p>Так функция говорит: «я не могу это сделать, вот причина».</p>
+
+    <h3>Свои классы ошибок</h3>
+    <p>Можно создавать свои типы ошибок, чтобы различать их:</p>
+
+    <pre>class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+try {
+  throw new ValidationError("email неверный");
+} catch (error) {
+  if (error.name === "ValidationError") {
+    console.log("проблема с данными:", error.message);
+  } else {
+    console.log("другая ошибка:", error.message);
+  }
+}</pre>
+
+    <h3>try / catch в async / await</h3>
+    <p>Это самое частое применение. Любой <code>await</code> может упасть — его надо ловить:</p>
+
+    <pre>async function loadData() {
+  try {
+    const response = await fetch("https://api.example.com/data");
+    
+    if (!response.ok) {
+      throw new Error(`Сервер вернул ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("не удалось загрузить:", error.message);
+    return null;
+  }
+}</pre>
+
+    <h3>Promise.catch</h3>
+    <p>Если работаешь без <code>async / await</code>, ошибки ловятся через <code>.catch()</code>:</p>
+
+    <pre>fetch("https://api.example.com/data")
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.log("ошибка:", error.message));</pre>
+
+    <h3>Что делать с ошибкой в catch</h3>
+    <p>Поймать ошибку — это полдела. Дальше надо решить, что с ней делать. Вариантов несколько:</p>
+    <ul>
+      <li><strong>Показать пользователю понятное сообщение.</strong> «Не удалось загрузить данные» вместо красной ошибки в консоли.</li>
+      <li><strong>Записать в лог.</strong> <code>console.error()</code> для разработки.</li>
+      <li><strong>Попробовать снова.</strong> Если ошибка временная — повторить запрос.</li>
+      <li><strong>Использовать запасной вариант.</strong> Например, загрузить данные из кэша.</li>
+      <li><strong>Пробросить дальше.</strong> Если не можешь обработать сама — пусть разбирается вызывающий код.</li>
+    </ul>
+
+    <h3>Чего не делать</h3>
+
+    <p><strong>Не глотай ошибки молча:</strong></p>
+    <pre>try {
+  dangerousOperation();
+} catch (error) {
+  // пусто — ошибка исчезла, но проблема осталась
+}</pre>
+    <p>Это худшее, что можно сделать. Никто не узнает, что что-то сломалось.</p>
+
+    <p><strong>Не лови ошибку, если не знаешь, что с ней делать:</strong></p>
+    <pre>try {
+  const result = complexFunction();
+} catch (error) {
+  console.log("что-то пошло не так");  // ← а что именно? и что делать?
+}</pre>
+
+    <p><strong>Не используй try / catch для обычной логики:</strong></p>
+    <pre>// плохо — try / catch для проверки условия
+try {
+  if (user.age < 18) throw new Error("мало лет");
+} catch (error) { /* ... */ }
+
+// хорошо — обычный if
+if (user.age < 18) {
+  console.log("мало лет");
+}</pre>
+
+    <h3>Глобальный обработчик ошибок</h3>
+    <p>Можно поймать все непойманные ошибки в одном месте:</p>
+
+    <pre>window.addEventListener("error", event => {
+  console.log("глобальная ошибка:", event.message);
+});
+
+window.addEventListener("unhandledrejection", event => {
+  console.log("непойманный Promise:", event.reason);
+});</pre>
+
+    <p>Полезно для отладки и логирования.</p>
+
+    <h3>Паттерн: безопасная функция</h3>
+    <p>Часто полезно сделать функцию, которая не падает:</p>
+
+    <pre>async function safeFetch(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`статус ${response.status}`);
+    return { ok: true, data: await response.json() };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+}
+
+const result = await safeFetch("/api/data");
+if (result.ok) {
+  console.log(result.data);
+} else {
+  console.log("ошибка:", result.error);
+}</pre>
+
+    <p>Вместо того чтобы бросать ошибку, функция возвращает объект с полем <code>ok</code>. Так вызывающий код явно проверяет результат.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>try / catch</code> ловит ошибки, <code>finally</code> выполняется всегда.</li>
+      <li>Ошибка — это объект с <code>message</code>, <code>name</code>, <code>stack</code>.</li>
+      <li><code>throw new Error()</code> — выбросить свою ошибку.</li>
+      <li>Можно создавать свои классы ошибок.</li>
+      <li>Любой <code>await</code> должен быть в <code>try / catch</code>.</li>
+      <li>Не глотай ошибки молча. Не лови, если не знаешь, что делать.</li>
+      <li>Для API удобен паттерн «безопасная функция» с полем <code>ok</code>.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>научиться ловить ошибки и делать код устойчивым</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>errors.html</code> с обычным каркасом. Открой, F12 → Console.</li>
+      <li><strong>Задание 1 — первый try / catch.</strong> Напиши код, который обращается к несуществующей переменной, оберни в <code>try / catch</code>, выведи <code>error.name</code> и <code>error.message</code>.
+      </li>
+      <li><strong>Задание 2 — finally.</strong> Сделай <code>try / catch / finally</code>. В <code>try</code> — ошибка, в <code>catch</code> — обработка, в <code>finally</code> — сообщение «завершено». Убедись, что finally выполняется.
+      </li>
+      <li><strong>Задание 3 — своя ошибка.</strong> Напиши функцию <code>checkAge(age)</code>, которая выбрасывает ошибку, если возраст меньше 18 или больше 120. Оберни вызов в <code>try / catch</code>. Проверь с разными значениями.
+      </li>
+      <li><strong>Задание 4 — свой класс ошибок.</strong> Создай класс <code>ValidationError extends Error</code>. Напиши функцию <code>validateEmail(email)</code>, которая выбрасывает <code>ValidationError</code>, если email без «@». Поймай и обработай отдельно от других ошибок.
+      </li>
+      <li><strong>Задание 5 — try / catch в async.</strong> Сделай запрос к несуществующему URL через fetch. Оберни в <code>try / catch</code>. Выведи понятное сообщение об ошибке. (Подсказка: fetch без интернета или с неверным URL выбросит ошибку.)
+      </li>
+      <li><strong>Задание 6 — безопасная функция.</strong> Напиши <code>safeFetch(url)</code> из теории. Используй её для запроса к <code>https://jsonplaceholder.typicode.com/posts/1</code>. Проверь результат через <code>if (result.ok)</code>.
+      </li>
+      <li><strong>Задание 7 — на странице.</strong> Сделай кнопку, при клике на которую загружаются данные. Если ошибка — показать понятное сообщение и кнопку «попробовать снова». Стилизуй красиво.
+      </li>
+      <li><strong>Бонус — глобальный обработчик.</strong> Добавь <code>window.addEventListener("error", ...)</code>. Убедись, что непойманные ошибки попадают туда.
+      </li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="try / catch, свои ошибки, safeFetch..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="документация, статьи, примеры..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="34-closures.html">← предыдущая</a>
+    <a class="btn" href="index.html">к оглавлению Web →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 35 · продвинутый JS · финал <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-35";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

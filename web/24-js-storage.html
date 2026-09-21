@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24. Хранение данных в браузере · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 24</div>
+    <h1>Хранение данных в браузере</h1>
+    <div class="subtitle">localStorage — чтобы данные не терялись после перезагрузки</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>24
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Всё, что JS хранит в переменных, пропадает при перезагрузке страницы. <code>let count = 5;</code> — и после F5 снова <code>0</code>. Чтобы данные жили между сессиями, используют <strong>localStorage</strong>.</p>
+
+    <h3>Что это</h3>
+    <p>Встроенное в браузер хранилище. Работает как мини-база данных прямо в браузере: данные остаются, даже если закрыть вкладку или выключить компьютер. Хранится отдельно для каждого сайта (в твоём случае — для каждого файла-страницы).</p>
+
+    <h3>Четыре операции</h3>
+    <pre>// сохранить
+localStorage.setItem("name", "Аня");
+
+// прочитать
+const name = localStorage.getItem("name"); // "Аня"
+
+// удалить одно
+localStorage.removeItem("name");
+
+// очистить всё
+localStorage.clear();</pre>
+    <p>Всё. Больше ничего не нужно. Это очень простой API.</p>
+
+    <h3>Важно: только строки</h3>
+    <p>localStorage хранит <em>только строки</em>. Число <code>5</code> превратится в <code>"5"</code>. Для объектов и массивов — <code>JSON</code>:</p>
+    <pre>const user = { name: "Аня", age: 17 };
+
+// сохранить объект
+localStorage.setItem("user", JSON.stringify(user));
+
+// прочитать объект
+const saved = JSON.parse(localStorage.getItem("user"));
+console.log(saved.name); // "Аня"</pre>
+    <p><code>JSON.stringify</code> — объект в строку. <code>JSON.parse</code> — строка в объект. <strong>Эту пару надо помнить наизусть</strong>, они используются везде.</p>
+
+    <h3>Проверка на пустоту</h3>
+    <p>Если ключа нет, <code>getItem</code> вернёт <code>null</code>. Обычно делают так:</p>
+    <pre>const raw = localStorage.getItem("count");
+const count = raw ? Number(raw) : 0;</pre>
+    <p>Или для объектов:</p>
+    <pre>const user = JSON.parse(localStorage.getItem("user") || "{}");</pre>
+    <p>Если ключа нет — вернётся <code>"{}"</code> и <code>JSON.parse</code> даст пустой объект.</p>
+
+    <h3>Пример: счётчик, который помнит себя</h3>
+    <pre>let count = Number(localStorage.getItem("count")) || 0;
+const display = document.getElementById("count");
+display.textContent = count;
+
+document.getElementById("plus").addEventListener("click", () => {
+  count++;
+  display.textContent = count;
+  localStorage.setItem("count", count);
+});</pre>
+    <p>Перезагрузи страницу — счётчик останется. Закрой браузер, открой снова — тоже.</p>
+
+    <h3>Пример: список задач</h3>
+    <pre>const input = document.querySelector("#task-input");
+const list = document.querySelector("#task-list");
+
+// загрузить при старте
+let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+renderTasks();
+
+function renderTasks() {
+  list.innerHTML = "";
+  tasks.forEach((task, i) => {
+    const li = document.createElement("li");
+    li.textContent = task;
+    li.addEventListener("click", () => {
+      tasks.splice(i, 1);
+      saveTasks();
+      renderTasks();
+    });
+    list.appendChild(li);
+  });
+}
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+document.querySelector("#add").addEventListener("click", () => {
+  if (!input.value.trim()) return;
+  tasks.push(input.value.trim());
+  input.value = "";
+  saveTasks();
+  renderTasks();
+});</pre>
+    <p>Это уже настоящий todo-лист. Он сохраняется между сессиями. <strong>Вот так работают реальные приложения.</strong></p>
+
+    <h3>sessionStorage и cookies</h3>
+    <ul>
+      <li><strong>localStorage</strong> — хранится, пока пользователь не очистит. Не имеет срока. Много места (~5–10 МБ);</li>
+      <li><strong>sessionStorage</strong> — тот же API, но данные живут до закрытия вкладки;</li>
+      <li><strong>cookies</strong> — маленькие данные, отправляются на сервер при каждом запросе. Устаревший способ для клиентского хранения.</li>
+    </ul>
+    <p>Для своих проектов почти всегда <strong>localStorage</strong>.</p>
+
+    <h3>Ограничения</h3>
+    <ul>
+      <li>Только строки;</li>
+      <li>Около 5–10 МБ на сайт;</li>
+      <li>Хранится в браузере, <em>не на сервере</em>. Если пользователь очистит данные — всё пропадёт;</li>
+      <li>Нельзя использовать для паролей и чувствительных данных;</li>
+      <li>Работает только для файлов, открытых через один и тот же путь (если перенести HTML в другую папку — данные не найдутся).</li>
+    </ul>
+
+    <h3>Важный нюанс для твоей обучалки</h3>
+    <p>Твоя обучалка уже использует localStorage — та самая <code>app.js</code>, которую мы писали. Ключ <code>"local-adaptation-v1"</code> — под ним хранится всё твоё: прогресс, заметки, ответы. Поэтому, если очистить данные браузера, всё пропадёт. Так что раз в неделю делай бэкап через «Экспорт JSON» — на всякий случай.</p>
+
+    <h3>Что важно запомнить</h3>
+    <ul>
+      <li><code>setItem</code> / <code>getItem</code> / <code>removeItem</code> / <code>clear</code>;</li>
+      <li>Хранит только строки;</li>
+      <li><code>JSON.stringify</code> + <code>JSON.parse</code> — для объектов;</li>
+      <li><code>getItem</code> возвращает <code>null</code>, если ключа нет;</li>
+      <li>localStorage — постоянный, sessionStorage — до закрытия вкладки;</li>
+      <li>Для чувствительных данных — не использовать.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать три штуки, которые помнят себя после перезагрузки</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>storage.html</code> + <code>style.css</code> + <code>script.js</code>.</li>
+      <li><strong>Проект 1 — счётчик с памятью:</strong>
+        <ul>
+          <li>кнопки «+» и «−»;</li>
+          <li>при старте загружай значение из localStorage;</li>
+          <li>при каждом клике — сохраняй;</li>
+          <li>обнови страницу — значение должно остаться;</li>
+          <li><em>бонус:</em> кнопка «сброс», которая очищает и localStorage.</li>
+        </ul>
+      </li>
+      <li><strong>Проект 2 — тема с памятью:</strong>
+        <ul>
+          <li>кнопка переключения светлая/тёмная;</li>
+          <li>при старте страница должна уже быть в той теме, которую выбрал в прошлый раз;</li>
+          <li>при переключении — сохраняй в localStorage.</li>
+        </ul>
+      </li>
+      <li><strong>Проект 3 — список задач:</strong>
+        <ul>
+          <li>поле ввода + кнопка «добавить»;</li>
+          <li>список задач;</li>
+          <li>при старте — загружай из localStorage;</li>
+          <li>при добавлении и удалении — сохраняй;</li>
+          <li><em>бонус:</em> клик по задаче удаляет её;</li>
+          <li><em>бонус 2:</em> если задач нет — покажи «пока пусто».</li>
+        </ul>
+      </li>
+      <li><strong>Главное:</strong> попробуй сохранить в localStorage объект (через <code>JSON.stringify</code>) и прочитать его обратно (через <code>JSON.parse</code>). Убедись, что свойства на месте.</li>
+      <li><strong>Проверка:</strong> открой F12 → Application → Local Storage. Ты увидишь свои данные вживую. Так удобно проверять, что всё сохраняется.</li>
+      <li><strong>Важный момент:</strong> в твоей обучалке уже используется localStorage. Открой Application → Local Storage → ключ <code>local-adaptation-v1</code> — там лежат твои ответы. Не удаляй их случайно.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="23-js-events.html">← предыдущая</a>
+    <a class="btn" href="25-js-project.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 24 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-24";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

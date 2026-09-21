@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08. Блочная модель · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 08</div>
+    <h1>Блочная модель</h1>
+    <div class="subtitle">padding, border, margin — где что</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>08
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Каждый элемент на странице — это <strong>прямоугольная коробка</strong>. У неё есть четыре слоя, вложенных друг в друга, как матрёшка. Это и есть блочная модель (box model).</p>
+
+    <h3>Четыре слоя</h3>
+    <ul>
+      <li><strong>content</strong> — сам контент (текст, картинка). Внутренняя часть;</li>
+      <li><strong>padding</strong> — внутренний отступ. Пространство между контентом и рамкой. «Надувает» коробку изнутри;</li>
+      <li><strong>border</strong> — рамка. Обводка вокруг padding;</li>
+      <li><strong>margin</strong> — внешний отступ. Пространство <em>вне</em> рамки. Отодвигает коробку от других.</li>
+    </ul>
+
+    <p><strong>Аналогия:</strong> представь картину в рамке, висящую на стене. Картина — content. Паспарту (белое поле вокруг картины внутри рамки) — padding. Сама рамка — border. Расстояние до соседней картины — margin.</p>
+
+    <h3>Как задавать</h3>
+    <pre>.card {
+  width: 300px;        /* ширина контента */
+  padding: 20px;       /* со всех сторон */
+  border: 2px solid pink;
+  margin: 16px;
+}</pre>
+
+    <p>Можно задавать стороны по отдельности:</p>
+    <pre>padding-top: 10px;
+padding-right: 20px;
+padding-bottom: 10px;
+padding-left: 20px;</pre>
+
+    <p>Или коротко:</p>
+    <pre>padding: 10px 20px;        /* верх/низ · лево/право */
+padding: 10px 20px 30px;   /* верх · лево/право · низ */
+padding: 10px 20px 30px 40px; /* верх · право · низ · лево (по часовой) */</pre>
+
+    <p>То же самое работает для <code>margin</code>.</p>
+
+    <h3>Центрирование блока</h3>
+    <p>Если у блока есть <code>width</code>, его можно отцентрировать так:</p>
+    <pre>margin: 0 auto;</pre>
+    <p><code>auto</code> слева и справа = равные отступы = по центру.</p>
+
+    <h3>box-sizing — самая частая ловушка</h3>
+    <p>По умолчанию <code>width: 300px</code> — это ширина <em>только контента</em>. Если добавить <code>padding: 20px</code> и <code>border: 2px</code>, реальная ширина станет 300 + 40 + 4 = 344px. Многие на этом спотыкаются.</p>
+
+    <p>Решение — <code>box-sizing</code>:</p>
+    <pre>* {
+  box-sizing: border-box;
+}</pre>
+    <p>Тогда <code>width: 300px</code> — это <em>вся</em> коробка, включая padding и border. Гораздо удобнее, и почти все проекты так и пишут.</p>
+
+    <h3>Схлопывание margin (margin collapse)</h3>
+    <p>Вертикальные margin соседних блоков «схлопываются»: если у одного <code>margin-bottom: 20px</code>, а у другого <code>margin-top: 30px</code>, между ними будет <em>не 50, а 30</em> — большее из двух. Это нормальное поведение, не баг.</p>
+
+    <h3>Как посмотреть блочную модель</h3>
+    <p>F12 → выбери элемент → вкладка «Computed» или «Layout» — увидишь цветную схему с content / padding / border / margin. Очень помогает, когда что-то «не туда встало».</p>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>почувствовать каждое кольцо блочной модели</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>box-model.html</code> + <code>style.css</code>.</li>
+      <li>Сразу добавь в CSS:
+        <pre>* { box-sizing: border-box; }</pre>
+      </li>
+      <li>В HTML сделай три блока <code>&lt;div class="box"&gt;</code> с коротким текстом внутри.</li>
+      <li>Поэкспериментируй:
+        <ul>
+          <li>первому блоку — <code>padding: 20px;</code> и фон посветлее. Заметь, как текст «отодвинулся» от краёв;</li>
+          <li>второму — <code>border: 3px solid pink;</code>. Заметь, где именно рамка;</li>
+          <li>третьему — <code>margin: 40px;</code>. Заметь, как он отодвинулся от соседей;</li>
+          <li>первому — <code>width: 300px; margin: 0 auto;</code>. Заметь центрирование.</li>
+        </ul>
+      </li>
+      <li><strong>Проверка box-sizing:</strong> задай блоку <code>width: 300px; padding: 40px; border: 5px solid;</code>. Открой DevTools → Computed — убедись, что итоговая ширина ровно 300px.</li>
+      <li><strong>Проверка схлопывания:</strong> сделай два блока с <code>margin-bottom: 40px;</code> и <code>margin-top: 20px;</code> между ними. Замерь в DevTools — увидишь 40, а не 60. Запиши это в конспект.</li>
+      <li><strong>Главное:</strong> открой DevTools → найди любой блок → во вкладке Elements посмотри цветную схему блочной модели. Потыкай значения прямо там — увидишь, как меняется страница в реальном времени.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="07-cascade.html">← предыдущая</a>
+    <a class="btn" href="09-positioning.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 08 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-08";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

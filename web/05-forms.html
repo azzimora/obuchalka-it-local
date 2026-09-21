@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05. Формы · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 05</div>
+    <h1>Формы</h1>
+    <div class="subtitle">как получать данные от пользователя</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>05
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p><strong>Форма</strong> — это способ, которым страница спрашивает у человека что-то: имя, email, выбор, сообщение. Без форм не было бы ни логинов, ни поиска, ни комментариев.</p>
+
+    <h3>Контейнер — <code>&lt;form&gt;</code></h3>
+    <p>Всё, что относится к одной форме, лежит внутри <code>&lt;form&gt;</code>:</p>
+    <pre>&lt;form&gt;
+  ... поля ...
+&lt;/form&gt;</pre>
+    <p>У формы есть атрибуты <code>action</code> (куда отправлять) и <code>method</code> (как: <code>get</code> или <code>post</code>), но пока они нам не нужны — вернёмся к ним в JS.</p>
+
+    <h3>Главные поля</h3>
+
+    <p><strong>Текстовая строка</strong> — <code>&lt;input type="text"&gt;</code>:</p>
+    <pre>&lt;input type="text" name="username" placeholder="твоё имя"&gt;</pre>
+
+    <p><strong>Email, пароль, число, дата</strong> — тот же <code>input</code>, но с разным <code>type</code>:</p>
+    <ul>
+      <li><code>type="email"</code> — браузер проверит, что там почта;</li>
+      <li><code>type="password"</code> — символы скрыты точками;</li>
+      <li><code>type="number"</code> — только цифры;</li>
+      <li><code>type="date"</code> — календарик;</li>
+      <li><code>type="color"</code> — выбор цвета;</li>
+      <li><code>type="checkbox"</code> — галочка;</li>
+      <li><code>type="radio"</code> — один из нескольких.</li>
+    </ul>
+
+    <p><strong>Большой текст</strong> — <code>&lt;textarea&gt;</code>:</p>
+    <pre>&lt;textarea name="message" rows="4"&gt;&lt;/textarea&gt;</pre>
+
+    <p><strong>Выпадающий список</strong> — <code>&lt;select&gt;</code> + <code>&lt;option&gt;</code>:</p>
+    <pre>&lt;select name="city"&gt;
+  &lt;option&gt;Москва&lt;/option&gt;
+  &lt;option&gt;Питер&lt;/option&gt;
+&lt;/select&gt;</pre>
+
+    <p><strong>Кнопка</strong> — <code>&lt;button&gt;</code>:</p>
+    <pre>&lt;button type="submit"&gt;отправить&lt;/button&gt;</pre>
+
+    <h3>Подписи — <code>&lt;label&gt;</code></h3>
+    <p>У каждого поля должна быть подпись. Связывают их так: у поля <code>id</code>, у <code>label</code> — <code>for</code> с тем же значением. Тогда клик по тексту ставит курсор в поле.</p>
+    <pre>&lt;label for="name"&gt;Имя:&lt;/label&gt;
+&lt;input id="name" type="text"&gt;</pre>
+
+    <h3>Атрибуты, которые стоит знать</h3>
+    <ul>
+      <li><code>placeholder</code> — серая подсказка внутри поля;</li>
+      <li><code>value</code> — предзаполненное значение;</li>
+      <li><code>required</code> — поле обязательно;</li>
+      <li><code>disabled</code> — поле отключено;</li>
+      <li><code>name</code> — имя поля (важно для отправки и для JS).</li>
+    </ul>
+
+    <p><strong>Правило:</strong> у каждого поля должен быть <code>name</code>, иначе при отправке оно «потеряется».</p>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать форму регистрации или анкету</strong>.</p>
+
+    <ul>
+      <li>Создай файл <code>forms.html</code> с обычным каркасом.</li>
+      <li>Внутри <code>&lt;body&gt;</code> сделай <code>&lt;form&gt;</code> с полями:
+        <ul>
+          <li><strong>имя</strong> (<code>type="text"</code>) — обязательно;</li>
+          <li><strong>email</strong> (<code>type="email"</code>) — обязательно;</li>
+          <li><strong>пароль</strong> (<code>type="password"</code>);</li>
+          <li><strong>возраст</strong> (<code>type="number"</code>);</li>
+          <li><strong>любимый цвет</strong> (<code>type="color"</code>);</li>
+          <li><strong>согласие с правилами</strong> (<code>type="checkbox"</code>);</li>
+          <li><strong>пол</strong> — два radio: мужской / женский;</li>
+          <li><strong>город</strong> — <code>&lt;select&gt;</code> с 3–4 вариантами;</li>
+          <li><strong>о себе</strong> — <code>&lt;textarea&gt;</code>;</li>
+          <li><strong>кнопка</strong> «отправить».</li>
+        </ul>
+      </li>
+      <li>У каждого поля сделай <code>&lt;label&gt;</code> со связкой <code>for</code>/<code>id</code>.</li>
+      <li>Добавь <code>placeholder</code> хотя бы в 3 поля.</li>
+      <li>Проверь <code>required</code>: попробуй отправить форму с пустым обязательным полем — браузер должен поругаться.</li>
+      <li><strong>Эксперимент:</strong> убери <code>name</code> у одного поля — визуально ничего не поменяется, но запомни: без <code>name</code> оно не отправится.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="04-links-images.html">← предыдущая</a>
+    <a class="btn" href="06-css-intro.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 05 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-05";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

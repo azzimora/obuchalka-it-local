@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13. CSS Grid — продолжение · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 13</div>
+    <h1>CSS Grid — продолжение</h1>
+    <div class="subtitle">размещение элементов, auto-fill и хитрые сетки</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>13
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>В прошлой теме мы строили сетку целиком. Теперь — как <em>положить один элемент</em> в конкретную ячейку или растянуть его на несколько. Это то, что делает Grid незаменимым для сложных макетов.</p>
+
+    <h3>Линии сетки</h3>
+    <p>У Grid есть <strong>линии</strong> (grid lines) — они нумеруются. Если 3 столбца, то линий 4: перед первым, между столбцами, после последнего.</p>
+    <pre>grid-template-columns: repeat(3, 1fr);
+/* линии: 1 | 2 | 3 | 4 */</pre>
+
+    <h3>grid-column и grid-row</h3>
+    <p>Говорим элементу: «начнись на линии 1, закончись на линии 3».</p>
+    <pre>.wide {
+  grid-column: 1 / 3;   /* с 1 по 3 = занимает 2 столбца */
+  grid-row: 1 / 2;
+}</pre>
+
+    <p>Можно через span — «занять столько-то ячеек»:</p>
+    <pre>.wide {
+  grid-column: span 2;   /* занять 2 столбца */
+}</pre>
+    <p>Так проще, потому что не надо считать линии.</p>
+
+    <h3>Пример: баннер на всю ширину</h3>
+    <pre>.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.banner {
+  grid-column: 1 / -1;   /* от первой линии до последней */
+}</pre>
+    <p><code>1 / -1</code> — «от начала до конца». Часто используется для full-width блоков внутри сетки.</p>
+
+    <h3>auto-fit vs auto-fill</h3>
+    <p>Обе делают адаптивную сетку, но по-разному:</p>
+    <ul>
+      <li><code>repeat(auto-fill, minmax(200px, 1fr))</code> — создаст <em>столько столбцов, сколько влезет</em>, даже если карточек меньше. Пустые ячейки останутся пустыми, но место под них будет.</li>
+      <li><code>repeat(auto-fit, minmax(200px, 1fr))</code> — создаст столбцы под <em>фактическое количество</em> карточек и растянет их. Если карточек мало — они займут всю ширину.</li>
+    </ul>
+    <p>На практике <strong>auto-fit</strong> чаще нужен именно для галерей: 3 карточки на широком экране займут всё пространство.</p>
+
+    <h3>min-content, max-content, fit-content</h3>
+    <ul>
+      <li><code>min-content</code> — минимальная ширина, при которой контент ещё не ломается (обычно самое длинное слово);</li>
+      <li><code>max-content</code> — ширина по самому длинному контенту, без переноса;</li>
+      <li><code>fit-content(300px)</code> — «не больше 300px, но и не меньше нужного».</li>
+    </ul>
+    <pre>grid-template-columns: fit-content(300px) 1fr;</pre>
+    <p>Так делают сайдбары, которые «не шире 300, но и не шире, чем нужно».</p>
+
+    <h3>grid-auto-flow — как идут элементы</h3>
+    <ul>
+      <li><code>row</code> (по умолчанию) — заполнение по строкам;</li>
+      <li><code>column</code> — по столбцам;</li>
+      <li><code>dense</code> — «уплотнить», заполняя пробелы. Полезно для мозаик.</li>
+    </ul>
+
+    <h3>grid-template-areas снова</h3>
+    <p>Ещё раз — потому что это самый наглядный способ строить макет:</p>
+    <pre>.page {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "nav    main   aside"
+    "footer footer footer";
+  grid-template-columns: 200px 1fr 240px;
+  gap: 12px;
+}
+.header { grid-area: header; }
+.nav    { grid-area: nav; }
+.main   { grid-area: main; }
+.aside  { grid-area: aside; }
+.footer { grid-area: footer; }</pre>
+    <p>Точки в areas — пустые ячейки: <code>"header . aside"</code>.</p>
+
+    <h3>Вложенные сетки</h3>
+    <p>Grid-элемент может сам быть grid-контейнером. Так строят сложные интерфейсы: внешняя сетка держит структуру, внутренние — раскладывают контент в карточке.</p>
+
+    <h3>Что важно запомнить</h3>
+    <ul>
+      <li><code>grid-column: span N;</code> — занять N столбцов;</li>
+      <li><code>1 / -1</code> — от начала до конца;</li>
+      <li><code>auto-fit</code> vs <code>auto-fill</code> — растянуть или оставить пустые;</li>
+      <li><code>grid-template-areas</code> — самый наглядный способ макета;</li>
+      <li><code>dense</code> — для мозаик и masonry-подобных сеток.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>собрать журнальный макет</strong> — тот, где одна большая статья и несколько маленьких.</p>
+
+    <ul>
+      <li>Создай файл <code>grid-2.html</code> + <code>style.css</code>.</li>
+      <li><strong>Упражнение 1 — растянуть на 2:</strong> сетка 4 столбца, 8 блоков. У второго поставь <code>grid-column: span 2;</code>. Убедись, что он занимает две ячейки.</li>
+      <li><strong>Упражнение 2 — full-width:</strong> внутри той же сетки сделай блок с <code>grid-column: 1 / -1;</code> — растянется на всю ширину.</li>
+      <li><strong>Упражнение 3 — auto-fit vs auto-fill:</strong> сделай две галереи с 3 карточками. Одна с <code>auto-fill</code>, другая с <code>auto-fit</code>. Сузь окно и сравни: где карточки растягиваются, а где остаются узкими.</li>
+      <li><strong>Макет 1 — «журнал»:</strong> сетка 4 столбца. Сделай:
+        <ul>
+          <li>большой блок-«заголовок» на всю ширину (<code>1 / -1</code>);</li>
+          <li>одну «главную статью» на 2 столбца и 2 строки (<code>grid-column: span 2; grid-row: span 2;</code>);</li>
+          <li>остальные — обычные на 1 ячейку, чтобы заполнили правую часть.</li>
+        </ul>
+      </li>
+      <li><strong>Макет 2 — Bento-сетка:</strong> сделай «бенто» — сетку из 5–6 блоков разного размера: один широкий, один высокий, остальные обычные. Это модный стиль, и Grid для него — идеальный.</li>
+      <li><strong>Главное:</strong> открой DevTools — на Grid-контейнере есть специальная панель, показывающая <em>линии</em>. Потыкай элементы — увидишь, как они ложатся на сетку.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="12-grid.html">← предыдущая</a>
+    <a class="btn" href="14-forms-style.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 13 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-13";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

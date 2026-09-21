@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>обучалка · главная</title>
+<link rel="stylesheet" href="_shared/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="badge">local adaptation</div>
+    <h1>Обучалка</h1>
+    <div class="subtitle">моя личная база · всё локально · в своём темпе</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="cards">
+
+    <a class="card" href="_shared/profile.html">
+      <span class="card-icon">◈</span>
+      <div class="card-title">Мой кабинет</div>
+      <div class="card-desc">Профиль, помодоро-таймер, статистика и прогресс.</div>
+      <div class="card-meta">таймер · профиль · сатистика</div>
+    </a>
+
+    <a class="card" href="web/index.html">
+      <span class="card-icon">🌐</span>
+      <div class="card-title">Web</div>
+      <div class="card-desc">HTML, CSS, JavaScript. Основа всего, что ты видишь в браузере.</div>
+      <div class="card-meta" id="meta-web">— тем</div>
+    </a>
+
+    <a class="card" href="ai/index.html">
+      <span class="card-icon">✦</span>
+      <div class="card-title">AI</div>
+      <div class="card-desc">Что такое AI, промпты, датасеты, агенты, оркестраторы, будущее.</div>
+      <div class="card-meta" id="meta-ai">— тем</div>
+    </a>
+
+    <a class="card" href="python/index.html">
+      <span class="card-icon">🐍</span>
+      <div class="card-title">Python</div>
+      <div class="card-desc">Основы программирования, списки, словари, функции, проекты.</div>
+      <div class="card-meta" id="meta-python">14 тем</div>
+    </a>
+
+
+    <div class="card soon">
+      <span class="card-icon">⛏️</span>
+      <div class="card-title">Minecraft</div>
+      <div class="card-desc">Блочный и текстовый Python в Minecraft.</div>
+    </div>
+
+    <div class="card soon">
+      <span class="card-icon">🎮</span>
+      <div class="card-title">Roblox / Lua</div>
+      <div class="card-desc">Основы Lua, механики, инструменты, NPC, жанры.</div>
+    </div>
+
+    <div class="card soon">
+      <span class="card-icon">🧊</span>
+      <div class="card-title">Blender</div>
+      <div class="card-desc">3D-моделирование, модификаторы, материалы, рендер.</div>
+    </div>
+
+    <div class="card soon">
+      <span class="card-icon">⚙️</span>
+      <div class="card-title">C++</div>
+      <div class="card-desc">Основы, массивы, строки, функции, ООП.</div>
+    </div>
+
+    <div class="card soon">
+      <span class="card-icon">🎨</span>
+      <div class="card-title">Photoshop</div>
+      <div class="card-desc">Слои, ретушь, маски, коллаж, баннер.</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="mark">◈</span> учись в своём темпе · данные только у тебя <span class="mark">◈</span>
+  </div>
+
+</div>
+
+<script src="_shared/app.js"></script>
+<script>
+  // маленькая подпись под карточками — сколько тем внутри
+  document.getElementById("meta-web").textContent = "20 + JS тем";
+  document.getElementById("meta-ai").textContent = "8 тем";
+  document.getElementById("meta-python").textContent = "14 тем";
+</script>
+</body>
+</html>

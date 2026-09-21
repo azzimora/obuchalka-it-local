@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06. Введение в CSS · Web</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-result { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input { min-height: auto; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Web · тема 06</div>
+    <h1>Введение в CSS</h1>
+    <div class="subtitle">как одеть HTML в красоту</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Web</a><span>›</span>06
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>HTML — это <em>скелет</em>: структура, теги, смысл. <strong>CSS</strong> (Cascading Style Sheets) — это <em>внешность</em>: цвета, размеры, отступы, шрифты, расположение.</p>
+
+    <p>Одна и та же HTML-страница без CSS выглядит как документ из 90-х: чёрный текст на белом, всё в столбик. С CSS — как что угодно, что ты захочешь.</p>
+
+    <h3>Как подключить CSS</h3>
+    <p>Три способа. Мы будем пользоваться третьим — он правильный.</p>
+
+    <p><strong>1. Внутри тега</strong> (inline, плохо):</p>
+    <pre>&lt;p style="color: red;"&gt;текст&lt;/p&gt;</pre>
+
+    <p><strong>2. Внутри &lt;style&gt; в head</strong> (нормально для маленьких страниц):</p>
+    <pre>&lt;style&gt;
+  p { color: red; }
+&lt;/style&gt;</pre>
+
+    <p><strong>3. Отдельный файл</strong> (правильно для проектов):</p>
+    <pre>&lt;link rel="stylesheet" href="style.css"&gt;</pre>
+    <p>Этот тег кладётся в <code>&lt;head&gt;</code>. В файле <code>style.css</code> — только CSS, без HTML.</p>
+
+    <h3>Анатомия CSS-правила</h3>
+    <pre>селектор {
+  свойство: значение;
+  свойство: значение;
+}</pre>
+
+    <p>Пример:</p>
+    <pre>h1 {
+  color: pink;
+  font-size: 40px;
+  text-align: center;
+}</pre>
+
+    <p>Что здесь что:</p>
+    <ul>
+      <li><strong>селектор</strong> — <em>кого</em> стилизуем (<code>h1</code> — все заголовки первого уровня);</li>
+      <li><strong>свойство</strong> — <em>что меняем</em> (<code>color</code>, <code>font-size</code>);</li>
+      <li><strong>значение</strong> — <em>на что меняем</em> (<code>pink</code>, <code>40px</code>);</li>
+      <li><strong>точка с запятой</strong> после каждого свойства — <em>обязательно</em>.</li>
+    </ul>
+
+    <h3>Три базовых селектора</h3>
+    <ul>
+      <li><strong>по тегу:</strong> <code>p { ... }</code> — все абзацы;</li>
+      <li><strong>по классу:</strong> <code>.card { ... }</code> — все элементы с <code>class="card"</code>;</li>
+      <li><strong>по id:</strong> <code>#header { ... }</code> — один элемент с <code>id="header"</code>.</li>
+    </ul>
+
+    <p>Класс можно вешать на сколько угодно элементов. Id — только один на странице. Поэтому в реальной работе почти всегда используют <strong>классы</strong>.</p>
+
+    <h3>Первые свойства, которые пригодятся</h3>
+    <ul>
+      <li><code>color</code> — цвет текста;</li>
+      <li><code>background</code> — цвет фона;</li>
+      <li><code>font-size</code> — размер шрифта (в <code>px</code> или <code>rem</code>);</li>
+      <li><code>font-family</code> — шрифт;</li>
+      <li><code>text-align</code> — выравнивание (<code>left</code>, <code>center</code>, <code>right</code>);</li>
+      <li><code>padding</code> — внутренний отступ;</li>
+      <li><code>margin</code> — внешний отступ;</li>
+      <li><code>border</code> — рамка.</li>
+    </ul>
+
+    <h3>Цвета — как их задавать</h3>
+    <ul>
+      <li><strong>по имени:</strong> <code>red</code>, <code>pink</code>, <code>black</code> — просто, но мало вариантов;</li>
+      <li><strong>HEX:</strong> <code>#ff8ec7</code> — шесть символов, самый частый способ;</li>
+      <li><strong>rgb:</strong> <code>rgb(255, 142, 199)</code> — три числа от 0 до 255.</li>
+    </ul>
+
+    <p><strong>Совет:</strong> HEX-цвета удобно подбирать в палитре Google или в любом color-picker'е.</p>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>почувствовать разницу между HTML и CSS</strong> и научиться подключать стили.</p>
+
+    <ul>
+      <li>Создай папку <code>css-practice</code>, внутри:
+        <ul>
+          <li><code>index.html</code> — с обычным каркасом;</li>
+          <li><code>style.css</code> — пустой файл.</li>
+        </ul>
+      </li>
+      <li>В <code>&lt;head&gt;</code> подключи стили через <code>&lt;link rel="stylesheet" href="style.css"&gt;</code>.</li>
+      <li>В HTML сделай:
+        <ul>
+          <li>заголовок <code>&lt;h1&gt;</code>;</li>
+          <li>два абзаца <code>&lt;p&gt;</code>;</li>
+          <li>блок <code>&lt;div class="card"&gt;</code> с любым текстом внутри.</li>
+        </ul>
+      </li>
+      <li>В CSS сделай:
+        <ul>
+          <li>заголовку — свой цвет, размер и центрирование;</li>
+          <li>первому абзацу — один цвет, второму — другой (используй классы);</li>
+          <li>блоку <code>.card</code> — фон, внутренний отступ, рамку и скруглённые углы (<code>border-radius</code>).</li>
+        </ul>
+      </li>
+      <li><strong>Эксперимент:</strong> поменяй одно значение — например, <code>color</code> у заголовка — и обнови страницу. Убедись, что CSS применяется мгновенно.</li>
+      <li><strong>Проверка:</strong> специально сделай ошибку — забудь точку с запятой. Посмотри, что перестало работать. Это научит внимательности.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что запомнила, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>✏️ что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="что сделала, что сломалось..."></textarea>
+    </div>
+
+    <div class="field field-result">
+      <div class="field-label"><span>🏆 ссылка на результат</span><span class="status-saved" id="saved-result">сохранено ✓</span></div>
+      <input id="in-result" type="text" placeholder="ссылка или скриншот...">
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 полезные ссылки по теме</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="05-forms.html">← предыдущая</a>
+    <a class="btn" href="07-cascade.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Web · тема 06 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "web-06";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    result: document.getElementById("in-result"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+</script>
+</body>
+</html>

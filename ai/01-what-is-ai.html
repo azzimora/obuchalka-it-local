@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01. Что такое AI · AI</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .block table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88rem; }
+  .block th, .block td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+  .block th { color: var(--purple-soft); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-prompts { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">AI · тема 01</div>
+    <h1>Что такое AI</h1>
+    <div class="subtitle">модели, обучение, токены и почему AI ошибается</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">AI</a><span>›</span>01
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Начнём с главного: <strong>AI — это не робот, который думает как человек</strong>. Это математическая система, которая учится находить закономерности в данных и использовать их для предсказаний. Никакого «сознания» там нет — есть числа, веса и вероятности.</p>
+
+    <h3>Обычная программа против AI</h3>
+    <p>Чтобы понять AI, надо сначала понять, чем он отличается от обычной программы.</p>
+
+    <p><strong>Обычная программа</strong> работает по правилам, которые написал разработчик. Например, термостат: «если температура ниже 20 — включить отопление». Разработчик заранее прописал каждый случай. Программа не может сделать ничего, что не было предусмотрено.</p>
+
+    <p><strong>AI-программа</strong> не получает готовых правил. Вместо этого ей показывают тысячи примеров — и она сама находит закономерности.</p>
+
+    <p><em>Аналогия:</em> представь, что дали 10 000 фотографий кошек и 10 000 фотографий собак, но ничего не объясняли. Ты сам замечаешь: у кошек уши треугольные, у собак висят. Теперь ты отличишь кошку от собаки на фото, которого никогда не видел. Примерно так работает AI.</p>
+
+    <table>
+      <tr>
+        <th>Обычная программа</th>
+        <th>AI-программа</th>
+      </tr>
+      <tr>
+        <td>Правила пишет программист</td>
+        <td>Правила AI находит сам</td>
+      </tr>
+      <tr>
+        <td>Работает только в предусмотренных ситуациях</td>
+        <td>Справляется с новыми ситуациями</td>
+      </tr>
+      <tr>
+        <td>Не улучшается со временем</td>
+        <td>Становится лучше с новыми данными</td>
+      </tr>
+    </table>
+
+    <h3>Как AI обучается: три этапа</h3>
+    <p>Обучение любой современной модели проходит через три шага.</p>
+
+    <p><strong>Этап 1 — Датасет.</strong><br>
+    Это коллекция примеров, на которых будет учиться модель. Для языковой модели — огромные объёмы текста: книги, сайты, статьи, форумы. Один современный датасет может содержать сотни миллиардов слов — это больше, чем человек прочитает за миллион жизней.</p>
+
+    <p><strong>Этап 2 — Обучение.</strong><br>
+    Модель читает датасет и ищет закономерности. Например: после слова «солнце» чаще идёт «светит», а не «бежит». После «Москва» — «столица», а не «рыба». Все эти связи запоминаются в виде чисел — их называют <strong>весами модели</strong>. У большой модели весов может быть 70–700 миллиардов. Обучение занимает недели и требует тысяч видеокарт.</p>
+
+    <p><strong>Этап 3 — Предсказание.</strong><br>
+    Когда задаётся вопрос, модель использует веса, чтобы предсказать наиболее вероятное продолжение. Она не «думает» и не «понимает» — она вычисляет, какой текст вероятнее всего идёт дальше.</p>
+
+    <pre>Датасет → Обучение → Веса модели
+                         ↓
+        Вопрос → Предсказание → Ответ</pre>
+
+    <h3>Что такое нейронная сеть</h3>
+    <p>Веса хранятся в структуре, которая называется <strong>нейронная сеть</strong>. Название взято из биологии — строение напоминает нейроны в мозге.</p>
+
+    <p>Сеть состоит из слоёв. Каждый слой получает данные от предыдущего, обрабатывает и передаёт следующему. Первый слой получает вопрос, последний выдаёт ответ. Между ними — десятки или сотни промежуточных слоёв.</p>
+
+    <p>Никто из разработчиков точно не знает, что происходит внутри промежуточных слоёв. Поэтому AI иногда называют <strong>«чёрным ящиком»</strong> — мы видим вход и выход, но не процесс.</p>
+
+    <h3>Почему AI ошибается</h3>
+    <p>Если модель учится на примерах, её знания всегда ограничены. Вот три причины ошибок.</p>
+
+    <p><strong>1. Устаревшие данные.</strong><br>
+    Датасет собирался до определённой даты — это называют <em>датой отсечения</em>. Всё, что произошло после, модель не знает.</p>
+
+    <p><strong>2. Ошибки и предвзятость в датасете.</strong><br>
+    Интернет полон неверной информации и предрассудков. Всё это попадает в датасет, и модель усваивает это как норму.</p>
+
+    <p><strong>3. Галлюцинации.</strong><br>
+    Это самая важная и опасная ошибка. AI предсказывает <em>правдоподобный</em> текст, а не <em>правдивый</em>. Иногда он уверенно пишет несуществующие факты, имена, книги — потому что это звучит так, как должен звучать правильный ответ. Это называется галлюцинацией. Именно поэтому опасно использовать AI как единственный источник информации.</p>
+
+    <h3>Виды AI-моделей</h3>
+    <p>Все модели обучаются одинаково, но задачи у них разные.</p>
+
+    <ul>
+      <li><strong>LLM (Large Language Model)</strong> — работают с текстом. Пишут, отвечают, переводят, объясняют. Примеры: ChatGPT, Claude, Gemini, GigaChat, YandexGPT.</li>
+      <li><strong>Визуальные модели</strong> — работают с изображениями. Распознают объекты, классифицируют фото, находят дефекты на производстве.</li>
+      <li><strong>Генеративные модели изображений</strong> — создают картинки по описанию. Примеры: Midjourney, Stable Diffusion, DALL-E, Kandinsky.</li>
+      <li><strong>Мультимодальные модели</strong> — работают одновременно с текстом и изображениями. Примеры: GPT-4o, Claude 3, Gemini.</li>
+      <li><strong>Аудиомодели</strong> — работают со звуком. Whisper переводит речь в текст, ElevenLabs озвучивает текст голосом.</li>
+    </ul>
+
+    <h3>Как получить доступ к модели</h3>
+    <ul>
+      <li><strong>Бесплатно / фримиум</strong> — базовый доступ бесплатный, но с лимитами. Примеры: ChatGPT (бесплатный тариф), Claude, Gemini, GigaChat, YandexGPT.</li>
+      <li><strong>Платная подписка</strong> — мощнее, без лимитов. Примеры: GPT-4o, Claude Opus, Midjourney.</li>
+      <li><strong>API</strong> — для разработчиков. Оплата за количество токенов.</li>
+      <li><strong>Локально</strong> — модель запускается на своём компьютере. Без интернета, бесплатно. Через инструмент <strong>Ollama</strong> можно запустить Llama, Mistral, Gemma.</li>
+    </ul>
+
+    <p><em>Для России локальный запуск особенно важен — многие западные сервисы требуют VPN.</em></p>
+
+    <h3>Что такое токен</h3>
+    <p>Перед обработкой текст разбивается на маленькие кусочки — <strong>токены</strong>.</p>
+
+    <p>Токен — это не слово и не буква. Это кусочек текста примерно из 3–4 символов или 0,75 слова.</p>
+
+    <pre>"кот"      → ["кот"]              # 1 токен
+"котенок"  → ["кот", "енок"]      # 2 токена
+"Hello"    → ["Hello"]            # 1 токен
+"приветствие" → ["при", "вет", "ствие"]  # 3 токена</pre>
+
+    <p><strong>Русский текст в среднем занимает в 1,5–2 раза больше токенов, чем английский.</strong> Это значит, что работа с русским текстом через API дороже.</p>
+
+    <h3>Контекстное окно</h3>
+    <p>Модель не помнит всё, что ей когда-либо писали. Она помнит только то, что находится в её <strong>контекстном окне</strong>.</p>
+
+    <p>Контекстное окно — это максимальное количество токенов, которые модель «видит» одновременно. Туда входит и вопрос, и ответ, и вся история переписки.</p>
+
+    <p>Если переписка становится длиннее окна — модель начинает «забывать» начало. Именно поэтому в длинных разговорах AI иногда противоречит себе.</p>
+
+    <ul>
+      <li>GPT-4o: ~128 000 токенов — примерно целая книга;</li>
+      <li>Claude 3: ~200 000 токенов — примерно полтора романа;</li>
+      <li>Малые модели: 4 000–8 000 токенов — несколько страниц.</li>
+    </ul>
+
+    <h3>Почему токены важны на практике</h3>
+    <ul>
+      <li><strong>Стоимость.</strong> При работе через API оплата идёт за каждый токен — и входящий, и исходящий. Чем длиннее промпт и ответ, тем дороже.</li>
+      <li><strong>Ограничения.</strong> Если промпт слишком длинный, он может не влезть в контекстное окно.</li>
+      <li><strong>Эффективность.</strong> Короткий точный промпт даёт лучший результат, чем длинный расплывчатый. Это и дешевле, и точнее.</li>
+    </ul>
+
+    <pre>Неэффективно (~60 токенов):
+"Привет, я хотел бы попросить тебя помочь мне,
+если тебе не сложно, написать, пожалуйста,
+краткое резюме вот этого текста..."
+
+Эффективно (~10 токенов):
+"Кратко резюмируй текст в 2 предложениях:"</pre>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>AI — это математика, а не сознание.</li>
+      <li>Модель учится на датасете, находит закономерности, запоминает их как веса.</li>
+      <li>Модель предсказывает правдоподобное, а не правдивое — отсюда галлюцинации.</li>
+      <li>Текст разбивается на токены; контекстное окно ограничивает, сколько модель «помнит».</li>
+      <li>Модели бывают текстовые, визуальные, генеративные, мультимодальные и аудио.</li>
+      <li>Доступ бывает бесплатный, платный, через API и локальный.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>увидеть своими глазами, как AI предсказывает, ошибается и помнит (или не помнит)</strong>.</p>
+
+    <p>Всё делается в любом доступном чате — GigaChat, YandexGPT, ChatGPT или локально через Ollama.</p>
+
+    <ul>
+      <li><strong>Задание 1 — угадай, что ответит AI.</strong><br>
+        Перед каждым запросом сначала предположи, что ответит модель, и запиши предположение. Потом отправь запрос и сравни.
+        <ul>
+          <li>Продолжи фразу: «Один раз отмерь —»</li>
+          <li>Продолжи фразу: «Мой любимый цвет —»</li>
+          <li>Кто выиграл чемпионат мира по футболу в 3000 году?</li>
+        </ul>
+        <em>Подумай: почему на первый вопрос ответ есть всегда, а на второй — нет?</em>
+      </li>
+      <li><strong>Задание 2 — сравни две модели.</strong><br>
+        Открой две разные модели. Задай обеим один и тот же вопрос: «Объясни, что такое гравитация, для ученика 6 класса». Сравни ответы. Запиши, чем они отличаются и почему.</li>
+      <li><strong>Задание 3 — поймай галлюцинацию.</strong><br>
+        Спроси: «Расскажи о книге "Синий закат" писателя Максима Орехова». Такой книги и такого писателя не существует. Посмотри, что сделает модель — признает незнание или уверенно выдумает факты.</li>
+      <li><strong>Задание 4 — проверь контекстное окно.</strong><br>
+        В начале чата напиши: «Запомни: моё любимое число — 777». Потом напиши 5–6 не связанных сообщений. В конце спроси: «Какое моё любимое число?» Запиши результат.</li>
+      <li><strong>Задание 5 — сократи промпт.</strong><br>
+        Возьми длинный запрос:
+        <pre>Привет, не мог бы ты помочь мне разобраться,
+как работают чёрные дыры, желательно объясни
+это простым языком, без сложных терминов,
+как будто объясняешь школьнику, и желательно
+покороче, буквально пару предложений, заранее спасибо</pre>
+        Перепиши максимально коротко, сохранив смысл. Задай оба варианта AI. Сравни ответы. Стоило ли сокращать?</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что осталось непонятным, что перечитать..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что попробовала на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось, что удивило..."></textarea>
+    </div>
+
+    <div class="field field-prompts">
+      <div class="field-label"><span>💬 промпты, которые использовались</span><span class="status-saved" id="saved-prompts">сохранено ✓</span></div>
+      <textarea id="in-prompts" placeholder="удачные запросы, которые хочется сохранить и переиспользовать..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="видео, статьи, инструменты, по одной ссылке на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="index.html">← к оглавлению AI</a>
+    <a class="btn" href="02-prompts.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> AI · тема 01 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "ai-1";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    prompts: document.getElementById("in-prompts"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "prompts") {
+      markActivity("edits", 1);
+    }
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  // отметить активность при открытии
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>
