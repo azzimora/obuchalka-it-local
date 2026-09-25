@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06. Условный оператор if · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 06</div>
+    <h1>Условный оператор if</h1>
+    <div class="subtitle">как заставить программу выбирать</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>06
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>До этого программы шли по прямой: строка за строкой, без вариантов. Но настоящая программа должна <strong>принимать решения</strong>: если одно — делать так, если другое — иначе. Для этого есть оператор <code>if</code>.</p>
+
+    <h3>Простейший if</h3>
+    <pre>age = 17
+
+if age >= 18:
+    print("совершеннолетний")</pre>
+
+    <p>Что здесь:</p>
+    <ul>
+      <li><code>if</code> — «если»;</li>
+      <li><code>age >= 18</code> — условие. Истинно или ложно;</li>
+      <li><code>:</code> — двоеточие в конце. Обязательно!</li>
+      <li>строка с отступом — что делать, если условие истинно.</li>
+    </ul>
+
+    <p><strong>Отступ важен.</strong> В Python код, который «внутри if», пишется с отступом (4 пробела или Tab). Без отступа Python не поймёт, что это часть условия.</p>
+
+    <h3>if / else</h3>
+    <p>Если условие ложно — что делать? Для этого есть <code>else</code>.</p>
+
+    <pre>age = 15
+
+if age >= 18:
+    print("совершеннолетний")
+else:
+    print("несовершеннолетний")</pre>
+
+    <p>Работает так: если условие истинно — первая ветка, если ложно — вторая. Одно из двух обязательно выполнится.</p>
+
+    <h3>if / elif / else</h3>
+    <p>Если вариантов больше двух — есть <code>elif</code> (сокращение от else if).</p>
+
+    <pre>age = 15
+
+if age >= 18:
+    print("взрослый")
+elif age >= 14:
+    print("подросток")
+elif age >= 7:
+    print("школьник")
+else:
+    print("маленький")</pre>
+
+    <p>Python проверяет условия <strong>сверху вниз</strong>. Как только одно стало истинным — заходит в него и <em>выходит</em> из всей конструкции. Остальные не проверяет.</p>
+
+    <p><strong>Совет:</strong> самое строгое условие — вверх, самое широкое — вниз.</p>
+
+    <h3>Операторы сравнения</h3>
+    <ul>
+      <li><code>==</code> — равно (два знака!)</li>
+      <li><code>!=</code> — не равно</li>
+      <li><code>&gt;</code> — больше</li>
+      <li><code>&lt;</code> — меньше</li>
+      <li><code>&gt;=</code> — больше или равно</li>
+      <li><code>&lt;=</code> — меньше или равно</li>
+    </ul>
+
+    <p><strong>Осторожно:</strong> <code>=</code> — это присваивание. <code>==</code> — сравнение. Это разные вещи.</p>
+
+    <pre>x = 5      # положили 5 в x
+x == 5     # проверили: x равен 5?</pre>
+
+    <h3>Логические операторы</h3>
+    <p>Условия можно соединять:</p>
+    <ul>
+      <li><code>and</code> — «и». Истинно, если <strong>оба</strong> условия истинны;</li>
+      <li><code>or</code> — «или». Истинно, если <strong>хотя бы одно</strong> истинно;</li>
+      <li><code>not</code> — «не». Меняет истину на ложь и наоборот.</li>
+    </ul>
+
+    <pre>age = 20
+has_ticket = True
+
+if age >= 18 and has_ticket:
+    print("можно пройти")
+
+if age < 7 or age > 65:
+    print("льготный билет")
+
+if not has_ticket:
+    print("нужен билет")</pre>
+
+    <h3>Вложенные условия</h3>
+    <p>Внутри одного if может быть другой if:</p>
+
+    <pre>age = 20
+has_ticket = True
+
+if age >= 18:
+    if has_ticket:
+        print("проходите")
+    else:
+        print("купите билет")
+else:
+    print("до 18 вход запрещён")</pre>
+
+    <p><strong>Совет:</strong> если вложенность глубже двух уровней — лучше использовать <code>and</code> вместо вложенных if.</p>
+
+    <pre>if age >= 18 and has_ticket:
+    print("проходите")</pre>
+
+    <h3>Что считается истиной</h3>
+    <p>В Python не только <code>True</code> и <code>False</code> могут быть условием. Есть «ложные» значения:</p>
+    <ul>
+      <li><code>False</code>, <code>None</code>;</li>
+      <li>число <code>0</code>;</li>
+      <li>пустая строка <code>""</code>;</li>
+      <li>пустой список <code>[]</code>.</li>
+    </ul>
+    <p>Всё остальное — истина. Это удобно:</p>
+
+    <pre>name = input("Имя: ")
+
+if name:
+    print(f"Привет, {name}!")
+else:
+    print("Ты не ввёл имя")</pre>
+
+    <p>Если пользователь оставит поле пустым — <code>name</code> будет <code>""</code>, условие ложно, выведется второе сообщение.</p>
+
+    <h3>Проверка на несколько значений</h3>
+    <p>Можно проверять, входит ли значение в список:</p>
+
+    <pre>color = input("Цвет: ")
+
+if color in ["красный", "синий", "зелёный"]:
+    print("основной цвет")
+else:
+    print("другой")</pre>
+
+    <h3>Пример программы: калькулятор оценок</h3>
+    <pre>score = int(input("Сколько баллов? "))
+
+if score >= 90:
+    print("5")
+elif score >= 75:
+    print("4")
+elif score >= 60:
+    print("3")
+else:
+    print("2")</pre>
+
+    <h3>Правила оформления</h3>
+    <ul>
+      <li>После <code>if</code>, <code>elif</code>, <code>else</code> — <strong>двоеточие</strong>.</li>
+      <li>Тело условия — с <strong>отступом</strong> (обычно 4 пробела).</li>
+      <li>Один уровень вложенности — один отступ.</li>
+      <li>Если внутри только одна строка — всё равно с новой строки и с отступом. Писать <code>if x: print("да")</code> можно, но не принято.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>if</code> — проверяет условие. Если истинно — выполняет код с отступом.</li>
+      <li><code>else</code> — что делать иначе.</li>
+      <li><code>elif</code> — дополнительные варианты.</li>
+      <li>Сравнение — через <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</li>
+      <li>Логика — через <code>and</code>, <code>or</code>, <code>not</code>.</li>
+      <li>После условий — двоеточие, внутри — отступ.</li>
+      <li>Пустая строка, 0, пустой список — «ложь».</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>научиться принимать решения в коде</strong>.</p>
+
+    <p>Файл <code>if_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — совершеннолетие.</strong> Спроси возраст. Если 18 или больше — «можно», иначе — «нельзя».
+      </li>
+      <li><strong>Задание 2 — чётное или нет.</strong> Спроси число. Проверь, чётное ли оно. Подсказка: <code>число % 2 == 0</code>.
+      </li>
+      <li><strong>Задание 3 — оценка.</strong> Спроси баллы от 0 до 100. Выведи оценку:
+        <ul>
+          <li>90+ → «отлично»;</li>
+          <li>75–89 → «хорошо»;</li>
+          <li>60–74 → «удовлетворительно»;</li>
+          <li>меньше 60 → «не сдал».</li>
+        </ul>
+      </li>
+      <li><strong>Задание 4 — пароль.</strong> Загадай пароль в переменной. Спроси у пользователя. Если совпал — «доступ разрешён», если нет — «доступ запрещён».
+      </li>
+      <li><strong>Задание 5 — большее из двух.</strong> Спроси два числа. Выведи то, которое больше. Или «равны», если одинаковые.
+      </li>
+      <li><strong>Задание 6 — логика.</strong> Спроси возраст и наличие билета (да/нет). Если возраст ≥ 18 и билет есть — «проходите». Если возраст < 18 — «нельзя». Если возраст ≥ 18, но билета нет — «купите билет».
+      </li>
+      <li><strong>Задание 7 — светофор.</strong> Спроси цвет светофора. Выведи, что делать:
+        <ul>
+          <li>красный — стоять;</li>
+          <li>жёлтый — приготовиться;</li>
+          <li>зелёный — идти;</li>
+          <li>другой — «неизвестный цвет».</li>
+        </ul>
+      </li>
+      <li><strong>Задание 8 — калькулятор.</strong> Спроси два числа и операцию (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>). Выведи результат. Если операция неизвестна — «не понимаю такую операцию».
+      </li>
+      <li><strong>Задание 9 — своя программа.</strong> Придумай что-то своё с условиями. Идеи:
+        <ul>
+          <li>«предсказатель» — по числу от 1 до 10 выдаёт предсказание;</li>
+          <li>«конвертер оценок» — 5, 4, 3, 2 → словами;</li>
+          <li>«тест на возраст» — что можно и что нельзя в разном возрасте.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="условия, калькулятор оценок, светофор, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="05-text.html">← предыдущая</a>
+    <a class="btn" href="07-logic.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 06 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-06";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

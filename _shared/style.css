@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    обучалка local adaptation · общий стиль
-   темы · 5 цветов × 2 режима · hero · mobile
+   темы · 6 цветов × 2 режима · hero · mobile
    ═══════════════════════════════════════════ */
 
 /* ── БАЗОВЫЕ ПЕРЕМЕННЫЕ (розовая тёмная по умолчанию) ── */
@@ -58,13 +58,21 @@
   --hero-overlay: rgba(26, 10, 14, 0.6);
   --hero-color-overlay: rgba(255, 122, 138, 0.2);
 }
-[data-theme="cyan-dark"] {
-  --bg: #0a0f1a; --bg-soft: #0f1624; --card: #141e30; --card-hover: #1a263a;
-  --pink: #6b9fff; --pink-soft: #b3c8ff; --pink-glow: rgba(107,159,255,0.35);
-  --purple: #7cd4ff; --purple-soft: #b3e5ff;
-  --text: #e8edfa; --muted: #8a95b8; --line: rgba(107,159,255,0.15);
-  --hero-overlay: rgba(10, 15, 26, 0.6);
-  --hero-color-overlay: rgba(107, 159, 255, 0.2);
+[data-theme="yellow-dark"] {
+  --bg: #1a150a; --bg-soft: #241c0f; --card: #2e2414; --card-hover: #3a2e1a;
+  --pink: #ffd166; --pink-soft: #ffe4a3; --pink-glow: rgba(255,209,102,0.35);
+  --purple: #ffb347; --purple-soft: #ffcc80;
+  --text: #faf4e8; --muted: #b8a888; --line: rgba(255,209,102,0.15);
+  --hero-overlay: rgba(26, 21, 10, 0.6);
+  --hero-color-overlay: rgba(255, 209, 102, 0.2);
+}
+[data-theme="green-dark"] {
+  --bg: #0a1a10; --bg-soft: #0f2418; --card: #142e1e; --card-hover: #1a3a28;
+  --pink: #7ee5a0; --pink-soft: #b3f0c8; --pink-glow: rgba(126,229,160,0.35);
+  --purple: #5cd4b8; --purple-soft: #a3e5d4;
+  --text: #e8faf0; --muted: #88b8a0; --line: rgba(126,229,160,0.15);
+  --hero-overlay: rgba(10, 26, 16, 0.6);
+  --hero-color-overlay: rgba(126, 229, 160, 0.2);
 }
 
 /* ── СВЕТЛЫЕ ТЕМЫ ── */
@@ -100,13 +108,21 @@
   --hero-overlay: rgba(253, 240, 242, 0.55);
   --hero-color-overlay: rgba(212, 80, 96, 0.15);
 }
-[data-theme="cyan-light"] {
-  --bg: #f0f4fd; --bg-soft: #e0e8fa; --card: #ffffff; --card-hover: #eaf0fc;
-  --pink: #3a6fd4; --pink-soft: #2a5ab8; --pink-glow: rgba(58,111,212,0.25);
-  --purple: #5a8fd4; --purple-soft: #3a6fb8;
-  --text: #14213e; --muted: #5f6f95; --line: rgba(58,111,212,0.25);
-  --hero-overlay: rgba(240, 244, 253, 0.55);
-  --hero-color-overlay: rgba(58, 111, 212, 0.15);
+[data-theme="yellow-light"] {
+  --bg: #fdf9f0; --bg-soft: #faf3e0; --card: #ffffff; --card-hover: #fcf7ea;
+  --pink: #d4a017; --pink-soft: #b88a14; --pink-glow: rgba(212,160,23,0.25);
+  --purple: #d4955c; --purple-soft: #b87a3a;
+  --text: #3e2e14; --muted: #95805f; --line: rgba(212,160,23,0.25);
+  --hero-overlay: rgba(253, 249, 240, 0.55);
+  --hero-color-overlay: rgba(212, 160, 23, 0.15);
+}
+[data-theme="green-light"] {
+  --bg: #f0fdf5; --bg-soft: #e0fae8; --card: #ffffff; --card-hover: #eafcf0;
+  --pink: #2e9e5b; --pink-soft: #268a4e; --pink-glow: rgba(46,158,91,0.25);
+  --purple: #5cb890; --purple-soft: #3a9e6b;
+  --text: #143e22; --muted: #5f9570; --line: rgba(46,158,91,0.25);
+  --hero-overlay: rgba(240, 253, 245, 0.55);
+  --hero-color-overlay: rgba(46, 158, 91, 0.15);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -120,8 +136,8 @@ body {
   line-height: 1.65;
   min-height: 100vh;
   background-image:
-    radial-gradient(circle at 10% 0%, rgba(199, 125, 255, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 90% 100%, rgba(255, 142, 199, 0.10) 0%, transparent 45%);
+    radial-gradient(circle at 10% 0%, var(--pink-glow) 0%, transparent 45%),
+    radial-gradient(circle at 90% 100%, var(--pink-glow) 0%, transparent 45%);
   transition: background 0.3s, color 0.3s;
 }
 
@@ -131,6 +147,7 @@ body {
   margin: 0 auto;
   padding: 30px 24px 80px;
 }
+
 
 /* ── Кнопка «назад» ── */
 .back-btn {
@@ -280,7 +297,7 @@ body.page-hero .btn-icon {
   pointer-events: none;
   transform: translateY(-6px);
   transition: opacity 0.2s, transform 0.2s;
-  min-width: 220px;
+  min-width: 240px;
 }
 body.page-hero .theme-panel {
   top: 66px;
@@ -300,6 +317,7 @@ body.page-hero .theme-panel {
 }
 .theme-colors {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 14px;
 }
@@ -321,7 +339,8 @@ body.page-hero .theme-panel {
 .theme-color[data-color="blue"]   { background: linear-gradient(135deg, #7ec8ff, #7c9eff); }
 .theme-color[data-color="purple"] { background: linear-gradient(135deg, #b47cff, #d47cff); }
 .theme-color[data-color="red"]    { background: linear-gradient(135deg, #ff7a8a, #ff8e7a); }
-.theme-color[data-color="cyan"]   { background: linear-gradient(135deg, #6b9fff, #7cd4ff); }
+.theme-color[data-color="yellow"] { background: linear-gradient(135deg, #ffd166, #ffb347); }
+.theme-color[data-color="green"]  { background: linear-gradient(135deg, #7ee5a0, #5cd4b8); }
 
 .theme-modes {
   display: flex;
@@ -347,11 +366,74 @@ body.page-hero .theme-panel {
   color: var(--pink-soft);
 }
 .theme-mode.active {
-  background: rgba(255,142,199,0.15);
+  background: var(--pink-glow);
   border-color: var(--pink);
   color: var(--pink);
 }
+/* ── Полоска кабинета на главной ── */
+.cabinet-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--pink-soft);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.cabinet-bar::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--pink), var(--purple));
+  opacity: 0.6;
+  transition: opacity 0.25s;
+}
+.cabinet-bar:hover {
+  border-color: var(--pink);
+  background: var(--card-hover);
+  box-shadow: 0 0 16px var(--pink-glow);
+}
+.cabinet-bar:hover::before { opacity: 1; }
+.cabinet-bar:hover .cabinet-bar-arrow {
+  transform: translateX(4px);
+  color: var(--pink);
+}
 
+.cabinet-bar-icon {
+  font-size: 1rem;
+  color: var(--pink);
+  flex-shrink: 0;
+}
+.cabinet-bar-text {
+  flex: 1;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.cabinet-bar-arrow {
+  font-size: 1rem;
+  color: var(--muted);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .cabinet-bar {
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .cabinet-bar-text {
+    font-size: 0.85rem;
+  }
+}
 /* ── Карточки направлений ── */
 .cards {
   display: grid;
@@ -383,7 +465,7 @@ body.page-hero .theme-panel {
 .card:hover {
   border-color: var(--pink);
   transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(255, 142, 199, 0.12);
+  box-shadow: 0 8px 28px var(--pink-glow);
 }
 .card:hover::before { opacity: 1; }
 
@@ -431,7 +513,7 @@ body.page-hero .theme-panel {
 .toc-item.done::before { background: var(--ok); opacity: 1; }
 .toc-item.progress::before { background: var(--warn); opacity: 0.8; }
 .toc-item:hover {
-  border-color: rgba(255, 142, 199, 0.4);
+  border-color: var(--pink);
   background: var(--card-hover);
 }
 
@@ -552,14 +634,12 @@ body.page-hero .theme-panel {
   .card-icon { font-size: 1.5rem; }
   .card-title { font-size: 1.05rem; }
 
-  /* кнопки — крупнее для пальца */
   .btn {
     padding: 12px 16px;
     font-size: 0.88rem;
     min-height: 44px;
   }
 
-  /* кнопка темы — в правом верхнем углу, не сдвигается */
   .btn-icon {
     position: fixed;
     top: 16px;
@@ -574,7 +654,6 @@ body.page-hero .theme-panel {
     right: 16px;
   }
 
-  /* кнопка назад — слева, не перекрывает контент */
   .back-btn {
     top: 16px;
     left: 16px;
@@ -583,7 +662,6 @@ body.page-hero .theme-panel {
     font-size: 1.1rem;
   }
 
-  /* панель тем — снизу, как модальное окно */
   .theme-panel {
     position: fixed;
     top: auto;
@@ -609,7 +687,6 @@ body.page-hero .theme-panel {
     min-height: 40px;
   }
 
-  /* заголовок hero — компактнее */
   body.page-hero .site-header {
     min-height: 140px;
     padding: 40px 16px 24px;
@@ -619,7 +696,6 @@ body.page-hero .theme-panel {
     margin-bottom: 30px;
   }
 
-  /* темы уроков — крупнее */
   .toc-item {
     padding: 14px 16px;
     gap: 10px;
@@ -627,7 +703,6 @@ body.page-hero .theme-panel {
   .toc-num { font-size: 0.7rem; min-width: 22px; }
   .toc-title { font-size: 0.9rem; line-height: 1.3; }
 
-  /* прогресс — компактнее */
   .progress-panel {
     padding: 14px 16px;
     gap: 12px;
@@ -640,4 +715,191 @@ body.page-hero .theme-panel {
   h1 { font-size: 1.3rem; }
   .back-btn, .btn-icon { width: 38px; height: 38px; }
   .back-btn { font-size: 1rem; }
+}
+
+/* ═══════════════════════════════════════════
+   ПЛАВАЮЩИЙ ВИДЖЕТ ПОМОДОРО
+   ═══════════════════════════════════════════ */
+
+.pomo-widget {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 85;
+  font-family: inherit;
+}
+
+.pomo-widget-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--pink-soft);
+  padding: 10px 16px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+
+.pomo-widget-btn:hover {
+  border-color: var(--pink);
+  box-shadow: 0 0 16px var(--pink-glow);
+}
+
+.pomo-widget.running .pomo-widget-btn {
+  border-color: var(--pink);
+  background: var(--card-hover);
+}
+
+.pomo-widget-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pink-soft);
+  transition: color 0.2s;
+}
+
+.pomo-widget.running .pomo-widget-icon {
+  color: var(--pink);
+}
+
+.pomo-widget-time {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--pink);
+  font-weight: 700;
+  min-width: 44px;
+}
+
+.pomo-widget-time:empty {
+  display: none;
+}
+
+.pomo-widget-panel {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  width: 260px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.pomo-widget-panel.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.pomo-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pomo-widget-header span {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.pomo-widget-close {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+
+.pomo-widget-close:hover {
+  color: var(--pink);
+}
+
+.pomo-widget-big-time {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--pink);
+  text-align: center;
+  font-family: monospace;
+  line-height: 1;
+  margin-bottom: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pomo-widget-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.pomo-widget-ctrl {
+  flex: 1;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: var(--pink-soft);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  min-width: 60px;
+}
+
+.pomo-widget-ctrl:hover {
+  border-color: var(--pink);
+  background: var(--card-hover);
+}
+
+.pomo-widget-ctrl.primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #1a0f1d;
+  font-weight: 600;
+  border-color: var(--pink);
+}
+
+.pomo-widget-link {
+  display: block;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  transition: color 0.2s;
+}
+
+.pomo-widget-link:hover {
+  color: var(--pink);
+}
+
+@media (max-width: 700px) {
+  .pomo-widget {
+    bottom: 16px;
+    left: 16px;
+  }
+  .pomo-widget-btn {
+    padding: 10px 14px;
+    min-height: 44px;
+  }
+  .pomo-widget-panel {
+    width: calc(100vw - 32px);
+    max-width: 300px;
+  }
 }

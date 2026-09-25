@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05. Работа с текстом · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 05</div>
+    <h1>Работа с текстом</h1>
+    <div class="subtitle">методы строк, срезы, склейка</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>05
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Строки в Python — не просто «текст». С ними можно многое делать: считать длину, менять регистр, обрезать, искать, заменять. Это одна из самых частых вещей в программировании.</p>
+
+    <h3>Длина строки: len()</h3>
+    <p>Функция <code>len()</code> возвращает количество символов в строке.</p>
+
+    <pre>text = "Привет"
+print(len(text))   # 6</pre>
+
+    <p>Считаются <strong>все</strong> символы, включая пробелы и знаки:</p>
+    <pre>print(len("Привет, мир!"))   # 12</pre>
+
+    <h3>Индексы: доступ к символам</h3>
+    <p>У каждого символа в строке есть <strong>номер</strong> — индекс. Нумерация начинается с <strong>нуля</strong>.</p>
+
+    <pre>text = "Python"
+print(text[0])   # P
+print(text[1])   # y
+print(text[5])   # n</pre>
+
+    <p>Можно считать <strong>с конца</strong> через минус:</p>
+    <pre>print(text[-1])   # n — последний
+print(text[-2])   # o — предпоследний</pre>
+
+    <p><strong>Важно:</strong> строки <em>неизменяемы</em>. Нельзя заменить один символ:</p>
+    <pre>text[0] = "J"   # ошибка!</pre>
+    <p>Вместо этого создают новую строку.</p>
+
+    <h3>Срезы: кусок строки</h3>
+    <p><strong>Срез</strong> — это часть строки. Пишется через двоеточие: <code>строка[начало:конец]</code>.</p>
+
+    <pre>text = "Python"
+print(text[0:3])   # Pyt — с 0 по 2 (не включая 3!)
+print(text[2:5])   # tho
+print(text[:3])    # Pyt — с начала до 3
+print(text[3:])    # hon — с 3 до конца
+print(text[:])     # Python — вся строка</pre>
+
+    <p><strong>Запомни:</strong> конец <em>не включается</em>. <code>[0:3]</code> — это символы 0, 1, 2.</p>
+
+    <p>Можно с шагом:</p>
+    <pre>print(text[::2])    # Pto — каждый второй
+print(text[::-1])   # nohtyP — строка наоборот!</pre>
+
+    <p>Строка наоборот — известный трюк. Пригодится.</p>
+
+    <h3>Методы строк</h3>
+    <p>Метод — это «функция, привязанная к строке». Вызывается через точку: <code>строка.метод()</code>.</p>
+
+    <ul>
+      <li><strong>upper()</strong> — все заглавные: <code>"привет".upper()</code> → <code>"ПРИВЕТ"</code>;</li>
+      <li><strong>lower()</strong> — все строчные: <code>"ПРИВЕТ".lower()</code> → <code>"привет"</code>;</li>
+      <li><strong>capitalize()</strong> — первая заглавная, остальные строчные;</li>
+      <li><strong>title()</strong> — каждое слово с заглавной: <code>"привет мир".title()</code> → <code>"Привет Мир"</code>;</li>
+      <li><strong>strip()</strong> — убирает пробелы с начала и конца;</li>
+      <li><strong>replace(a, b)</strong> — меняет все <code>a</code> на <code>b</code>.</li>
+    </ul>
+
+    <pre>text = "  Привет, мир!  "
+print(text.strip())               # "Привет, мир!"
+print(text.upper())               # "  ПРИВЕТ, МИР!  "
+print("Привет".lower())           # "привет"
+print("hello".capitalize())       # "Hello"
+print("привет мир".title())       # "Привет Мир"
+print("Привет".replace("и", "е")) # "Превет"</pre>
+
+    <h3>Поиск: in и find()</h3>
+    <p>Проверить, есть ли подстрока в строке:</p>
+    <pre>text = "Я учу Python"
+print("Python" in text)    # True
+print("Java" in text)      # False</pre>
+
+    <p>Найти позицию:</p>
+    <pre>print(text.find("Python"))   # 5
+print(text.find("Java"))     # -1 (не найдено)</pre>
+
+    <h3>Разделение и склейка</h3>
+    <p><strong>split()</strong> — разбивает строку на список по пробелам (или по указанному разделителю):</p>
+    <pre>text = "яблоко груша слива"
+print(text.split())   # ['яблоко', 'груша', 'слива']
+
+csv = "Аня,17,Москва"
+print(csv.split(","))  # ['Аня', '17', 'Москва']</pre>
+
+    <p><strong>join()</strong> — склеивает список в строку:</p>
+    <pre>words = ["я", "учу", "Python"]
+print(" ".join(words))    # "я учу Python"
+print(", ".join(words))   # "я, учу, Python"</pre>
+
+    <h3>Склейка строк</h3>
+    <p>Три способа соединить строки:</p>
+
+    <pre># 1. Через +
+print("Привет, " + "мир!")
+
+# 2. Через запятую в print (автоматически пробел)
+name = "Аня"
+print("Привет,", name)
+
+# 3. Через f-строку (самый удобный)
+print(f"Привет, {name}!")</pre>
+
+    <p><strong>Совет:</strong> для сложных случаев — f-строки. Для простой склейки двух строк — <code>+</code>.</p>
+
+    <h3>Число в строке</h3>
+    <p>Если нужно вставить число в строку — оно сначала должно стать строкой:</p>
+    <pre>age = 17
+print("Мне " + age + " лет")   # ошибка!
+print("Мне " + str(age) + " лет")   # ок
+print(f"Мне {age} лет")   # ок, и красивее</pre>
+
+    <h3>Многострочные строки</h3>
+    <p>Тройные кавычки позволяют писать текст в несколько строк:</p>
+    <pre>text = """Это
+строка
+в три строки"""
+
+print(text)</pre>
+
+    <h3>Полезные мелочи</h3>
+    <ul>
+      <li><code>\n</code> — перенос строки внутри строки: <code>"раз\nдва"</code>;</li>
+      <li><code>\t</code> — табуляция;</li>
+      <li><code>\"</code> — экранированная кавычка, если нужно вставить её в строку.</li>
+    </ul>
+
+    <pre>print("раз\nдва\nтри")</pre>
+    <p>Вывод:</p>
+    <pre>раз
+два
+три</pre>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>len()</code> — длина строки.</li>
+      <li>Индексы: с 0, с конца — с -1.</li>
+      <li>Срезы: <code>[начало:конец]</code>, конец не включается.</li>
+      <li><code>[::-1]</code> — строка наоборот.</li>
+      <li>Методы: <code>upper</code>, <code>lower</code>, <code>strip</code>, <code>replace</code>, <code>split</code>, <code>join</code>.</li>
+      <li><code>in</code> — проверка вхождения.</li>
+      <li>f-строки — лучший способ собирать текст.</li>
+      <li>Строки неизменяемы: нельзя заменить символ по индексу.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>поработать со строками руками</strong>.</p>
+
+    <p>Файл <code>text_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — длина.</strong> Спроси у пользователя слово через <code>input</code>. Выведи его длину через <code>len()</code>.
+      </li>
+      <li><strong>Задание 2 — регистры.</strong> Спроси слово. Выведи его в трёх вариантах: <code>upper</code>, <code>lower</code>, <code>title</code>.
+      </li>
+      <li><strong>Задание 3 — первый и последний.</strong> Спроси слово. Выведи первый и последний символ. Подсказка: <code>text[0]</code> и <code>text[-1]</code>.
+      </li>
+      <li><strong>Задание 4 — обрубок.</strong> Спроси слово. Выведи:
+        <ul>
+          <li>первые три символа;</li>
+          <li>последние три символа;</li>
+          <li>слово без первой и последней буквы.</li>
+        </ul>
+      </li>
+      <li><strong>Задание 5 — наоборот.</strong> Спроси слово. Выведи его задом наперёд через <code>[::-1]</code>.
+      </li>
+      <li><strong>Задание 6 — палиндром.</strong> Спроси слово. Проверь, читается ли оно одинаково слева направо и справа налево. Если да — «палиндром», если нет — «не палиндром».
+        <pre>word = input("Слово: ")
+if word == word[::-1]:
+    print("палиндром")
+else:
+    print("не палиндром")</pre>
+        <em>(Если ещё не проходил условия — просто выведи слово и его перевёрнутую версию рядом.)</em>
+      </li>
+      <li><strong>Задание 7 — разбор предложения.</strong> Спроси предложение. Выведи:
+        <ul>
+          <li>сколько в нём символов (<code>len</code>);</li>
+          <li>сколько в нём слов (<code>split</code> + <code>len</code>);</li>
+          <li>список слов;</li>
+          <li>каждое слово с заглавной (через <code>title</code>).</li>
+        </ul>
+      </li>
+      <li><strong>Задание 8 — чистка.</strong> Спроси текст с пробелами и лишними знаками. Выведи его через <code>strip()</code>, потом через <code>replace()</code> замени, например, все запятые на пробелы.
+      </li>
+      <li><strong>Задание 9 — своя программа.</strong> Придумай что-то своё с текстом. Например:
+        <ul>
+          <li>«генератор никнеймов» — из имени и года делает ник;</li>
+          <li>«цензор» — заменяет плохие слова на звёздочки;</li>
+          <li>«сокращатель» — берёт первые буквы слов и делает аббревиатуру.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="методы строк, срезы, палиндром, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="04-input.html">← предыдущая</a>
+    <a class="btn" href="06-conditions.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 05 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-05";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

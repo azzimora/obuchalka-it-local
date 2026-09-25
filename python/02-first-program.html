@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02. Первая программа и вывод данных · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 02</div>
+    <h1>Первая программа и вывод данных</h1>
+    <div class="subtitle">функция print, строки и комментарии</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>02
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>В первой теме ты уже запустила программу <code>hello.py</code>. Теперь разберёмся, как это работает и что ещё умеет <code>print</code>.</p>
+
+    <h3>Что такое функция</h3>
+    <p><strong>Функция</strong> — это готовая команда, которая что-то делает. Она есть в Python «из коробки», писать её самой не надо. Ты просто вызываешь её по имени и даёшь данные.</p>
+
+    <p><code>print</code> — одна из самых простых функций. Она берёт то, что ты ей дала, и выводит на экран.</p>
+
+    <pre>print("Привет, мир!")</pre>
+
+    <ul>
+      <li><code>print</code> — имя функции;</li>
+      <li><code>(</code> и <code>)</code> — скобки. Внутри них — то, что нужно вывести;</li>
+      <li><code>"Привет, мир!"</code> — строка. Текст в кавычках.</li>
+    </ul>
+
+    <h3>Строки и кавычки</h3>
+    <p><strong>Строка</strong> — это текст. В Python строки пишут в кавычках. Можно в двойных <code>"..."</code>, можно в одинарных <code>'...'</code> — разницы нет.</p>
+
+    <pre>print("Привет")
+print('Привет')</pre>
+
+    <p>Оба варианта работают одинаково. Главное — чтобы кавычки были <strong>парные</strong>: открывающая и закрывающая одинаковые.</p>
+
+    <p><em>Если открыть двойную, а закрыть одинарную — будет ошибка.</em></p>
+
+    <h3>Несколько строк</h3>
+    <p>Каждый <code>print</code> выводит текст <strong>с новой строки</strong>. Хочешь несколько строк — пиши несколько <code>print</code>:</p>
+
+    <pre>print("Привет!")
+print("Меня зовут Аня.")
+print("Я учу Python.")</pre>
+
+    <p>Вывод:</p>
+    <pre>Привет!
+Меня зовут Аня.
+Я учу Python.</pre>
+
+    <h3>Вывод чисел</h3>
+    <p>Числа пишут <strong>без кавычек</strong>. Кавычки — только для текста.</p>
+
+    <pre>print(42)
+print(3.14)
+print(2 + 3)</pre>
+
+    <p>Вывод:</p>
+    <pre>42
+3.14
+5</pre>
+
+    <p>В третьем случае Python сначала <strong>посчитал</strong> <code>2 + 3</code>, а потом вывел результат.</p>
+
+    <h3>Что будет, если перепутать</h3>
+    <p><strong>Число в кавычках</strong> — это строка, а не число:</p>
+    <pre>print("2 + 3")   # выведет: 2 + 3 (как текст)
+print(2 + 3)     # выведет: 5 (как результат)</pre>
+
+    <p>Разница видна сразу. Кавычки говорят Python: «это текст, не считай».</p>
+
+    <h3>Комментарии</h3>
+    <p><strong>Комментарий</strong> — это текст в коде, который Python <em>игнорирует</em>. Нужен для заметок: что делает код, зачем, что поменять потом.</p>
+
+    <p>В Python комментарий начинается с символа <code>#</code>. Всё после него до конца строки — игнорируется.</p>
+
+    <pre># это комментарий, Python его не видит
+
+print("Привет")  # а это — код, он выполнится</pre>
+
+    <p>Комментарии полезны, когда:</p>
+    <ul>
+      <li>хочешь оставить заметку себе на будущее;</li>
+      <li>временно «выключить» строку кода — поставить <code>#</code> в начале, и она не выполнится;</li>
+      <li>объяснить сложное место другим (или себе через месяц).</li>
+    </ul>
+
+    <h3>Пробелы и отступы</h3>
+    <p>Python <strong>очень чувствителен к отступам</strong>. В отличие от других языков, где отступы — просто для красоты, здесь они — часть синтаксиса.</p>
+
+    <p>Пока мы пишем код без блоков (без условий и циклов), отступы в начале строки <strong>не нужны</strong>. Каждая команда — с новой строки, без пробелов впереди.</p>
+
+    <pre>print("раз")
+print("два")
+print("три")</pre>
+
+    <p>Если случайно поставить пробел в начале — Python может выдать ошибку <code>IndentationError</code>. Так что следи за этим.</p>
+
+    <h3>Пустая строка</h3>
+    <p>Иногда нужно вывести пустую строку — просто отступ. Для этого:</p>
+    <pre>print()</pre>
+    <p>Или:</p>
+    <pre>print("")</pre>
+    <p>Оба варианта дают пустую строку на экране.</p>
+
+    <h3>Как выглядит типичная программа</h3>
+    <pre># моя первая программа
+# изучаю Python
+
+print("Привет!")
+print()
+print("Сегодня я узнала:")
+print("- что такое print")
+print("- как писать строки")
+print("- зачем нужны комментарии")
+
+print("Готово!")</pre>
+
+    <p>Вот и всё. Пока — просто текст на экране. Дальше научимся принимать данные от пользователя, считать, повторять.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>print()</code> — функция, которая выводит на экран.</li>
+      <li>Строки — в кавычках (любых, но парных).</li>
+      <li>Числа — без кавычек.</li>
+      <li>Каждый <code>print</code> — с новой строки.</li>
+      <li>Комментарий — <code>#</code> в начале строки, Python его игнорирует.</li>
+      <li>Отступы в начале строки — важны, пока их лучше не ставить.</li>
+      <li><code>print()</code> без аргументов — пустая строка.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>поиграть с <code>print</code> и почувствовать, как Python выводит данные</strong>.</p>
+
+    <p>Все задания — в файле <code>print_practice.py</code> в папке проектов.</p>
+
+    <ul>
+      <li><strong>Задание 1 — знакомство.</strong> Напиши программу, которая выводит три строки:
+        <ul>
+          <li>твоё имя;</li>
+          <li>возраст;</li>
+          <li>город.</li>
+        </ul>
+        Каждая — отдельным <code>print</code>.
+      </li>
+      <li><strong>Задание 2 — числа.</strong> Выведи через <code>print</code>:
+        <ul>
+          <li>число 100;</li>
+          <li>число 3.14;</li>
+          <li>результат <code>10 + 20</code>;</li>
+          <li>результат <code>5 * 6</code>;</li>
+          <li>результат <code>100 / 4</code>.</li>
+        </ul>
+      </li>
+      <li><strong>Задание 3 — почувствуй разницу.</strong> Напиши две строки:
+        <pre>print("2 + 3")
+print(2 + 3)</pre>
+        Запусти. Запиши в конспект, что вывелось и почему.
+      </li>
+      <li><strong>Задание 4 — комментарии.</strong> Напиши код с комментариями:
+        <pre># это моя программа на Python
+print("строка первая")
+# print("эта строка не выведется")
+print("строка вторая")</pre>
+        Убедись, что закомментированная строка не выводится.
+      </li>
+      <li><strong>Задание 5 — пустая строка.</strong> Сделай так, чтобы между двумя абзацами текста была пустая строка. Подсказка: <code>print()</code>.
+      </li>
+      <li><strong>Задание 6 — своя программа.</strong> Придумай небольшую программу, которая выводит что-то осмысленное. Например:
+        <ul>
+          <li>список любимых фильмов;</li>
+          <li>рецепт;</li>
+          <li>мини-приветствие;</li>
+          <li>что угодно на твой вкус.</li>
+        </ul>
+        Используй <strong>минимум 5 <code>print</code></strong>, комментарии и хотя бы одну пустую строку.
+      </li>
+      <li><strong>Проверь:</strong> нет ошибок в терминале. Если есть — прочитай, что написано. Обычно там всё понятно.</li>
+      <li><strong>Сохрани код</strong> в поле «код» — пригодится позже.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="свои программы на print, комментарии, эксперименты..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="01-install.html">← предыдущая</a>
+    <a class="btn" href="03-variables.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 02 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-02";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

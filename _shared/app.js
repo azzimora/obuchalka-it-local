@@ -1,13 +1,16 @@
 /* ═══════════════════════════════════════════
    обучалка local adaptation · общий скрипт
    прогресс · сохранение · темы · тосты
-   статистика · активность · бэкап · hero · кнопка назад
+   статистика · активность · бэкап · hero
+   кнопка назад · плавающий помодоро
    ═══════════════════════════════════════════ */
 
 const STORAGE_KEY = "local-adaptation-v1";
 const THEME_KEY = "local-adaptation-theme";
 const ACTIVITY_KEY = "local-adaptation-activity";
 const BACKUP_KEY = "local-adaptation-lastbackup";
+const POMO_STATE_KEY = "local-adaptation-pomo-state";
+const POMO_CONFIG_KEY = "local-adaptation-pomo-config";
 
 /* ── Загрузка / сохранение ── */
 function loadState() {
@@ -101,11 +104,27 @@ function markActivity(field, amount) {
   saveActivity(activity);
 }
 
+/* ── Бэкап ── */
+function getLastBackup() {
+  try { return localStorage.getItem(BACKUP_KEY) || null; } catch { return null; }
+}
+
+function setLastBackup() {
+  try { localStorage.setItem(BACKUP_KEY, new Date().toISOString()); } catch {}
+}
+
+function daysSinceBackup() {
+  const last = getLastBackup();
+  if (!last) return Infinity;
+  const diff = Date.now() - new Date(last).getTime();
+  return Math.floor(diff / 86400000);
+}
+
 /* ═══════════════════════════════════════════
    ТЕМЫ
    ═══════════════════════════════════════════ */
 
-const THEME_COLORS = ["pink", "blue", "purple", "red", "cyan"];
+const THEME_COLORS = ["pink", "blue", "purple", "red", "yellow", "green"];
 
 function getTheme() {
   try {
@@ -233,25 +252,19 @@ function initBackButton() {
   const path = window.location.pathname;
   const file = path.split("/").pop() || "index.html";
 
-  // на главной корня — кнопки нет
   const isRootIndex = file === "index.html" && !path.includes("/web/") && !path.includes("/ai/") && !path.includes("/python/") && !path.includes("/_shared/");
   if (isRootIndex) return;
 
-  // определяем, куда вести
   let href = null;
 
   if (path.includes("/web/") || path.includes("/ai/") || path.includes("/python/")) {
-    // мы внутри раздела
     const isIndex = file === "index.html";
     if (isIndex) {
-      // оглавление раздела → на главную
       href = "../index.html";
     } else {
-      // урок → в оглавление раздела
       href = "index.html";
     }
   } else if (path.includes("/_shared/")) {
-    // кабинет → на главную
     href = "../index.html";
   }
 
@@ -333,6 +346,276 @@ function initHotkeys() {
   });
 }
 
+/* ═══════════════════════════════════════════
+   ОБЩЕЕ СОСТОЯНИЕ ПОМОДОРО
+   ═══════════════════════════════════════════ */
+
+function loadPomoConfig() {
+  try {
+    const raw = localStorage.getItem(POMO_CONFIG_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { work: 25, break: 5 };
+}
+
+function savePomoConfig(cfg) {
+  try { localStorage.setItem(POMO_CONFIG_KEY, JSON.stringify(cfg)); } catch {}
+}
+
+function loadPomoState() {
+  try {
+    const raw = localStorage.getItem(POMO_STATE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return null;
+}
+
+function savePomoState(s) {
+  try {
+    if (s) localStorage.setItem(POMO_STATE_KEY, JSON.stringify(s));
+    else localStorage.removeItem(POMO_STATE_KEY);
+  } catch {}
+}
+
+/* Рассчитать текущее состояние таймера */
+function calcPomoNow() {
+  const state = loadPomoState();
+  const cfg = loadPomoConfig();
+
+  if (!state) {
+    return {
+      mode: "work",
+      running: false,
+      timeLeft: cfg.work * 60,
+      total: cfg.work * 60,
+      config: cfg
+    };
+  }
+
+  const total = (state.mode === "work" ? cfg.work : cfg.break) * 60;
+
+  if (state.running && state.startedAt) {
+    const elapsed = Math.floor((Date.now() - state.startedAt) / 1000);
+    const left = Math.max(0, state.timeLeftAtStart - elapsed);
+
+    if (left <= 0) {
+      // время вышло, переключаем режим
+      const newMode = state.mode === "work" ? "break" : "work";
+      const newTotal = (newMode === "work" ? cfg.work : cfg.break) * 60;
+
+      // записать помидор
+      if (state.mode === "work") {
+        markActivity("pomos", 1);
+        markActivity("minutes", cfg.work);
+      }
+
+      const newState = {
+        mode: newMode,
+        running: true,
+        timeLeftAtStart: newTotal,
+        startedAt: Date.now()
+      };
+      savePomoState(newState);
+
+      return {
+        mode: newMode,
+        running: true,
+        timeLeft: newTotal,
+        total: newTotal,
+        config: cfg,
+        justFinished: true,
+        finishedMode: state.mode
+      };
+    }
+
+    return {
+      mode: state.mode,
+      running: true,
+      timeLeft: left,
+      total,
+      config: cfg
+    };
+  }
+
+  return {
+    mode: state.mode,
+    running: false,
+    timeLeft: state.timeLeftAtStart,
+    total,
+    config: cfg
+  };
+}
+
+function startPomo() {
+  const now = calcPomoNow();
+  savePomoState({
+    mode: now.mode,
+    running: true,
+    timeLeftAtStart: now.timeLeft,
+    startedAt: Date.now()
+  });
+}
+
+function pausePomo() {
+  const now = calcPomoNow();
+  savePomoState({
+    mode: now.mode,
+    running: false,
+    timeLeftAtStart: now.timeLeft,
+    startedAt: null
+  });
+}
+
+function resetPomo() {
+  savePomoState(null);
+}
+
+function formatPomoTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+/* ═══════════════════════════════════════════
+   ПЛАВАЮЩИЙ ВИДЖЕТ ПОМОДОРО
+   ═══════════════════════════════════════════ */
+
+function initPomodoroWidget() {
+  const path = window.location.pathname;
+  const file = path.split("/").pop() || "index.html";
+
+  // не показываем в кабинете — там большой таймер
+  if (file === "profile.html") return;
+
+  // создаём обёртку
+  const wrap = document.createElement("div");
+  wrap.className = "pomo-widget";
+  wrap.innerHTML = `
+    <button class="pomo-widget-btn" id="pomoWidgetBtn" title="помодоро">
+        <svg class="pomo-widget-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="14" r="7"/>
+        <path d="M12 7 L12 4"/>
+        <path d="M12 4 C 10 2, 8 3, 8 4"/>
+        <path d="M12 4 C 14 2, 16 3, 16 4"/>
+      </svg>
+      <span class="pomo-widget-time" id="pomoWidgetTime"></span>
+    </button>
+    <div class="pomo-widget-panel" id="pomoWidgetPanel">
+      <div class="pomo-widget-header">
+        <span id="pomoWidgetMode">работа</span>
+        <button class="pomo-widget-close" id="pomoWidgetClose" title="закрыть">×</button>
+      </div>
+      <div class="pomo-widget-big-time" id="pomoWidgetBigTime">25:00</div>
+      <div class="pomo-widget-controls">
+        <button class="pomo-widget-ctrl primary" id="pomoWidgetStart">старт</button>
+        <button class="pomo-widget-ctrl" id="pomoWidgetPause">пауза</button>
+        <button class="pomo-widget-ctrl" id="pomoWidgetReset">сброс</button>
+      </div>
+      <a class="pomo-widget-link" href="${
+        path.includes("/web/") || path.includes("/ai/") || path.includes("/python/")
+          ? "../_shared/profile.html"
+          : path.includes("/_shared/")
+          ? "profile.html"
+          : "_shared/profile.html"
+      }">настроить в кабинете →</a>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+
+  const btn = document.getElementById("pomoWidgetBtn");
+  const panel = document.getElementById("pomoWidgetPanel");
+  const timeEl = document.getElementById("pomoWidgetTime");
+  const bigTimeEl = document.getElementById("pomoWidgetBigTime");
+  const modeEl = document.getElementById("pomoWidgetMode");
+
+  let tickInterval = null;
+  let lastMode = null;
+
+  function render() {
+    const s = calcPomoNow();
+
+    // если только что закончился — сигнал
+    if (s.justFinished) {
+      playBeep();
+      toast(s.finishedMode === "work" ? "◦ работа окончена — перерыв!" : "◦ перерыв окончен — к работе!");
+    }
+
+    timeEl.textContent = s.running ? formatPomoTime(s.timeLeft) : "";
+    bigTimeEl.textContent = formatPomoTime(s.timeLeft);
+    modeEl.textContent = s.mode === "work" ? "работа" : "перерыв";
+
+    wrap.classList.toggle("running", s.running);
+
+    if (s.running && !tickInterval) {
+      tickInterval = setInterval(render, 1000);
+    } else if (!s.running && tickInterval) {
+      clearInterval(tickInterval);
+      tickInterval = null;
+    }
+  }
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    panel.classList.toggle("open");
+    render();
+  });
+
+  document.getElementById("pomoWidgetClose").addEventListener("click", (e) => {
+    e.stopPropagation();
+    panel.classList.remove("open");
+  });
+
+  document.getElementById("pomoWidgetStart").addEventListener("click", () => {
+    startPomo();
+    render();
+    toast("◦ таймер запущен");
+  });
+
+  document.getElementById("pomoWidgetPause").addEventListener("click", () => {
+    pausePomo();
+    render();
+    toast("◦ пауза");
+  });
+
+  document.getElementById("pomoWidgetReset").addEventListener("click", () => {
+    if (confirm("сбросить таймер?")) {
+      resetPomo();
+      render();
+      toast("◦ сброшено");
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) panel.classList.remove("open");
+  });
+
+  // начальный рендер
+  render();
+  // тик каждую секунду, даже если таймер стоит — чтобы поймать «время вышло»
+  setInterval(render, 1000);
+}
+
+/* ── короткий звук ── */
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 1100].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = "sine";
+      const start = ctx.currentTime + i * 0.3;
+      gain.gain.setValueAtTime(0.25, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.7);
+      osc.start(start);
+      osc.stop(start + 0.7);
+    });
+  } catch {}
+}
+
+
 /* ── Инициализация ── */
 function initApp() {
   initTheme();
@@ -340,13 +623,16 @@ function initApp() {
   initBackButton();
   initHotkeys();
   createThemePanel();
+  initPomodoroWidget();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
 
-/* ── PWA: регистрация service worker ── */
+/* ── PWA ── */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
+    if (window.location.protocol === "file:") return;
+
     const inSubfolder =
       window.location.pathname.includes("/web/") ||
       window.location.pathname.includes("/ai/") ||

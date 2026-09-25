@@ -86,6 +86,160 @@
     box-shadow: 0 0 0 3px var(--pink-glow);
   }
 
+    /* ── мои ссылки ── */
+  .links-block {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+  }
+  .links-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .links-title {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .links-add-btn {
+    background: transparent;
+    border: 1px dashed var(--line);
+    color: var(--pink-soft);
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .links-add-btn:hover {
+    border-color: var(--pink);
+    background: var(--pink-glow);
+  }
+
+  .links-form {
+    display: none;
+    gap: 8px;
+    flex-direction: column;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .links-form.open { display: flex; }
+  .links-form input {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .links-form input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 2px var(--pink-glow);
+  }
+  .links-form-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .links-save-btn {
+    flex: 1;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #1a0f1d;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .links-save-btn:hover { box-shadow: 0 0 12px var(--pink-glow); }
+  .links-cancel-btn {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .links-cancel-btn:hover { color: var(--pink-soft); border-color: var(--pink); }
+
+  .links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    transition: all 0.2s;
+  }
+  .link-item:hover {
+    border-color: var(--pink);
+  }
+  .link-item a {
+    flex: 1;
+    color: var(--pink-soft);
+    text-decoration: none;
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+  .link-item a:hover {
+    color: var(--pink);
+    text-decoration: underline;
+  }
+  .link-item a::before {
+    content: "🔗 ";
+    opacity: 0.7;
+    font-size: 0.8em;
+  }
+  .link-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    opacity: 0.6;
+  }
+  .link-btn:hover {
+    opacity: 1;
+    background: var(--bg);
+  }
+  .link-btn.edit:hover { color: var(--pink); }
+  .link-btn.del:hover { color: var(--err); }
+  .links-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 14px;
+    opacity: 0.7;
+  }
+
   /* ── помодоро ── */
   .deco {
     position: absolute;
@@ -131,6 +285,13 @@
     stroke: url(#timerGrad);
     stroke-linecap: round;
     transition: stroke-dashoffset 0.5s linear;
+  }
+    /* ── градиент кольца подстраивается под тему ── */
+  #timerGrad .stop-pink {
+    stop-color: var(--pink);
+  }
+  #timerGrad .stop-purple {
+    stop-color: var(--purple);
   }
   .timer-center {
     position: absolute;
@@ -213,7 +374,7 @@
     outline: none;
   }
   .timer-settings input:focus { border-color: var(--pink); }
-
+ 
   /* ── статистика ── */
   .stats-grid {
     display: grid;
@@ -483,6 +644,25 @@
         <label class="field-label">о себе</label>
         <textarea id="userAbout" rows="2" placeholder="пара слов о себе, о цели учёбы..." maxlength="200"></textarea>
       </div>
+
+      <!-- МОИ ССЫЛКИ -->
+      <div class="links-block">
+        <div class="links-header">
+          <span class="links-title">◈ мои ссылки</span>
+          <button class="links-add-btn" id="linksAddBtn">+ добавить</button>
+        </div>
+
+        <div class="links-form" id="linksForm">
+          <input type="text" id="linkName" placeholder="название (например, лоу-фай музыка)" maxlength="60">
+          <input type="url" id="linkUrl" placeholder="https://...">
+          <div class="links-form-buttons">
+            <button class="links-save-btn" id="linkSaveBtn">сохранить</button>
+            <button class="links-cancel-btn" id="linkCancelBtn">отмена</button>
+          </div>
+        </div>
+
+        <div class="links-list" id="linksList"></div>
+      </div>
     </div>
 
     <!-- ПРАВАЯ: ПОМОДОРО -->
@@ -496,8 +676,8 @@
         <svg viewBox="0 0 200 200">
           <defs>
             <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#ff8ec7"/>
-              <stop offset="100%" stop-color="#c77dff"/>
+              <stop class="stop-pink" offset="0%" />
+              <stop class="stop-purple" offset="100%" />
             </linearGradient>
           </defs>
           <circle class="ring-bg" cx="100" cy="100" r="90" fill="none" stroke-width="7"/>
@@ -515,6 +695,7 @@
         <button class="btn-p" id="btnPause">пауза</button>
         <button class="btn-p" id="btnReset">сброс</button>
       </div>
+      
 
       <div class="timer-settings">
         <div>
@@ -687,144 +868,196 @@ userNameEl.addEventListener("input", autoSaveProfile);
 userAboutEl.addEventListener("input", autoSaveProfile);
 
 /* ═══════════════════════════════════════════
-   ПОМОДОРО
+   МОИ ССЫЛКИ
    ═══════════════════════════════════════════ */
-const POMO_KEY = "local-adaptation-pomodoro";
+const LINKS_KEY = "local-adaptation-links";
 
-function loadPomo() {
+function loadLinks() {
   try {
-    const raw = localStorage.getItem(POMO_KEY);
+    const raw = localStorage.getItem(LINKS_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { work: 25, break: 5 };
-}
-function savePomo() {
-  try { localStorage.setItem(POMO_KEY, JSON.stringify(pomo)); } catch {}
+  return [];
 }
 
-let pomo = loadPomo();
+function saveLinksToStorage(list) {
+  try {
+    localStorage.setItem(LINKS_KEY, JSON.stringify(list));
+  } catch {}
+}
+
+let links = loadLinks();
+let editingIndex = null;
+
+const linksForm = document.getElementById("linksForm");
+const linkNameInput = document.getElementById("linkName");
+const linkUrlInput = document.getElementById("linkUrl");
+const linksListEl = document.getElementById("linksList");
+
+function renderLinks() {
+  if (!linksListEl) return;
+  linksListEl.innerHTML = "";
+
+  if (!links.length) {
+    linksListEl.innerHTML = `<div class="links-empty">пока нет ссылок — добавь первую</div>`;
+    return;
+  }
+
+  links.forEach((link, i) => {
+    const el = document.createElement("div");
+    el.className = "link-item";
+    el.innerHTML = `
+      <a href="${esc(link.url)}" target="_blank" rel="noopener" title="${esc(link.url)}">${esc(link.name)}</a>
+      <button class="link-btn edit" data-i="${i}" title="редактировать">✎</button>
+      <button class="link-btn del" data-i="${i}" title="удалить">×</button>
+    `;
+    linksListEl.appendChild(el);
+  });
+
+  linksListEl.querySelectorAll(".link-btn.edit").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.i);
+      openLinkForm(i);
+    });
+  });
+
+  linksListEl.querySelectorAll(".link-btn.del").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.i);
+      if (!confirm(`удалить «${links[i].name}»?`)) return;
+      links.splice(i, 1);
+      saveLinksToStorage(links);
+      renderLinks();
+      toast("◦ ссылка удалена");
+    });
+  });
+}
+
+function openLinkForm(index) {
+  editingIndex = index === undefined ? null : index;
+  linksForm.classList.add("open");
+
+  if (editingIndex !== null) {
+    linkNameInput.value = links[editingIndex].name;
+    linkUrlInput.value = links[editingIndex].url;
+  } else {
+    linkNameInput.value = "";
+    linkUrlInput.value = "";
+  }
+  linkNameInput.focus();
+}
+
+function closeLinkForm() {
+  linksForm.classList.remove("open");
+  editingIndex = null;
+  linkNameInput.value = "";
+  linkUrlInput.value = "";
+}
+
+document.getElementById("linksAddBtn").addEventListener("click", () => {
+  openLinkForm();
+});
+
+document.getElementById("linkCancelBtn").addEventListener("click", closeLinkForm);
+
+document.getElementById("linkSaveBtn").addEventListener("click", () => {
+  const name = linkNameInput.value.trim();
+  const url = linkUrlInput.value.trim();
+
+  if (!name) { toast("◦ нужно название"); return; }
+  if (!url) { toast("◦ нужна ссылка"); return; }
+  if (!/^https?:\/\//i.test(url)) { toast("◦ ссылка должна начинаться с http:// или https://"); return; }
+
+  if (editingIndex !== null) {
+    links[editingIndex] = { name, url };
+    toast("◦ ссылка обновлена");
+  } else {
+    links.push({ name, url });
+    toast("◦ ссылка добавлена");
+  }
+
+  saveLinksToStorage(links);
+  renderLinks();
+  closeLinkForm();
+});
+
+linkNameInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") linkUrlInput.focus();
+});
+linkUrlInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") document.getElementById("linkSaveBtn").click();
+  if (e.key === "Escape") closeLinkForm();
+});
+
+renderLinks();
+
+/* ═══════════════════════════════════════════
+   ПОМОДОРО — синхронизация с общим состоянием
+   ═══════════════════════════════════════════ */
 
 const inputWork = document.getElementById("inputWork");
 const inputBreak = document.getElementById("inputBreak");
-inputWork.value = pomo.work;
-inputBreak.value = pomo.break;
+
+let pomoConfig = loadPomoConfig();
+inputWork.value = pomoConfig.work;
+inputBreak.value = pomoConfig.break;
 
 inputWork.addEventListener("change", () => {
-  pomo.work = Math.max(1, Math.min(120, Number(inputWork.value) || 25));
-  inputWork.value = pomo.work;
-  savePomo();
-  if (!running) resetTimer();
+  pomoConfig.work = Math.max(1, Math.min(120, Number(inputWork.value) || 25));
+  inputWork.value = pomoConfig.work;
+  savePomoConfig(pomoConfig);
+  renderTimer();
 });
 inputBreak.addEventListener("change", () => {
-  pomo.break = Math.max(1, Math.min(60, Number(inputBreak.value) || 5));
-  inputBreak.value = pomo.break;
-  savePomo();
+  pomoConfig.break = Math.max(1, Math.min(60, Number(inputBreak.value) || 5));
+  inputBreak.value = pomoConfig.break;
+  savePomoConfig(pomoConfig);
 });
-
-let running = false;
-let mode = "work";
-let timeLeft = pomo.work * 60;
-let intervalId = null;
 
 const timerTime = document.getElementById("timerTime");
 const timerMode = document.getElementById("timerMode");
 const ringFg = document.getElementById("ringFg");
 const CIRC = 2 * Math.PI * 90;
 
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-}
+function renderTimer() {
+  const s = calcPomoNow();
 
-function updateTimerDisplay() {
-  timerTime.textContent = formatTime(timeLeft);
-  timerMode.textContent = mode === "work" ? "работа" : "перерыв";
-  const total = (mode === "work" ? pomo.work : pomo.break) * 60;
-  const offset = CIRC - (CIRC * (timeLeft / total));
+  timerTime.textContent = formatPomoTime(s.timeLeft);
+  timerMode.textContent = s.mode === "work" ? "работа" : "перерыв";
+
+  const offset = CIRC - (CIRC * (s.timeLeft / s.total));
   ringFg.style.strokeDashoffset = offset;
-}
 
-function resetTimer() {
-  running = false;
-  clearInterval(intervalId);
-  intervalId = null;
-  mode = "work";
-  timeLeft = pomo.work * 60;
-  updateTimerDisplay();
-}
-
-function startTimer() {
-  if (running) return;
-  running = true;
-  intervalId = setInterval(tick, 1000);
-}
-
-function pauseTimer() {
-  running = false;
-  clearInterval(intervalId);
-  intervalId = null;
-}
-
-function tick() {
-  timeLeft--;
-  if (timeLeft <= 0) { finishSession(); return; }
-  updateTimerDisplay();
-}
-
-function finishSession() {
-  pauseTimer();
-  playBeep();
-  if (mode === "work") {
-    markActivity("pomos", 1);
-    markActivity("minutes", pomo.work);
-    toast("◦ работа окончена — перерыв!");
-    mode = "break";
-    timeLeft = pomo.break * 60;
-  } else {
-    toast("◦ перерыв окончен — к работе!");
-    mode = "work";
-    timeLeft = pomo.work * 60;
+  if (s.justFinished) {
+    playBeep();
+    toast(s.finishedMode === "work" ? "◦ работа окончена — перерыв!" : "◦ перерыв окончен — к работе!");
+    updateStats();
   }
-  updateTimerDisplay();
-  updateStats();
-  setTimeout(startTimer, 1000);
 }
 
-function playBeep() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    osc.type = "sine";
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.8);
-    setTimeout(() => {
-      const ctx2 = new (window.AudioContext || window.webkitAudioContext)();
-      const osc2 = ctx2.createOscillator();
-      const gain2 = ctx2.createGain();
-      osc2.connect(gain2);
-      gain2.connect(ctx2.destination);
-      osc2.frequency.value = 1100;
-      osc2.type = "sine";
-      gain2.gain.setValueAtTime(0.3, ctx2.currentTime);
-      gain2.gain.exponentialRampToValueAtTime(0.001, ctx2.currentTime + 0.8);
-      osc2.start(ctx2.currentTime);
-      osc2.stop(ctx2.currentTime + 0.8);
-    }, 300);
-  } catch {}
-}
-
-document.getElementById("btnStart").addEventListener("click", startTimer);
-document.getElementById("btnPause").addEventListener("click", pauseTimer);
-document.getElementById("btnReset").addEventListener("click", () => {
-  if (confirm("сбросить таймер?")) resetTimer();
+document.getElementById("btnStart").addEventListener("click", () => {
+  startPomo();
+  renderTimer();
+  toast("◦ таймер запущен");
 });
+
+document.getElementById("btnPause").addEventListener("click", () => {
+  pausePomo();
+  renderTimer();
+  toast("◦ пауза");
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  if (confirm("сбросить таймер?")) {
+    resetPomo();
+    renderTimer();
+    toast("◦ сброшено");
+  }
+});
+
+/* обновление каждую секунду */
+setInterval(renderTimer, 1000);
+
 
 /* ═══════════════════════════════════════════
    СТАТИСТИКА
@@ -844,10 +1077,10 @@ function updateStats() {
 
   // прогресс уроков
   const done = Object.values(state.lessons || {}).filter(l => l.done).length;
-  const total = 33;
+  const total = 58;
   const pct = Math.round((done / total) * 100);
   document.getElementById("profProgressFill").style.width = pct + "%";
-  document.getElementById("profProgressText").textContent = `${done} / ${total} пройдено · Web + AI`;
+  document.getElementById("profProgressText").textContent = `${done} / ${total} пройдено · Web + AI + Python`;
 }
 
 /* ── календарь 30 дней ── */
@@ -909,13 +1142,14 @@ function gatherAllData() {
     state: state,
     activity: activity,
     profile: profile,
-    pomodoro: pomo,
+    pomodoro: pomoConfig,
+    links: links,
     lessonsMeta: {}
   };
   // на всякий — собираем всё, что есть в localStorage с нашим префиксом
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.startsWith("local-adaptation-") && !["local-adaptation-v1","local-adaptation-activity","local-adaptation-profile","local-adaptation-pomodoro","local-adaptation-theme","local-adaptation-lastbackup"].includes(k)) {
+    if (k && k.startsWith("local-adaptation-") && !["local-adaptation-v1","local-adaptation-activity","local-adaptation-profile","local-adaptation-pomodoro","local-adaptation-theme","local-adaptation-lastbackup", "local-adaptation-links"].includes(k)) {
       try { data.lessonsMeta[k] = JSON.parse(localStorage.getItem(k)); } catch {}
     }
   }
@@ -975,10 +1209,16 @@ function importBackup(e) {
         renderProfile();
       }
       if (data.pomodoro && replace) {
-        pomo = data.pomodoro;
-        savePomo();
-        inputWork.value = pomo.work;
-        inputBreak.value = pomo.break;
+        savePomoConfig(data.pomodoro);
+        pomoConfig = data.pomodoro;
+        inputWork.value = pomoConfig.work;
+        inputBreak.value = pomoConfig.break;
+      }
+
+      if (data.links && replace) {
+        links = data.links;
+        saveLinksToStorage(links);
+        renderLinks();
       }
 
       updateStats();
@@ -1046,7 +1286,7 @@ document.getElementById("reminderLater").addEventListener("click", hideReminder)
    INIT
    ═══════════════════════════════════════════ */
 renderProfile();
-updateTimerDisplay();
+renderTimer();
 updateStats();
 renderCalendar();
 updateBackupInfo();
@@ -1056,7 +1296,7 @@ showReminderIfNeeded();
    МОИ МАТЕРИАЛЫ
    ═══════════════════════════════════════════ */
 const LESSONS_META = [
-  // Web
+  // Web — часть 1 (HTML/CSS)
   { id: "web-01", num: "01", title: "Структура HTML и первые теги", group: "Web" },
   { id: "web-02", num: "02", title: "Специальные символы и блочные элементы", group: "Web" },
   { id: "web-03", num: "03", title: "Списки в HTML", group: "Web" },
@@ -1077,11 +1317,24 @@ const LESSONS_META = [
   { id: "web-18", num: "18", title: "Адаптивный дизайн", group: "Web" },
   { id: "web-19", num: "19", title: "Одностраничный сайт", group: "Web" },
   { id: "web-20", num: "20", title: "Многостраничный сайт", group: "Web" },
+  // Web — часть 2 (JS основы)
   { id: "web-21", num: "21", title: "JavaScript — основы", group: "Web" },
   { id: "web-22", num: "22", title: "DOM — работа со страницей", group: "Web" },
   { id: "web-23", num: "23", title: "События", group: "Web" },
   { id: "web-24", num: "24", title: "Хранение данных в браузере", group: "Web" },
   { id: "web-25", num: "25", title: "Мини-проект на JavaScript", group: "Web" },
+  // Web — часть 3 (продвинутый JS)
+  { id: "web-26", num: "26", title: "Асинхронность: что это и зачем", group: "Web" },
+  { id: "web-27", num: "27", title: "setTimeout и setInterval", group: "Web" },
+  { id: "web-28", num: "28", title: "Promise: обещания", group: "Web" },
+  { id: "web-29", num: "29", title: "async / await", group: "Web" },
+  { id: "web-30", num: "30", title: "fetch: запросы к серверу", group: "Web" },
+  { id: "web-31", num: "31", title: "Работа с API на практике", group: "Web" },
+  { id: "web-32", num: "32", title: "Модули: import / export", group: "Web" },
+  { id: "web-33", num: "33", title: "Классы и ООП", group: "Web" },
+  { id: "web-34", num: "34", title: "Замыкания и область видимости", group: "Web" },
+  { id: "web-35", num: "35", title: "Обработка ошибок: try / catch", group: "Web" },
+  { id: "web-36", num: "36", title: "Итоговый проект · продвинутый JS", group: "Web" },
   // AI
   { id: "ai-1", num: "01", title: "Что такое AI", group: "AI" },
   { id: "ai-2", num: "02", title: "Промпт-инжиниринг", group: "AI" },
@@ -1090,7 +1343,22 @@ const LESSONS_META = [
   { id: "ai-5", num: "05", title: "AI-агент", group: "AI" },
   { id: "ai-6", num: "06", title: "Оркестраторы", group: "AI" },
   { id: "ai-7", num: "07", title: "Будущее AI", group: "AI" },
-  { id: "ai-8", num: "08", title: "Итоговый проект", group: "AI" }
+  { id: "ai-8", num: "08", title: "Итоговый проект", group: "AI" },
+  // Python
+  { id: "py-01", num: "01", title: "Установка Python и VS Code", group: "Python" },
+  { id: "py-02", num: "02", title: "Первая программа и вывод данных", group: "Python" },
+  { id: "py-03", num: "03", title: "Переменные и типы данных", group: "Python" },
+  { id: "py-04", num: "04", title: "Ввод данных от пользователя", group: "Python" },
+  { id: "py-05", num: "05", title: "Работа с текстом", group: "Python" },
+  { id: "py-06", num: "06", title: "Условный оператор if", group: "Python" },
+  { id: "py-07", num: "07", title: "Логические операторы", group: "Python" },
+  { id: "py-08", num: "08", title: "Цикл for", group: "Python" },
+  { id: "py-09", num: "09", title: "Цикл while", group: "Python" },
+  { id: "py-10", num: "10", title: "Списки", group: "Python" },
+  { id: "py-11", num: "11", title: "Словари", group: "Python" },
+  { id: "py-12", num: "12", title: "Функции", group: "Python" },
+  { id: "py-13", num: "13", title: "Модули random и math", group: "Python" },
+  { id: "py-14", num: "14", title: "Контрольные проекты", group: "Python" }
 ];
 
 function renderMaterials() {

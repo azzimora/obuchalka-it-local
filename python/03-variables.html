@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03. Переменные и типы данных · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 03</div>
+    <h1>Переменные и типы данных</h1>
+    <div class="subtitle">как хранить значения и что с ними делать</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>03
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Пока ты писала <code>print("Привет")</code> — это были разовые команды. А что, если значение нужно использовать несколько раз? Или менять по ходу программы? Для этого придумали <strong>переменные</strong>.</p>
+
+    <h3>Что такое переменная</h3>
+    <p><strong>Переменная</strong> — это «коробка» с именем, в которую можно положить значение. Положить, потом достать, потом заменить.</p>
+
+    <pre>name = "Аня"
+print(name)</pre>
+
+    <p>Здесь:</p>
+    <ul>
+      <li><code>name</code> — имя переменной;</li>
+      <li><code>=</code> — знак присваивания (не «равно», а «положи в коробку»);</li>
+      <li><code>"Аня"</code> — значение, которое кладём.</li>
+    </ul>
+
+    <p><em>Важно:</em> в Python <code>=</code> — это <strong>присваивание</strong>, а не сравнение. Сравнение — это <code>==</code> (два знака). Мы поговорим об этом в теме про условия.</p>
+
+    <h3>Как пользоваться</h3>
+    <p>После того как переменная создана, можно использовать её имя везде:</p>
+
+    <pre>name = "Аня"
+age = 17
+city = "Москва"
+
+print(name)
+print(age)
+print(city)
+
+print("Меня зовут", name)
+print("Мне", age, "лет")
+print("Я живу в", city)</pre>
+
+    <p>Вывод:</p>
+    <pre>Аня
+17
+Москва
+Меня зовут Аня
+Мне 17 лет
+Я живу в Москва</pre>
+
+    <p><strong>Обрати внимание:</strong> в последних строках мы <em>передаём переменные в <code>print</code></em> через запятую. Python сам поставит пробелы между ними.</p>
+
+    <h3>Значение можно менять</h3>
+    <p>Переменная называется переменной, потому что её значение можно <strong>перезаписать</strong>:</p>
+
+    <pre>score = 0
+print(score)   # 0
+
+score = 10
+print(score)   # 10
+
+score = score + 5
+print(score)   # 15</pre>
+
+    <p>В последней строке: «взять текущее значение <code>score</code> (10), прибавить 5, положить обратно в <code>score</code>». Теперь там 15.</p>
+
+    <h3>Правила именования</h3>
+    <p>Имя переменной может содержать:</p>
+    <ul>
+      <li>буквы (латиница — обязательно для надёжности);</li>
+      <li>цифры (но не в начале);</li>
+      <li>знак подчёркивания <code>_</code>.</li>
+    </ul>
+
+    <p><strong>Можно:</strong> <code>name</code>, <code>user_name</code>, <code>age2</code>, <code>my_score</code>.</p>
+    <p><strong>Нельзя:</strong> <code>2name</code> (начинается с цифры), <code>my-score</code> (дефис), <code>user name</code> (пробел).</p>
+
+    <p><strong>Совет:</strong> называй переменные <em>по смыслу</em>. Не <code>a</code>, <code>b</code>, <code>c</code>, а <code>name</code>, <code>age</code>, <code>score</code>. Через месяц ты скажешь себе спасибо.</p>
+
+    <p><strong>Регистр важен.</strong> <code>Name</code>, <code>name</code> и <code>NAME</code> — три разные переменные. Python чувствителен к регистру.</p>
+
+    <h3>Типы данных</h3>
+    <p>Значения в Python имеют <strong>типы</strong>. Четыре основных, которые встретятся сразу:</p>
+
+    <ul>
+      <li><strong>str</strong> (string) — строка. Текст в кавычках: <code>"Привет"</code>, <code>'Аня'</code>.</li>
+      <li><strong>int</strong> (integer) — целое число: <code>17</code>, <code>-5</code>, <code>100</code>.</li>
+      <li><strong>float</strong> — дробное число: <code>3.14</code>, <code>-0.5</code>, <code>2.0</code>.</li>
+      <li><strong>bool</strong> (boolean) — логический тип. Только два значения: <code>True</code> или <code>False</code>.</li>
+    </ul>
+
+    <pre>name = "Аня"        # str
+age = 17            # int
+height = 1.65       # float
+is_student = True   # bool</pre>
+
+    <h3>Как узнать тип</h3>
+    <p>Функция <code>type()</code> показывает тип значения:</p>
+
+    <pre>print(type("Привет"))    # &lt;class 'str'&gt;
+print(type(42))          # &lt;class 'int'&gt;
+print(type(3.14))        # &lt;class 'float'&gt;
+print(type(True))        # &lt;class 'bool'&gt;</pre>
+
+    <h3>Преобразование типов</h3>
+    <p>Иногда нужно превратить один тип в другой. Три функции:</p>
+
+    <pre>int("42")      # строка → число: 42
+str(42)        # число → строка: "42"
+float("3.14")  # строка → дробное: 3.14</pre>
+
+    <p>Пример:</p>
+    <pre>age_text = "17"
+age = int(age_text)
+print(age + 1)   # 18</pre>
+
+    <p>Если бы не преобразовали, Python бы выдал ошибку: нельзя складывать строку с числом.</p>
+
+    <h3>Что будет, если перепутать типы</h3>
+    <pre>print("5" + "3")   # "53" — склеились как строки
+print(5 + 3)       # 8 — сложились как числа</pre>
+
+    <p>Разница огромная. Кавычки решают всё.</p>
+
+    <pre>print("5" + 3)   # ошибка!</pre>
+    <p>Python не знает, что делать: строка + число — непонятно. Он остановится и скажет: «нельзя».</p>
+
+    <h3>f-строки — удобный способ соединять текст и переменные</h3>
+    <p>Вместо того чтобы писать длинные <code>print("Меня зовут", name, "и мне", age, "лет")</code>, можно использовать <strong>f-строку</strong>:</p>
+
+    <pre>name = "Аня"
+age = 17
+
+print(f"Меня зовут {name}, мне {age} лет")</pre>
+
+    <p>Буква <code>f</code> перед кавычками говорит: «внутри будут переменные». А <code>{name}</code> и <code>{age}</code> — это места, куда Python подставит значения.</p>
+
+    <p>Вывод:</p>
+    <pre>Меня зовут Аня, мне 17 лет</pre>
+
+    <p><strong>Это самый удобный способ работы с текстом.</strong> Дальше ты будешь использовать его постоянно.</p>
+
+    <p>Внутри фигурных скобок можно даже считать:</p>
+    <pre>print(f"Через год мне будет {age + 1} лет")</pre>
+    <p>Вывод:</p>
+    <pre>Через год мне будет 18 лет</pre>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Переменная — «коробка» с именем, куда кладут значение.</li>
+      <li><code>=</code> — присваивание. <code>==</code> — сравнение.</li>
+      <li>Значение можно менять: <code>score = score + 5</code>.</li>
+      <li>Имена: буквы, цифры (не в начале), <code>_</code>. Регистр важен.</li>
+      <li>Четыре типа: <code>str</code>, <code>int</code>, <code>float</code>, <code>bool</code>.</li>
+      <li><code>type()</code> — узнать тип.</li>
+      <li><code>int()</code>, <code>str()</code>, <code>float()</code> — преобразование.</li>
+      <li>f-строки — удобный способ вставлять переменные в текст.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>поработать с переменными, типами и f-строками</strong>.</p>
+
+    <p>Файл <code>variables.py</code> в папке проектов.</p>
+
+    <ul>
+      <li><strong>Задание 1 — знакомство.</strong> Создай переменные:
+        <ul>
+          <li><code>name</code> — твоё имя (строка);</li>
+          <li><code>age</code> — возраст (число);</li>
+          <li><code>city</code> — город (строка);</li>
+          <li><code>hobby</code> — любимое занятие (строка).</li>
+        </ul>
+        Выведи их через <code>print</code>. Потом выведи одной строкой через f-строку.
+      </li>
+      <li><strong>Задание 2 — типы.</strong> Для каждой переменной из задания 1 напиши <code>print(type(...))</code>. Запиши в конспект, какие типы вывелись.
+      </li>
+      <li><strong>Задание 3 — изменение.</strong> Напиши:
+        <pre>score = 0
+print(score)
+
+score = 10
+print(score)
+
+score = score + 5
+print(score)
+
+score = score * 2
+print(score)</pre>
+        Запусти. Запиши, какие числа вывелись.
+      </li>
+      <li><strong>Задание 4 — преобразование.</strong> Напиши:
+        <pre>a = "5"
+b = "3"
+print(a + b)
+
+c = int(a)
+d = int(b)
+print(c + d)</pre>
+        Запусти. Запиши разницу между двумя выводами. Объясни словами, почему так.
+      </li>
+      <li><strong>Задание 5 — кавычки.</strong> Напиши:
+        <pre>print("5" + "3")
+print(5 + 3)</pre>
+        Сравни. Что выводит каждая строка?
+      </li>
+      <li><strong>Задание 6 — калькулятор.</strong> Создай переменные:
+        <pre>a = 15
+b = 4</pre>
+        Выведи через f-строки:
+        <ul>
+          <li><code>a + b</code>;</li>
+          <li><code>a - b</code>;</li>
+          <li><code>a * b</code>;</li>
+          <li><code>a / b</code>.</li>
+        </ul>
+        Например: <code>print(f"{a} + {b} = {a + b}")</code>.
+      </li>
+      <li><strong>Задание 7 — своя мини-программа.</strong> Придумай что-то своё с переменными. Например:
+        <ul>
+          <li>«визитка» — имя, возраст, город, профессия мечты;</li>
+          <li>«смета» — цена, количество, итог;</li>
+          <li>«рецепт» — ингредиенты и количество.</li>
+        </ul>
+        Используй минимум 5 переменных и f-строки для вывода.
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код». Это пригодится дальше.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="переменные, f-строки, калькулятор, своя мини-программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="02-first-program.html">← предыдущая</a>
+    <a class="btn" href="04-input.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 03 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-03";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

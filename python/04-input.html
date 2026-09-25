@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04. Ввод данных от пользователя · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 04</div>
+    <h1>Ввод данных от пользователя</h1>
+    <div class="subtitle">функция input и что с ней делать</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>04
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>До этого программа только <em>выводила</em> данные. Но настоящая программа должна ещё и <strong>получать данные от пользователя</strong> — имя, число, ответ на вопрос. Для этого есть функция <code>input()</code>.</p>
+
+    <h3>Что делает input</h3>
+    <p><code>input()</code> останавливает программу, ждёт, пока пользователь что-то напишет и нажмёт Enter. А потом <strong>возвращает то, что он написал</strong>.</p>
+
+    <pre>name = input("Как тебя зовут? ")
+print(f"Привет, {name}!")</pre>
+
+    <p>Как это работает:</p>
+    <ul>
+      <li>Python выводит текст <code>"Как тебя зовут? "</code> на экран;</li>
+      <li>ждёт, пока ты что-то введёшь и нажмёшь Enter;</li>
+      <li>то, что ты ввела, кладёт в переменную <code>name</code>;</li>
+      <li>идёт дальше — выводит приветствие.</li>
+    </ul>
+
+    <h3>input всегда возвращает строку</h3>
+    <p>Это важно. Что бы пользователь ни ввёл — число, слово, что угодно — <code>input()</code> вернёт <strong>строку</strong> (тип <code>str</code>).</p>
+
+    <pre>age = input("Сколько тебе лет? ")
+print(type(age))</pre>
+
+    <p>Если пользователь введёт <code>17</code>, тип всё равно будет <code>&lt;class 'str'&gt;</code>. А значит, с этим значением нельзя работать как с числом — нельзя складывать, вычитать, сравнивать.</p>
+
+    <pre>age = input("Сколько тебе лет? ")
+print(age + 1)   # ошибка!</pre>
+
+    <p>Python скажет: «нельзя сложить строку и число».</p>
+
+    <h3>Преобразование в число</h3>
+    <p>Чтобы работать с введённым числом как с числом, надо <strong>преобразовать тип</strong> через <code>int()</code> или <code>float()</code>:</p>
+
+    <pre>age = int(input("Сколько тебе лет? "))
+print(f"Через год тебе будет {age + 1}")</pre>
+
+    <p>Здесь: <code>input()</code> вернул строку, <code>int()</code> превратил её в целое число, и теперь можно считать.</p>
+
+    <p>Если число может быть дробным (например, рост, вес, цена) — используй <code>float()</code>:</p>
+
+    <pre>height = float(input("Твой рост в метрах? "))
+print(f"Твой рост: {height} м")</pre>
+
+    <h3>Как выглядят типичные программы с input</h3>
+
+    <p><strong>1. Приветствие.</strong></p>
+    <pre>name = input("Как тебя зовут? ")
+city = input("Из какого ты города? ")
+
+print(f"Привет, {name} из города {city}!")</pre>
+
+    <p><strong>2. Калькулятор.</strong></p>
+    <pre>a = int(input("Введи первое число: "))
+b = int(input("Введи второе число: "))
+
+print(f"{a} + {b} = {a + b}")
+print(f"{a} - {b} = {a - b}")
+print(f"{a} * {b} = {a * b}")</pre>
+
+    <p><strong>3. Анкета.</strong></p>
+    <pre>name = input("Имя: ")
+age = int(input("Возраст: "))
+hobby = input("Хобби: ")
+
+print()
+print("=== Анкета ===")
+print(f"Имя: {name}")
+print(f"Возраст: {age}")
+print(f"Хобби: {hobby}")</pre>
+
+    <h3>Подсказка внутри input</h3>
+    <p>Текст в скобках <code>input()</code> — это <strong>подсказка</strong>. Он выводится пользователю, чтобы тот понял, что от него хотят.</p>
+
+    <pre>name = input("Как тебя зовут? ")</pre>
+
+    <p><strong>Совет:</strong> в конце подсказки оставляй пробел — <code>"...? "</code>. Иначе ввод «прилипнет» к вопросу: <code>Как тебя зовут?Аня</code>.</p>
+
+    <h3>Что если пользователь ошибётся</h3>
+    <p>Если написать <code>int(input())</code>, а пользователь введёт «привет» вместо числа — программа упадёт с ошибкой <code>ValueError</code>.</p>
+
+    <pre>age = int(input("Возраст: "))   # вводим "привет"
+# ValueError: invalid literal for int() with base 10: 'привет'</pre>
+
+    <p>Пока это нормально — мы просто предполагаем, что пользователь вводит то, что нужно. В будущем научимся обрабатывать такие ошибки.</p>
+
+    <h3>Полезные мелочи</h3>
+    <ul>
+      <li><code>input()</code> <strong>ждёт ввода</strong>. Программа стоит на месте, пока не нажмёшь Enter.</li>
+      <li>Enter в конце ввода — не часть строки. То есть <code>"Аня"</code>, а не <code>"Аня\n"</code>.</li>
+      <li>Если пользователь введёт пробелы в начале и конце — они останутся. Чтобы убрать: <code>input().strip()</code>.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>input()</code> — функция, которая ждёт ввод и возвращает его.</li>
+      <li>Текст в скобках — подсказка для пользователя.</li>
+      <li><strong>input всегда возвращает строку</strong>, даже если ввели число.</li>
+      <li>Для чисел — <code>int(input())</code> или <code>float(input())</code>.</li>
+      <li>Совет: пробел в конце подсказки.</li>
+      <li>Если ввести не то — программа может упасть с ошибкой.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>сделать интерактивные программы, которые разговаривают с пользователем</strong>.</p>
+
+    <p>Файл <code>input_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — приветствие.</strong> Программа спрашивает имя и возраст, потом выводит приветствие. Возраст преобразуй в число, чтобы можно было сказать, сколько лет будет через год.
+      </li>
+      <li><strong>Задание 2 — анкета.</strong> Спроси у пользователя:
+        <ul>
+          <li>имя;</li>
+          <li>город;</li>
+          <li>любимую книгу;</li>
+          <li>любимого персонажа.</li>
+        </ul>
+        Выведи всё аккуратной анкетой через f-строки.
+      </li>
+      <li><strong>Задание 3 — калькулятор.</strong> Программа спрашивает два числа и выводит их сумму, разность, произведение и частное. Используй <code>int()</code> или <code>float()</code>.
+      </li>
+      <li><strong>Задание 4 — прямоугольник.</strong> Спроси длину и ширину. Выведи:
+        <ul>
+          <li>периметр (<code>2 * (длина + ширина)</code>);</li>
+          <li>площадь (<code>длина * ширина</code>).</li>
+        </ul>
+      </li>
+      <li><strong>Задание 5 — время.</strong> Спроси у пользователя количество минут. Выведи, сколько это часов и сколько минут осталось. Например:
+        <pre>150 минут = 2 часа 30 минут</pre>
+        <em>Подсказка:</em> часов — <code>минут // 60</code> (целочисленное деление), остаток — <code>минут % 60</code>.
+      </li>
+      <li><strong>Задание 6 — своя программа.</strong> Придумай что-то своё, что спрашивает у пользователя данные и что-то с ними делает. Идеи:
+        <ul>
+          <li>посчитать, сколько дней пользователь прожил (приблизительно);</li>
+          <li>перевести рубли в доллары по курсу;</li>
+          <li>спросить рост и вес, посчитать ИМТ;</li>
+          <li>спросить год рождения, посчитать возраст.</li>
+        </ul>
+      </li>
+      <li><strong>Обязательно:</strong> во всех заданиях используй <strong>f-строки</strong> для вывода.</li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="приветствие, анкета, калькулятор, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="03-variables.html">← предыдущая</a>
+    <a class="btn" href="05-text.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 04 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-04";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

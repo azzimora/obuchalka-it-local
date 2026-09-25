@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07. Логические операторы · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .block table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85rem; }
+  .block th, .block td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .block th { color: var(--purple-soft); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 07</div>
+    <h1>Логические операторы</h1>
+    <div class="subtitle">and, or, not — и как думать условиями</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>07
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>В прошлой теме мы познакомились с <code>if</code>. Но часто условие — это <strong>не одно сравнение, а несколько</strong>: «если возраст больше 18 <em>и</em> есть билет», «если оценка 5 <em>или</em> 4», «если <em>не</em> дождь». Для этого есть логические операторы.</p>
+
+    <h3>Три оператора</h3>
+    <ul>
+      <li><strong>and</strong> — «и». Истинно, только если <strong>оба</strong> условия истинны;</li>
+      <li><strong>or</strong> — «или». Истинно, если <strong>хотя бы одно</strong> истинно;</li>
+      <li><strong>not</strong> — «не». Переворачивает: истина → ложь, ложь → истина.</li>
+    </ul>
+
+    <h3>and</h3>
+    <pre>age = 20
+has_ticket = True
+
+if age >= 18 and has_ticket:
+    print("можно войти")</pre>
+
+    <p>Здесь проверяются <strong>оба</strong> условия. Если хотя бы одно ложно — весь <code>and</code> ложен.</p>
+
+    <p>Таблица истинности:</p>
+    <table>
+      <tr>
+        <th>A</th>
+        <th>B</th>
+        <th>A and B</th>
+      </tr>
+      <tr><td>True</td><td>True</td><td>True</td></tr>
+      <tr><td>True</td><td>False</td><td>False</td></tr>
+      <tr><td>False</td><td>True</td><td>False</td></tr>
+      <tr><td>False</td><td>False</td><td>False</td></tr>
+    </table>
+
+    <h3>or</h3>
+    <pre>day = "суббота"
+
+if day == "суббота" or day == "воскресенье":
+    print("выходной")</pre>
+
+    <p>Здесь достаточно, чтобы <strong>одно</strong> из условий было истинным.</p>
+
+    <table>
+      <tr>
+        <th>A</th>
+        <th>B</th>
+        <th>A or B</th>
+      </tr>
+      <tr><td>True</td><td>True</td><td>True</td></tr>
+      <tr><td>True</td><td>False</td><td>True</td></tr>
+      <tr><td>False</td><td>True</td><td>True</td></tr>
+      <tr><td>False</td><td>False</td><td>False</td></tr>
+    </table>
+
+    <h3>not</h3>
+    <pre>is_raining = False
+
+if not is_raining:
+    print("можно гулять")</pre>
+
+    <p><code>not is_raining</code> означает «если <em>не</em> идёт дождь». То есть если <code>is_raining</code> ложно — условие истинно.</p>
+
+    <table>
+      <tr>
+        <th>A</th>
+        <th>not A</th>
+      </tr>
+      <tr><td>True</td><td>False</td></tr>
+      <tr><td>False</td><td>True</td></tr>
+    </table>
+
+    <h3>Комбинирование</h3>
+    <p>Операторы можно соединять. Но <strong>следи за скобками</strong> — они определяют порядок.</p>
+
+    <pre>age = 25
+is_student = True
+has_discount_card = False
+
+if (age < 18 or is_student) and not has_discount_card:
+    print("положена скидка")</pre>
+
+    <p>Читается так: «если (моложе 18 <em>или</em> студент) <em>и</em> при этом нет карты скидок».</p>
+
+    <p><strong>Без скобок</strong> Python выполняет <code>not</code> первым, потом <code>and</code>, потом <code>or</code>. Это как математика: умножение раньше сложения. Но лучше <strong>всегда ставить скобки</strong> — для себя и для читателя.</p>
+
+    <h3>Порядок выполнения</h3>
+    <ol>
+      <li><code>not</code> — первым;</li>
+      <li><code>and</code> — вторым;</li>
+      <li><code>or</code> — последним.</li>
+    </ol>
+
+    <p>Пример:</p>
+    <pre>a or b and not c</pre>
+    <p>Читается как:</p>
+    <pre>a or (b and (not c))</pre>
+
+    <h3>Короткое замыкание</h3>
+    <p>Python <strong>ленивый</strong>. Если результат уже ясен — он не проверяет остальное.</p>
+
+    <ul>
+      <li>В <code>a and b</code>: если <code>a</code> ложно — <code>b</code> не проверяется, потому что результат уже <code>False</code>.</li>
+      <li>В <code>a or b</code>: если <code>a</code> истинно — <code>b</code> не проверяется, потому что результат уже <code>True</code>.</li>
+    </ul>
+
+    <p>Это полезно, когда правая часть может вызвать ошибку:</p>
+    <pre>if user != None and user.name == "Аня":
+    print("привет, Аня")</pre>
+    <p>Если <code>user</code> — <code>None</code>, вторая часть не выполнится, и не будет ошибки. Без <code>and</code> Python бы попытался прочитать <code>user.name</code> у пустого объекта — и упал.</p>
+
+    <h3>Проверка «в диапазоне»</h3>
+    <p>В Python можно писать цепочки сравнений:</p>
+    <pre>age = 25
+
+if 18 <= age <= 65:
+    print("рабочий возраст")</pre>
+    <p>Это то же самое, что:</p>
+    <pre>if age >= 18 and age <= 65:</pre>
+    <p>Но короче и читается лучше.</p>
+
+    <h3>Проверка «в списке»</h3>
+    <p>Вместо длинного <code>or</code> используй <code>in</code>:</p>
+    <pre># плохо
+if day == "сб" or day == "вс" or day == "пт":
+    print("отдых")
+
+# хорошо
+if day in ["сб", "вс", "пт"]:
+    print("отдых")</pre>
+
+    <h3>Проверка «не в списке»</h3>
+    <pre>if name not in ["Аня", "Макс", "Лена"]:
+    print("новенький")</pre>
+
+    <h3>Логические значения как переменные</h3>
+    <p>Условие можно сохранить в переменную — она будет <code>True</code> или <code>False</code>:</p>
+
+    <pre>age = 20
+has_ticket = True
+
+can_enter = age >= 18 and has_ticket
+
+if can_enter:
+    print("проходите")</pre>
+
+    <p>Это удобно, когда условие длинное, а использовать его нужно несколько раз. Имя переменной объясняет смысл.</p>
+
+    <h3>Пример: проверка данных</h3>
+    <pre>name = input("Имя: ")
+age = int(input("Возраст: "))
+
+if not name:
+    print("Имя не введено")
+elif age < 0 or age > 150:
+    print("Возраст неправдоподобный")
+elif age < 18:
+    print(f"{name}, ты ещё несовершеннолетний")
+else:
+    print(f"{name}, добро пожаловать!")</pre>
+
+    <h3>Пример: калькулятор скидки</h3>
+    <pre>age = int(input("Возраст: "))
+is_student = input("Студент? (да/нет): ") == "да"
+
+if age < 7 or age > 65 or is_student:
+    print("скидка 50%")
+elif age < 18:
+    print("скидка 20%")
+else:
+    print("без скидки")</pre>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>and</code> — истинно, если <strong>оба</strong> условия истинны.</li>
+      <li><code>or</code> — истинно, если <strong>хотя бы одно</strong> истинно.</li>
+      <li><code>not</code> — переворачивает.</li>
+      <li>Порядок: <code>not</code> → <code>and</code> → <code>or</code>. Скобки — для ясности.</li>
+      <li>Короткое замыкание: Python не проверяет то, что уже не влияет на результат.</li>
+      <li><code>18 &lt;= x &lt;= 65</code> — можно объединять сравнения.</li>
+      <li><code>in</code> — проверка «в списке», короче чем длинный <code>or</code>.</li>
+      <li>Условие можно сохранить в переменную.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>научиться строить сложные условия</strong>.</p>
+
+    <p>Файл <code>logic_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — and.</strong> Спроси возраст и наличие водительских прав (да/нет). Если возраст ≥ 18 <em>и</em> права есть — «можно за руль», иначе — «нельзя».
+      </li>
+      <li><strong>Задание 2 — or.</strong> Спроси день недели. Если суббота <em>или</em> воскресенье — «выходной», иначе — «рабочий день».
+      </li>
+      <li><strong>Задание 3 — not.</strong> Спроси, идёт ли дождь (да/нет). Если <em>не</em> идёт — «можно гулять», иначе — «возьми зонт».
+      </li>
+      <li><strong>Задание 4 — комбинированное.</strong> Спроси возраст и студент ли пользователь. Если возраст меньше 18 <em>или</em> студент — «скидка», иначе — «без скидки».
+      </li>
+      <li><strong>Задание 5 — диапазон.</strong> Спроси число. Проверь, входит ли оно в диапазон от 1 до 100. Используй цепочку <code>1 &lt;= x &lt;= 100</code>.
+      </li>
+      <li><strong>Задание 6 — в списке.</strong> Спроси любимый цвет. Если он в списке <code>["красный", "синий", "зелёный"]</code> — «основной», иначе — «другой».
+      </li>
+      <li><strong>Задание 7 — билет.</strong> Спроси возраст и наличие билета. Правила:
+        <ul>
+          <li>возраст ≥ 18 и билет есть → «проходите»;</li>
+          <li>возраст ≥ 18 и билета нет → «купите билет»;</li>
+          <li>возраст < 18 и есть взрослый → «проходите со взрослым»;</li>
+          <li>возраст < 18 и без взрослого → «нельзя».</li>
+        </ul>
+      </li>
+      <li><strong>Задание 8 — сохранённое условие.</strong> Спроси три числа. Проверь, все ли они положительные. Сохрани условие в переменную <code>all_positive</code>. Потом выведи результат.
+      </li>
+      <li><strong>Задание 9 — своя программа.</strong> Придумай что-то своё, где нужны сложные условия. Идеи:
+        <ul>
+          <li>«тест на скидку в магазине» — возраст, сумма покупки, карта лояльности;</li>
+          <li>«доступ к игре» — возраст, возраст родителей разрешил, куплена ли игра;</li>
+          <li>«погода» — температура и влажность, выдать совет.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="and, or, not, сложные условия, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="06-conditions.html">← предыдущая</a>
+    <a class="btn" href="08-for.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 07 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-07";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

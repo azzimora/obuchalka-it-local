@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11. Словари · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 11</div>
+    <h1>Словари</h1>
+    <div class="subtitle">данные с именованными ключами</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>11
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Список удобен, когда данные идут по порядку: первый, второй, третий. Но что если нужно хранить <strong>именованные</strong> данные? Например, «имя: Аня, возраст: 17, город: Москва». Для этого есть <strong>словари</strong>.</p>
+
+    <h3>Что такое словарь</h3>
+    <p><strong>Словарь</strong> — коллекция пар «ключ → значение». Пишется в фигурных скобках.</p>
+
+    <pre>person = {
+    "name": "Аня",
+    "age": 17,
+    "city": "Москва"
+}</pre>
+
+    <p>В отличие от списка, где доступ по индексу (0, 1, 2), в словаре доступ <strong>по ключу</strong>.</p>
+
+    <pre>print(person["name"])   # Аня
+print(person["age"])    # 17</pre>
+
+    <h3>Ключи и значения</h3>
+    <ul>
+      <li><strong>Ключ</strong> — обычно строка или число. Должен быть уникальным;</li>
+      <li><strong>Значение</strong> — что угодно: строка, число, список, другой словарь.</li>
+    </ul>
+
+    <pre>user = {
+    "name": "Аня",
+    "age": 17,
+    "hobbies": ["чтение", "рисование"],
+    "address": {
+        "city": "Москва",
+        "street": "Ленина"
+    }
+}</pre>
+
+    <h3>Доступ и изменение</h3>
+    <pre>person = {"name": "Аня", "age": 17}
+
+# прочитать
+print(person["name"])
+
+# изменить
+person["age"] = 18
+print(person["age"])   # 18
+
+# добавить новое
+person["city"] = "Москва"
+print(person)</pre>
+
+    <h3>Безопасный доступ: get()</h3>
+    <p>Если ключа нет — обычный доступ вызовет ошибку:</p>
+    <pre>print(person["salary"])   # KeyError</pre>
+
+    <p>Чтобы этого избежать, используют <code>get()</code>:</p>
+    <pre>print(person.get("salary"))         # None
+print(person.get("salary", 0))      # 0 — значение по умолчанию</pre>
+
+    <p><strong>Совет:</strong> если не уверен, что ключ есть — используй <code>get()</code>.</p>
+
+    <h3>Удаление</h3>
+    <pre>person = {"name": "Аня", "age": 17, "city": "Москва"}
+
+del person["city"]
+print(person)   # {"name": "Аня", "age": 17}
+
+# или через pop — возвращает значение
+age = person.pop("age")
+print(age)      # 17
+print(person)   # {"name": "Аня"}</pre>
+
+    <h3>Проверка наличия ключа</h3>
+    <pre>person = {"name": "Аня", "age": 17}
+
+print("name" in person)      # True
+print("salary" in person)    # False
+print("salary" not in person)  # True</pre>
+
+    <h3>Перебор словаря</h3>
+
+    <p><strong>Только ключи:</strong></p>
+    <pre>person = {"name": "Аня", "age": 17}
+
+for key in person:
+    print(key)</pre>
+    <p>Вывод:</p>
+    <pre>name
+age</pre>
+
+    <p><strong>Только значения:</strong></p>
+    <pre>for value in person.values():
+    print(value)</pre>
+
+    <p><strong>Пары ключ-значение:</strong></p>
+    <pre>for key, value in person.items():
+    print(f"{key}: {value}")</pre>
+    <p>Вывод:</p>
+    <pre>name: Аня
+age: 17</pre>
+
+    <p><strong>Совет:</strong> <code>items()</code> используется чаще всего.</p>
+
+    <h3>Длина словаря</h3>
+    <pre>person = {"name": "Аня", "age": 17}
+print(len(person))   # 2</pre>
+
+    <h3>Полезные методы</h3>
+
+    <p><strong>keys()</strong> — все ключи:</p>
+    <pre>print(list(person.keys()))   # ["name", "age"]</pre>
+
+    <p><strong>values()</strong> — все значения:</p>
+    <pre>print(list(person.values()))  # ["Аня", 17]</pre>
+
+    <p><strong>items()</strong> — все пары:</p>
+    <pre>print(list(person.items()))  # [("name", "Аня"), ("age", 17)]</pre>
+
+    <p><strong>update()</strong> — добавить или обновить сразу несколько:</p>
+    <pre>person.update({"city": "Москва", "age": 18})
+print(person)</pre>
+
+    <p><strong>clear()</strong> — очистить:</p>
+    <pre>person.clear()
+print(person)   # {}</pre>
+
+    <h3>Когда использовать словарь, а когда список</h3>
+    <ul>
+      <li><strong>Список</strong> — когда важен <em>порядок</em>. Оценки по предметам, шаги рецепта, список задач.</li>
+      <li><strong>Словарь</strong> — когда важен <em>смысл</em>. Характеристики объекта (имя, возраст), настройки, статистика.</li>
+    </ul>
+
+    <p>Иногда их комбинируют. Например, список словарей:</p>
+    <pre>users = [
+    {"name": "Аня", "age": 17},
+    {"name": "Макс", "age": 18},
+    {"name": "Лена", "age": 16}
+]
+
+for user in users:
+    print(f"{user['name']}, {user['age']} лет")</pre>
+
+    <p><strong>Это очень частый формат данных.</strong> Например, так приходят данные из API.</p>
+
+    <h3>Пример: телефонная книга</h3>
+    <pre>contacts = {
+    "Аня": "+7-900-111-22-33",
+    "Макс": "+7-900-444-55-66"
+}
+
+name = input("Кого искать? ")
+
+if name in contacts:
+    print(f"{name}: {contacts[name]}")
+else:
+    print("Не найден")</pre>
+
+    <h3>Пример: счётчик слов</h3>
+    <pre>text = "я учу python и python это круто"
+words = text.split()
+
+counts = {}
+
+for word in words:
+    if word in counts:
+        counts[word] = counts[word] + 1
+    else:
+        counts[word] = 1
+
+for word, count in counts.items():
+    print(f"{word}: {count}")</pre>
+
+    <p>Такой подсчёт — классическая задача. Используется и в чат-ботах, и в анализе текста.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Словарь — пары «ключ → значение» в <code>{}</code>.</li>
+      <li>Доступ по ключу: <code>d["key"]</code>.</li>
+      <li><code>get()</code> — безопасный доступ, если ключа может не быть.</li>
+      <li><code>in</code> — проверка ключа.</li>
+      <li><code>items()</code> — перебор пар в цикле.</li>
+      <li><code>update()</code>, <code>pop()</code>, <code>clear()</code> — методы.</li>
+      <li>Список словарей — частый формат данных.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>освоить словари</strong>.</p>
+
+    <p>Файл <code>dict_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — карточка.</strong> Создай словарь с информацией о себе: имя, возраст, город, любимый язык программирования. Выведи каждое поле отдельной строкой.
+      </li>
+      <li><strong>Задание 2 — изменение.</strong> Возьми словарь из задания 1. Измени возраст, добавь поле <code>hobby</code>, удали одно поле. Выведи результат.
+      </li>
+      <li><strong>Задание 3 — get.</strong> Попробуй получить значение по несуществующему ключу через <code>d["key"]</code> — получишь ошибку. Потом через <code>get()</code> — вернётся None или значение по умолчанию. Запиши разницу в конспект.
+      </li>
+      <li><strong>Задание 4 — перебор.</strong> Создай словарь из 5 пар (например, страна → столица). Пройди циклом:
+        <ul>
+          <li>только ключи;</li>
+          <li>только значения;</li>
+          <li>пары через <code>items()</code>.</li>
+        </ul>
+      </li>
+      <li><strong>Задание 5 — телефонная книга.</strong> Создай словарь с 3–4 контактами. Спроси имя. Если есть — выведи номер, если нет — «не найден».
+      </li>
+      <li><strong>Задание 6 — счётчик.</strong> Спроси у пользователя строку. Посчитай, сколько раз встречается каждое слово. Выведи результат.
+      </li>
+      <li><strong>Задание 7 — список словарей.</strong> Создай список из 3 словарей — например, любимые фильмы (название, год, режиссёр). Пройди циклом и выведи красиво.
+      </li>
+      <li><strong>Задание 8 — словарь-переводчик.</strong> Сделай словарь из 5 русских слов с переводом на английский. Спрашивай слово — выводи перевод. Если нет — «не знаю такого».
+      </li>
+      <li><strong>Задание 9 — своя программа.</strong> Придумай что-то с словарями. Идеи:
+        <ul>
+          <li>«профиль игрока» — имя, уровень, здоровье, инвентарь (список);</li>
+          <li>«смета» — товар → цена, посчитать итог;</li>
+          <li>«заметки» — заголовок → текст.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="словари, счётчик, телефонная книга, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="10-lists.html">← предыдущая</a>
+    <a class="btn" href="12-functions.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 11 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-11";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08. Цикл for · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 08</div>
+    <h1>Цикл for</h1>
+    <div class="subtitle">повторять код без копирования</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>08
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Представь, что нужно вывести числа от 1 до 100. Писать 100 строк <code>print</code>? Нет. Для повторяющихся действий есть <strong>циклы</strong>. <code>for</code> — самый частый.</p>
+
+    <h3>Что такое цикл</h3>
+    <p><strong>Цикл</strong> — это способ повторить один и тот же код много раз, не копируя его. Один раз написал — Python выполнил десять, сто, миллион раз.</p>
+
+    <h3>for с range()</h3>
+    <p>Функция <code>range()</code> создаёт последовательность чисел. А <code>for</code> проходит по ней.</p>
+
+    <pre>for i in range(5):
+    print(i)</pre>
+
+    <p>Вывод:</p>
+    <pre>0
+1
+2
+3
+4</pre>
+
+    <p>Что здесь:</p>
+    <ul>
+      <li><code>for</code> — «для каждого»;</li>
+      <li><code>i</code> — переменная цикла. В неё попадает каждое значение из последовательности;</li>
+      <li><code>in range(5)</code> — по чему проходим. <code>range(5)</code> — числа 0, 1, 2, 3, 4;</li>
+      <li><code>:</code> — двоеточие;</li>
+      <li>тело цикла — с отступом.</li>
+    </ul>
+
+    <p><strong>Обрати внимание:</strong> <code>range(5)</code> даёт числа от 0 до 4, а не от 1 до 5. Нумерация с нуля, как и у индексов.</p>
+
+    <h3>range — три варианта</h3>
+    <pre>range(5)          # 0, 1, 2, 3, 4
+range(2, 7)       # 2, 3, 4, 5, 6
+range(0, 10, 2)   # 0, 2, 4, 6, 8</pre>
+
+    <ul>
+      <li><code>range(конец)</code> — от 0 до конца (не включая);</li>
+      <li><code>range(начало, конец)</code> — от начала до конца (не включая);</li>
+      <li><code>range(начало, конец, шаг)</code> — с шагом.</li>
+    </ul>
+
+    <p>Если нужно от 1 до 10 включительно — <code>range(1, 11)</code>.</p>
+
+    <h3>Примеры</h3>
+
+    <p><strong>Вывести квадраты чисел от 1 до 5:</strong></p>
+    <pre>for i in range(1, 6):
+    print(f"{i} в квадрате = {i ** 2}")</pre>
+
+    <p><strong>Сумма чисел от 1 до 100:</strong></p>
+    <pre>total = 0
+
+for i in range(1, 101):
+    total = total + i
+
+print(f"Сумма: {total}")</pre>
+
+    <p><strong>Обратный отсчёт:</strong></p>
+    <pre>for i in range(10, 0, -1):
+    print(i)
+
+print("Пуск!")</pre>
+
+    <h3>for по строке</h3>
+    <p><code>for</code> может проходить не только по числам, но и по символам строки:</p>
+
+    <pre>word = "Python"
+
+for letter in word:
+    print(letter)</pre>
+
+    <p>Вывод:</p>
+    <pre>P
+y
+t
+h
+o
+n</pre>
+
+    <h3>for по списку</h3>
+    <pre>fruits = ["яблоко", "груша", "слива"]
+
+for fruit in fruits:
+    print(f"Я люблю {fruit}")</pre>
+
+    <h3>enumerate — счётчик в цикле</h3>
+    <p>Если нужно не только значение, но и его номер:</p>
+
+    <pre>fruits = ["яблоко", "груша", "слива"]
+
+for i, fruit in enumerate(fruits):
+    print(f"{i}: {fruit}")</pre>
+
+    <p>Вывод:</p>
+    <pre>0: яблоко
+1: груша
+2: слива</pre>
+
+    <p>Если хочешь нумерацию с 1 — <code>enumerate(fruits, 1)</code>.</p>
+
+    <h3>break и continue</h3>
+
+    <p><strong>break</strong> — выйти из цикла досрочно:</p>
+    <pre>for i in range(1, 100):
+    print(i)
+    if i == 5:
+        break</pre>
+    <p>Выведет 1, 2, 3, 4, 5 и остановится.</p>
+
+    <p><strong>continue</strong> — пропустить текущую итерацию, перейти к следующей:</p>
+    <pre>for i in range(1, 11):
+    if i % 2 == 0:
+        continue
+    print(i)   # выведет только нечётные: 1, 3, 5, 7, 9</pre>
+
+    <h3>Вложенные циклы</h3>
+    <p>Один цикл внутри другого. Например, таблица умножения:</p>
+
+    <pre>for i in range(1, 4):
+    for j in range(1, 4):
+        print(f"{i} × {j} = {i * j}")
+    print()   # пустая строка между блоками</pre>
+
+    <p>Внешний цикл идёт 3 раза. Внутри каждого — внутренний тоже 3 раза. Итого 9 строк.</p>
+
+    <h3>Типичные задачи</h3>
+
+    <p><strong>Подсчёт:</strong></p>
+    <pre>count = 0
+
+for i in range(1, 101):
+    if i % 3 == 0:
+        count = count + 1
+
+print(f"Чисел, делящихся на 3: {count}")</pre>
+
+    <p><strong>Поиск максимума:</strong></p>
+    <pre>numbers = [3, 7, 2, 9, 4, 1]
+max_num = numbers[0]
+
+for n in numbers:
+    if n > max_num:
+        max_num = n
+
+print(f"Максимум: {max_num}")</pre>
+
+    <p><strong>Накопление строки:</strong></p>
+    <pre>result = ""
+
+for i in range(1, 6):
+    result = result + str(i) + " "
+
+print(result)   # "1 2 3 4 5 "</pre>
+
+    <h3>Как не попасть в бесконечный цикл</h3>
+    <p>Цикл <code>for</code> всегда идёт по конкретной последовательности — он <strong>не может быть бесконечным</strong>. Бесконечными бывают только <code>while</code> (о них в следующей теме).</p>
+
+    <p>Но можно случайно написать цикл, который идёт дольше, чем нужно — например, <code>range(1000000)</code>. Если запустишь — программа будет долго работать. Это нормально, просто нажми <code>Ctrl+C</code> в терминале, чтобы остановить.</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>for</code> — цикл для повторения кода.</li>
+      <li><code>range(n)</code> — числа от 0 до n−1.</li>
+      <li><code>range(a, b)</code> — от a до b−1.</li>
+      <li><code>range(a, b, step)</code> — с шагом.</li>
+      <li><code>for</code> может идти по строке, списку, чему угодно.</li>
+      <li><code>enumerate</code> — с номером итерации.</li>
+      <li><code>break</code> — выйти из цикла, <code>continue</code> — пропустить итерацию.</li>
+      <li>Циклы можно вкладывать.</li>
+      <li>Тело цикла — с отступом, как у <code>if</code>.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>освоить циклы через реальные задачи</strong>.</p>
+
+    <p>Файл <code>for_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — от 1 до 10.</strong> Выведи числа от 1 до 10 через <code>for</code>.
+      </li>
+      <li><strong>Задание 2 — чётные.</strong> Выведи все чётные числа от 2 до 20.
+      </li>
+      <li><strong>Задание 3 — обратный отсчёт.</strong> Выведи числа от 10 до 1. Потом «Пуск!».
+      </li>
+      <li><strong>Задание 4 — квадраты.</strong> Выведи квадраты чисел от 1 до 10.
+        <pre>1 в квадрате = 1
+2 в квадрате = 4
+...</pre>
+      </li>
+      <li><strong>Задание 5 — сумма.</strong> Посчитай сумму чисел от 1 до 50. Выведи результат. Проверь в уме: должна быть 1275.
+      </li>
+      <li><strong>Задание 6 — таблица умножения.</strong> Спроси число. Выведи таблицу умножения на это число от 1 до 10.
+        <pre>5 × 1 = 5
+5 × 2 = 10
+...</pre>
+      </li>
+      <li><strong>Задание 7 — по буквам.</strong> Спроси слово. Выведи его по одной букве, каждую на новой строке.
+      </li>
+      <li><strong>Задание 8 — с номерами.</strong> Спроси слово. Выведи каждую букву с её номером:
+        <pre>0: П
+1: р
+2: и
+...</pre>
+      </li>
+      <li><strong>Задание 9 — break.</strong> Иди по числам от 1 до 100. Выведи каждое. Если число стало 10 — остановись.
+      </li>
+      <li><strong>Задание 10 — continue.</strong> Выведи числа от 1 до 20, но пропусти те, что делятся на 3.
+      </li>
+      <li><strong>Задание 11 — сумма с условием.</strong> Найди сумму всех чётных чисел от 1 до 100.
+      </li>
+      <li><strong>Задание 12 — своя программа.</strong> Придумай что-то своё с <code>for</code>. Идеи:
+        <ul>
+          <li>ёлочка из звёздочек;</li>
+          <li>таблица умножения полностью (вложенный цикл);</li>
+          <li>счётчик гласных в слове;</li>
+          <li>обратный отсчёт до дня рождения.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие задания сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="циклы, таблица умножения, break, continue, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="07-logic.html">← предыдущая</a>
+    <a class="btn" href="09-while.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 08 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-08";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

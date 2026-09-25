@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>09. Цикл while · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 09</div>
+    <h1>Цикл while</h1>
+    <div class="subtitle">повторять, пока условие истинно</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>09
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p><code>for</code> хорош, когда известно, <em>сколько раз</em> повторять. А если неизвестно? Например, «повторяй, пока пользователь не введёт правильный пароль». Тут нужен <strong>while</strong>.</p>
+
+    <h3>Что такое while</h3>
+    <p><code>while</code> повторяет код, <strong>пока условие истинно</strong>. Как только станет ложно — выходит.</p>
+
+    <pre>i = 0
+
+while i < 5:
+    print(i)
+    i = i + 1</pre>
+
+    <p>Вывод:</p>
+    <pre>0
+1
+2
+3
+4</pre>
+
+    <p>Что здесь:</p>
+    <ul>
+      <li><code>while i &lt; 5:</code> — «пока i меньше 5»;</li>
+      <li>внутри — вывод и увеличение <code>i</code>;</li>
+      <li>когда <code>i</code> станет 5 — условие ложно, цикл останавливается.</li>
+    </ul>
+
+    <p><strong>Важно:</strong> внутри цикла должно быть что-то, что меняет условие. Иначе цикл будет бесконечным.</p>
+
+    <h3>for vs while — когда что</h3>
+    <ul>
+      <li><strong>for</strong> — когда знаешь, сколько раз. «Выведи 10 чисел». «Пройди по списку».</li>
+      <li><strong>while</strong> — когда не знаешь, сколько раз. «Пока не угадает число». «Пока не введёт пароль».</li>
+    </ul>
+
+    <h3>Бесконечный цикл</h3>
+    <p>Если условие всегда истинно — цикл никогда не остановится:</p>
+
+    <pre>while True:
+    print("это никогда не кончится")</pre>
+
+    <p>Такой код будет выводить строку бесконечно, пока ты не остановишь его (Ctrl+C в терминале).</p>
+
+    <p>Иногда бесконечный цикл — это нормально. Например, «игра идёт, пока пользователь не выйдет». Тогда выход делают через <code>break</code>.</p>
+
+    <h3>break — выход из цикла</h3>
+    <p>Самый частый приём: бесконечный цикл + выход по условию.</p>
+
+    <pre>while True:
+    answer = input("Скажи 'выход' чтобы закончить: ")
+    if answer == "выход":
+        break
+    print(f"Ты сказал: {answer}")
+
+print("Пока!")</pre>
+
+    <p>Здесь цикл крутится, пока пользователь не введёт «выход». Тогда <code>break</code> выкидывает нас из цикла.</p>
+
+    <h3>continue — пропустить итерацию</h3>
+    <pre>i = 0
+
+while i < 10:
+    i = i + 1
+    if i % 2 == 0:
+        continue
+    print(i)   # выведет: 1, 3, 5, 7, 9</pre>
+
+    <h3>Классический пример: угадай число</h3>
+    <pre>secret = 7
+guess = 0
+tries = 0
+
+while guess != secret:
+    guess = int(input("Угадай число от 1 до 10: "))
+    tries = tries + 1
+
+    if guess < secret:
+        print("Больше")
+    elif guess > secret:
+        print("Меньше")
+
+print(f"Угадал! Попыток: {tries}")</pre>
+
+    <p>Программа спрашивает, пока пользователь не угадает. Сколько раз — заранее неизвестно. Поэтому <code>while</code>.</p>
+
+    <h3>Пример: проверка пароля</h3>
+    <pre>password = "python123"
+attempt = ""
+
+while attempt != password:
+    attempt = input("Пароль: ")
+    if attempt != password:
+        print("Неверно, попробуй снова")
+
+print("Доступ разрешён!")</pre>
+
+    <h3>while с else</h3>
+    <p>У <code>while</code> есть необычная особенность: можно добавить <code>else</code>. Он срабатывает, если цикл завершился <em>естественно</em> (не через break).</p>
+
+    <pre>i = 0
+
+while i < 3:
+    print(i)
+    i = i + 1
+else:
+    print("Цикл завершён")</pre>
+
+    <p>Если бы внутри был <code>break</code> — <code>else</code> бы не выполнился. На практике используется редко, но полезно знать.</p>
+
+    <h3>Вложенные while</h3>
+    <p>Как и <code>for</code>, можно вкладывать. Например, таблица умножения:</p>
+
+    <pre>i = 1
+
+while i <= 3:
+    j = 1
+    while j <= 3:
+        print(f"{i} × {j} = {i * j}")
+        j = j + 1
+    print()
+    i = i + 1</pre>
+
+    <p>Осторожно: если забыть увеличить <code>j</code> — внутренний цикл станет бесконечным, и внешний никогда не пойдёт дальше.</p>
+
+    <h3>Типичные ошибки</h3>
+
+    <p><strong>1. Забыть изменить переменную.</strong></p>
+    <pre>i = 0
+while i < 5:
+    print(i)   # забыли i = i + 1 — бесконечный цикл</pre>
+
+    <p><strong>2. Изменить не ту переменную.</strong></p>
+    <pre>x = 0
+while x < 5:
+    y = y + 1   # а условие про x — тоже бесконечно</pre>
+
+    <p><strong>3. Условие никогда не станет ложным.</strong></p>
+    <pre>i = 0
+while i != 10:
+    i = i + 2   # i станет 10? Нет: 0, 2, 4, 6, 8, 10 — станет. Но если шаг 3 — проскочит мимо.</pre>
+
+    <p><strong>Совет:</strong> перед запуском <code>while</code> мысленно проверь: «условие точно когда-то станет ложным?»</p>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>while</code> повторяет код, пока условие истинно.</li>
+      <li>Внутри должно быть что-то, что меняет условие.</li>
+      <li><code>while True</code> — бесконечный цикл. Выход через <code>break</code>.</li>
+      <li><code>break</code> — выйти, <code>continue</code> — пропустить итерацию.</li>
+      <li><code>for</code> — когда известно, сколько раз; <code>while</code> — когда неизвестно.</li>
+      <li>У <code>while</code> есть <code>else</code> — срабатывает, если не было <code>break</code>.</li>
+      <li>Циклы можно вкладывать, но следи за переменными.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>освоить while через реальные задачи</strong>.</p>
+
+    <p>Файл <code>while_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — от 1 до 5.</strong> Выведи числа от 1 до 5 через <code>while</code>.
+      </li>
+      <li><strong>Задание 2 — сумма.</strong> Посчитай сумму чисел от 1 до 100 через <code>while</code>. Выведи результат.
+      </li>
+      <li><strong>Задание 3 — обратный отсчёт.</strong> Выведи от 10 до 1, потом «Пуск!».
+      </li>
+      <li><strong>Задание 4 — угадай число.</strong> Загадай число в переменной. Спрашивай у пользователя, пока не угадает. Подсказывай «больше» или «меньше». В конце — сколько попыток потребовалось.
+      </li>
+      <li><strong>Задание 5 — пароль.</strong> Загадай пароль. Спрашивай, пока не введёт правильно. Ограничь попытки тремя: если не угадал — «доступ заблокирован».
+      </li>
+      <li><strong>Задание 6 — бесконечный цикл с break.</strong> Спрашивай у пользователя слова. Если он введёт «стоп» — выйти. Иначе выводи, сколько букв в слове.
+      </li>
+      <li><strong>Задание 7 — continue.</strong> Выведи числа от 1 до 20, кроме тех, что делятся на 3.
+      </li>
+      <li><strong>Задание 8 — калькулятор.</strong> Спроси два числа и операцию. Выведи результат. Спроси: «продолжить? (да/нет)». Если да — повтори, если нет — выход.
+      </li>
+      <li><strong>Задание 9 — таблица умножения.</strong> Выведи таблицу умножения от 1 до 5 через вложенные <code>while</code>.
+      </li>
+      <li><strong>Задание 10 — своя программа.</strong> Придумай что-то своё с <code>while</code>. Идеи:
+        <ul>
+          <li>«банкомат» — вводишь действия (снять, положить, выйти), баланс меняется;</li>
+          <li>«анкета» — спрашивает данные, пока пользователь не напишет «хватит»;</li>
+          <li>«игра-викторина» — вопросы по очереди, пока не закончатся.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="угадай число, пароль, калькулятор, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="08-for.html">← предыдущая</a>
+    <a class="btn" href="10-lists.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 09 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-09";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

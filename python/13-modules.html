@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13. Модули random и math · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 13</div>
+    <h1>Модули random и math</h1>
+    <div class="subtitle">готовые инструменты, которые делают код проще</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>13
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>В Python есть тысячи готовых <strong>модулей</strong> — наборов функций, которые кто-то уже написал за нас. Не нужно писать самому случайные числа или квадратный корень — они уже есть.</p>
+
+    <h3>Что такое модуль</h3>
+    <p><strong>Модуль</strong> — это файл с функциями и переменными. Чтобы использовать, его нужно <strong>импортировать</strong>.</p>
+
+    <pre>import random
+import math</pre>
+
+    <p>После импорта — используем функции через точку: <code>random.randint()</code>, <code>math.sqrt()</code>.</p>
+
+    <p>Можно импортировать конкретные функции:</p>
+    <pre>from random import randint, choice
+
+print(randint(1, 10))   # без "random." в начале
+print(choice(["а", "б", "в"]))</pre>
+
+    <p><strong>Совет:</strong> для начинающих удобнее <code>import random</code> — видно, откуда функция.</p>
+
+    <h3>Модуль random — случайности</h3>
+
+    <p><strong>randint(a, b)</strong> — случайное целое от <code>a</code> до <code>b</code> включительно:</p>
+    <pre>import random
+
+print(random.randint(1, 6))   # как кубик
+print(random.randint(1, 100)) # от 1 до 100</pre>
+
+    <p><strong>choice(список)</strong> — случайный элемент из списка:</p>
+    <pre>fruits = ["яблоко", "груша", "слива", "банан"]
+print(random.choice(fruits))</pre>
+
+    <p><strong>shuffle(список)</strong> — перемешивает список <em>на месте</em>:</p>
+    <pre>cards = [1, 2, 3, 4, 5]
+random.shuffle(cards)
+print(cards)   # порядок случайный</pre>
+
+    <p><strong>sample(список, n)</strong> — выбирает n случайных <em>без повторов</em>:</p>
+    <pre>nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(random.sample(nums, 3))   # три случайных числа</pre>
+
+    <p><strong>random()</strong> — случайное дробное от 0 до 1:</p>
+    <pre>print(random.random())   # например 0.7423891</pre>
+
+    <p><strong>uniform(a, b)</strong> — случайное дробное от a до b:</p>
+    <pre>print(random.uniform(1.5, 3.5))</pre>
+
+    <h3>Пример: кубик</h3>
+    <pre>import random
+
+for i in range(5):
+    print(random.randint(1, 6))</pre>
+
+    <h3>Пример: угадай число</h3>
+    <pre>import random
+
+secret = random.randint(1, 100)
+guess = 0
+tries = 0
+
+while guess != secret:
+    guess = int(input("Угадай число от 1 до 100: "))
+    tries = tries + 1
+
+    if guess < secret:
+        print("Больше")
+    elif guess > secret:
+        print("Меньше")
+
+print(f"Угадал! Попыток: {tries}")</pre>
+
+    <h3>Модуль math — математика</h3>
+
+    <p><strong>sqrt(x)</strong> — квадратный корень:</p>
+    <pre>import math
+
+print(math.sqrt(25))   # 5.0
+print(math.sqrt(2))    # 1.4142...</pre>
+
+    <p><strong>pi</strong> и <strong>e</strong> — константы:</p>
+    <pre>print(math.pi)   # 3.141592653589793
+print(math.e)    # 2.718281828459045</pre>
+
+    <p><strong>ceil(x)</strong> и <strong>floor(x)</strong> — округление вверх и вниз:</p>
+    <pre>print(math.ceil(4.1))    # 5
+print(math.floor(4.9))   # 4</pre>
+
+    <p><strong>round(x, n)</strong> — обычное округление (не в math, а встроено):</p>
+    <pre>print(round(4.567, 2))   # 4.57
+print(round(4.4))        # 4</pre>
+
+    <p><strong>pow(a, b)</strong> — возведение в степень (то же, что <code>a ** b</code>):</p>
+    <pre>print(math.pow(2, 10))   # 1024.0</pre>
+
+    <p><strong>fabs(x)</strong> — модуль числа (то же, что <code>abs(x)</code>):</p>
+    <pre>print(math.fabs(-5))   # 5.0
+print(abs(-5))         # 5 (встроенная)</pre>
+
+    <p><strong>factorial(n)</strong> — факториал:</p>
+    <pre>print(math.factorial(5))   # 120</pre>
+
+    <p><strong>sin, cos, tan</strong> — тригонометрия (радианы):</p>
+    <pre>print(math.sin(math.pi / 2))   # 1.0
+print(math.cos(0))             # 1.0</pre>
+
+    <h3>Пример: прямоугольник</h3>
+    <pre>import math
+
+a = float(input("Сторона a: "))
+b = float(input("Сторона b: "))
+
+c = math.sqrt(a**2 + b**2)
+print(f"Гипотенуза: {c:.2f}")</pre>
+
+    <p><code>:.2f</code> внутри f-строки — округление до 2 знаков после запятой. Удобно!</p>
+
+    <h3>Пример: площадь круга</h3>
+    <pre>import math
+
+radius = float(input("Радиус: "))
+area = math.pi * radius ** 2
+print(f"Площадь: {area:.2f}")</pre>
+
+    <h3>Другие полезные модули</h3>
+    <p>Их много. Некоторые, с которыми ты столкнёшься дальше:</p>
+    <ul>
+      <li><strong>time</strong> — работа со временем. <code>time.sleep(2)</code> — пауза 2 секунды;</li>
+      <li><strong>datetime</strong> — даты. <code>datetime.now()</code> — текущее время;</li>
+      <li><strong>os</strong> — работа с файлами и папками;</li>
+      <li><strong>json</strong> — сохранение и чтение данных в формате JSON;</li>
+      <li><strong>requests</strong> — запросы к сайтам (нужно устанавливать отдельно).</li>
+    </ul>
+
+    <h3>Пример: пауза в программе</h3>
+    <pre>import time
+
+print("Начало")
+time.sleep(2)   # пауза 2 секунды
+print("Прошло 2 секунды")</pre>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Модуль — готовый набор функций. Импортируется через <code>import</code>.</li>
+      <li><code>random</code>: <code>randint</code>, <code>choice</code>, <code>shuffle</code>, <code>sample</code>, <code>random</code>, <code>uniform</code>.</li>
+      <li><code>math</code>: <code>sqrt</code>, <code>pi</code>, <code>ceil</code>, <code>floor</code>, <code>factorial</code>, <code>sin</code>, <code>cos</code>.</li>
+      <li>Встроенные: <code>round</code>, <code>abs</code>, <code>pow</code>.</li>
+      <li><code>time.sleep(секунды)</code> — пауза.</li>
+      <li>В f-строках можно округлять: <code>{x:.2f}</code>.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>освоить random и math через игры и задачи</strong>.</p>
+
+    <p>Файл <code>modules_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — кубик.</strong> «Брось» кубик 10 раз через <code>random.randint(1, 6)</code>. Выведи все результаты и сумму.
+      </li>
+      <li><strong>Задание 2 — монетка.</strong> Симулируй 20 бросков монетки: <code>random.choice(["орёл", "решка"])</code>. Посчитай, сколько раз выпал орёл.
+      </li>
+      <li><strong>Задание 3 — случайное слово.</strong> Создай список из 5 слов. Выведи случайное через <code>choice</code>.
+      </li>
+      <li><strong>Задание 4 — перемешивание.</strong> Создай список чисел от 1 до 10. Перемешай через <code>shuffle</code>. Выведи.
+      </li>
+      <li><strong>Задание 5 — лотерея.</strong> Создай список чисел от 1 до 50. Выбери 6 случайных без повторов через <code>sample</code>. Отсортируй и выведи.
+      </li>
+      <li><strong>Задание 6 — угадай число.</strong> Используй <code>random.randint(1, 100)</code>. Спрашивай пользователя, пока не угадает. Подсказывай «больше» / «меньше». В конце — сколько попыток.
+      </li>
+      <li><strong>Задание 7 — гипотенуза.</strong> Спроси два катета. Выведи гипотенузу через <code>math.sqrt(a**2 + b**2)</code>. Округли до 2 знаков.
+      </li>
+      <li><strong>Задание 8 — круг.</strong> Спроси радиус. Выведи площадь круга (<code>math.pi * r ** 2</code>) и длину окружности (<code>2 * math.pi * r</code>).
+      </li>
+      <li><strong>Задание 9 — округление.</strong> Спроси дробное число. Выведи его <code>ceil</code>, <code>floor</code> и округлённое до 2 знаков.
+      </li>
+      <li><strong>Задание 10 — факториал.</strong> Спроси число. Выведи его факториал через <code>math.factorial</code>.
+      </li>
+      <li><strong>Задание 11 — своя игра.</strong> Придумай мини-игру с <code>random</code>. Идеи:
+        <ul>
+          <li>«камень-ножницы-бумага» против компьютера;</li>
+          <li>«виселица» — компьютер загадывает слово из списка;</li>
+          <li>«проверка памяти» — показать 5 чисел, потом спросить, что запомнил.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="random, math, угадай число, своя игра..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="12-functions.html">← предыдущая</a>
+    <a class="btn" href="14-projects.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 13 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-13";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

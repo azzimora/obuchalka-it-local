@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10. Списки · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 10</div>
+    <h1>Списки</h1>
+    <div class="subtitle">как хранить много значений в одном месте</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>10
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Переменная хранит одно значение. А если нужно хранить сто? Список дел, оценки, имена, числа. Для этого в Python есть <strong>списки</strong>.</p>
+
+    <h3>Что такое список</h3>
+    <p><strong>Список</strong> — упорядоченная коллекция значений. Пишется в квадратных скобках, элементы через запятую.</p>
+
+    <pre>fruits = ["яблоко", "груша", "слива"]
+numbers = [1, 2, 3, 4, 5]
+mixed = ["Аня", 17, 1.65, True]</pre>
+
+    <p>В списке могут быть любые типы. Даже другие списки — тогда это «список списков».</p>
+
+    <pre>matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]</pre>
+
+    <h3>Индексы</h3>
+    <p>Как и в строках: нумерация с 0, с конца — с −1.</p>
+
+    <pre>fruits = ["яблоко", "груша", "слива"]
+
+print(fruits[0])    # яблоко
+print(fruits[1])    # груша
+print(fruits[-1])   # слива
+print(fruits[-2])   # груша</pre>
+
+    <p>В отличие от строк, список <strong>можно менять</strong>:</p>
+    <pre>fruits[1] = "банан"
+print(fruits)   # ["яблоко", "банан", "слива"]</pre>
+
+    <h3>Срезы</h3>
+    <p>Работают так же, как у строк:</p>
+
+    <pre>nums = [10, 20, 30, 40, 50]
+
+print(nums[1:4])    # [20, 30, 40]
+print(nums[:2])     # [10, 20]
+print(nums[2:])     # [30, 40, 50]
+print(nums[::-1])   # [50, 40, 30, 20, 10] — наоборот</pre>
+
+    <h3>len — длина списка</h3>
+    <pre>nums = [1, 2, 3, 4, 5]
+print(len(nums))   # 5</pre>
+
+    <h3>Основные методы</h3>
+
+    <p><strong>append(x)</strong> — добавить в конец:</p>
+    <pre>fruits = ["яблоко"]
+fruits.append("груша")
+print(fruits)   # ["яблоко", "груша"]</pre>
+
+    <p><strong>insert(i, x)</strong> — вставить по индексу:</p>
+    <pre>fruits.insert(1, "банан")
+print(fruits)   # ["яблоко", "банан", "груша"]</pre>
+
+    <p><strong>remove(x)</strong> — удалить первое вхождение:</p>
+    <pre>fruits.remove("банан")
+print(fruits)   # ["яблоко", "груша"]</pre>
+
+    <p><strong>pop(i)</strong> — удалить по индексу и <em>вернуть</em> значение:</p>
+    <pre>last = fruits.pop()    # удаляет последний
+first = fruits.pop(0)  # удаляет первый
+print(last, first)</pre>
+
+    <p><strong>clear()</strong> — очистить список:</p>
+    <pre>fruits.clear()
+print(fruits)   # []</pre>
+
+    <p><strong>index(x)</strong> — индекс элемента:</p>
+    <pre>nums = [10, 20, 30]
+print(nums.index(20))   # 1</pre>
+
+    <p><strong>count(x)</strong> — сколько раз встречается:</p>
+    <pre>nums = [1, 2, 2, 3, 2]
+print(nums.count(2))   # 3</pre>
+
+    <p><strong>sort()</strong> — сортировка:</p>
+    <pre>nums = [3, 1, 4, 1, 5, 9, 2, 6]
+nums.sort()
+print(nums)   # [1, 1, 2, 3, 4, 5, 6, 9]</pre>
+
+    <p><strong>reverse()</strong> — перевернуть:</p>
+    <pre>nums.reverse()
+print(nums)   # [9, 6, 5, 4, 3, 2, 1, 1]</pre>
+
+    <h3>Проверка на наличие</h3>
+    <pre>fruits = ["яблоко", "груша"]
+
+print("яблоко" in fruits)   # True
+print("банан" in fruits)    # False
+print("банан" not in fruits)  # True</pre>
+
+    <h3>Сложение и умножение</h3>
+    <pre>a = [1, 2]
+b = [3, 4]
+
+print(a + b)      # [1, 2, 3, 4]
+print(a * 3)      # [1, 2, 1, 2, 1, 2]</pre>
+
+    <h3>Перебор списка</h3>
+    <p>Самый частый способ:</p>
+    <pre>fruits = ["яблоко", "груша", "слива"]
+
+for fruit in fruits:
+    print(fruit)</pre>
+
+    <p>С индексами:</p>
+    <pre>for i in range(len(fruits)):
+    print(f"{i}: {fruits[i]}")</pre>
+
+    <p>С <code>enumerate</code> — короче:</p>
+    <pre>for i, fruit in enumerate(fruits):
+    print(f"{i}: {fruit}")</pre>
+
+    <h3>Списковые включения (list comprehension)</h3>
+    <p>Короткий способ создать список на основе другого:</p>
+
+    <pre>nums = [1, 2, 3, 4, 5]
+
+# обычный способ
+squares = []
+for n in nums:
+    squares.append(n ** 2)
+
+# list comprehension
+squares = [n ** 2 for n in nums]
+print(squares)   # [1, 4, 9, 16, 25]</pre>
+
+    <p>С условием:</p>
+    <pre>nums = [1, 2, 3, 4, 5, 6]
+evens = [n for n in nums if n % 2 == 0]
+print(evens)   # [2, 4, 6]</pre>
+
+    <p>Это <strong>очень удобный</strong> инструмент. Дальше ты будешь использовать его постоянно.</p>
+
+    <h3>Полезные функции</h3>
+    <pre>nums = [3, 1, 4, 1, 5]
+
+print(sum(nums))   # 14 — сумма
+print(max(nums))   # 5 — максимум
+print(min(nums))   # 1 — минимум
+print(sorted(nums))   # [1, 1, 3, 4, 5] — новая сортированная копия</pre>
+
+    <p><strong>Важно:</strong> <code>sort()</code> меняет сам список, а <code>sorted()</code> возвращает новый. Это разные вещи.</p>
+
+    <h3>Копирование списка</h3>
+    <p>Тут есть ловушка. Если написать <code>b = a</code> — это не копия, это «второе имя» того же списка. Изменишь <code>b</code> — изменится <code>a</code>.</p>
+
+    <pre>a = [1, 2, 3]
+b = a
+b.append(4)
+print(a)   # [1, 2, 3, 4] — a тоже изменился!</pre>
+
+    <p>Правильная копия:</p>
+    <pre>a = [1, 2, 3]
+b = a.copy()
+b.append(4)
+print(a)   # [1, 2, 3] — не изменилось
+print(b)   # [1, 2, 3, 4]</pre>
+
+    <h3>Пример: список дел</h3>
+    <pre>tasks = []
+
+while True:
+    action = input("add / show / quit: ")
+
+    if action == "add":
+        task = input("Задача: ")
+        tasks.append(task)
+        print("Добавлено")
+    elif action == "show":
+        for i, task in enumerate(tasks, 1):
+            print(f"{i}. {task}")
+    elif action == "quit":
+        break</pre>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li>Список — коллекция значений в <code>[]</code>.</li>
+      <li>Индексы с 0, с конца с −1.</li>
+      <li>Список можно менять: <code>lst[0] = "..."</code>.</li>
+      <li>Методы: <code>append</code>, <code>insert</code>, <code>remove</code>, <code>pop</code>, <code>sort</code>, <code>reverse</code>.</li>
+      <li><code>in</code> — проверка наличия.</li>
+      <li><code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code>, <code>sorted</code> — встроенные функции.</li>
+      <li>List comprehension — короткий способ создать список.</li>
+      <li><code>b = a.copy()</code> — копия. <code>b = a</code> — не копия.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>освоить списки и их методы</strong>.</p>
+
+    <p>Файл <code>lists_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — создание.</strong> Создай список из 5 любимых фильмов (или книг, или игр). Выведи его целиком. Выведи первый, последний, третий элементы.
+      </li>
+      <li><strong>Задание 2 — длина.</strong> Выведи длину списка через <code>len</code>.
+      </li>
+      <li><strong>Задание 3 — методы.</strong> К списку из задания 1:
+        <ul>
+          <li>добавь новый элемент через <code>append</code>;</li>
+          <li>вставь ещё один через <code>insert</code> на позицию 2;</li>
+          <li>удали один через <code>remove</code>;</li>
+          <li>удали последний через <code>pop</code>;</li>
+          <li>выведи итоговый список.</li>
+        </ul>
+      </li>
+      <li><strong>Задание 4 — срез.</strong> Создай список чисел от 1 до 10. Выведи:
+        <ul>
+          <li>первые три;</li>
+          <li>последние три;</li>
+          <li>элементы с 3 по 7;</li>
+          <li>весь список наоборот.</li>
+        </ul>
+      </li>
+      <li><strong>Задание 5 — перебор.</strong> Пройди по списку фильмов через <code>for</code> и выведи каждый с номером через <code>enumerate</code>.
+      </li>
+      <li><strong>Задание 6 — сумма и максимум.</strong> Создай список из 10 чисел. Выведи: сумму, максимум, минимум, среднее (<code>sum / len</code>).
+      </li>
+      <li><strong>Задание 7 — чётные.</strong> Через list comprehension сделай новый список из чётных чисел исходного.
+      </li>
+      <li><strong>Задание 8 — квадраты.</strong> Через list comprehension сделай список квадратов чисел от 1 до 10.
+      </li>
+      <li><strong>Задание 9 — поиск.</strong> Спроси у пользователя название фильма. Проверь, есть ли он в твоём списке. Выведи «есть» или «нет».
+      </li>
+      <li><strong>Задание 10 — список дел.</strong> Сделай мини-программу:
+        <ul>
+          <li>пустой список <code>tasks</code>;</li>
+          <li>в цикле спрашивай действие: <code>add</code>, <code>show</code>, <code>remove</code>, <code>quit</code>;</li>
+          <li><code>add</code> — спрашивает задачу и добавляет;</li>
+          <li><code>show</code> — выводит все задачи с номерами;</li>
+          <li><code>remove</code> — спрашивает номер и удаляет;</li>
+          <li><code>quit</code> — выход.</li>
+        </ul>
+      </li>
+      <li><strong>Задание 11 — своя программа.</strong> Придумай что-то с списками. Идеи:
+        <ul>
+          <li>«список покупок» — добавляешь, считаешь сумму;</li>
+          <li>«топ-5» — сортируешь по рейтингу;</li>
+          <li>«слова» — список слов, поиск самого длинного.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие программы сделаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="методы списков, list comprehension, список дел, своя программа..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="09-while.html">← предыдущая</a>
+    <a class="btn" href="11-dictionaries.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 10 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-10";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12. Функции · Python</title>
+<link rel="stylesheet" href="../_shared/style.css">
+<style>
+  .lesson-wrap { max-width: 900px; margin: 0 auto; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+  .block-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .block-theory { border-left: 3px solid var(--purple); }
+  .block-theory .block-label { color: var(--purple-soft); }
+  .block-hw { border-left: 3px solid var(--pink); background: rgba(255,142,199,0.04); }
+  .block-hw .block-label { color: var(--pink-soft); }
+  .block p { margin-bottom: 10px; }
+  .block ul { margin: 8px 0 10px 20px; }
+  .block li { margin-bottom: 6px; }
+  .block strong { color: var(--pink-soft); }
+  .block em { color: var(--purple-soft); font-style: normal; }
+  .block code { background: rgba(255,142,199,0.1); color: var(--pink-soft); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88em; }
+  .block pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font-family: monospace; font-size: 0.85rem; color: var(--pink-soft); margin: 10px 0; line-height: 1.5; white-space: pre-wrap; }
+  .block h3 { font-size: 0.95rem; color: var(--purple-soft); margin: 16px 0 8px; font-weight: 600; }
+  .block h3:first-child { margin-top: 0; }
+  .field { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--muted); }
+  .field-note { border-left-color: var(--pink); }
+  .field-practice { border-left-color: var(--purple); }
+  .field-code { border-left-color: var(--ok); }
+  .field-link { border-left-color: var(--warn); }
+  .field-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .field textarea, .field input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; font-family: inherit; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field-code textarea { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; }
+  .field textarea:focus, .field input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
+  .field textarea::placeholder, .field input::placeholder { color: var(--muted); opacity: 0.5; }
+  .done-row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; cursor: pointer; transition: all 0.2s; }
+  .done-row:hover { border-color: var(--pink); }
+  .done-row input { display: none; }
+  .done-box { width: 24px; height: 24px; border: 2px solid var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.9rem; transition: all 0.2s; flex-shrink: 0; }
+  .done-row input:checked + .done-box { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: var(--pink); color: #1a0f1d; }
+  .done-label { font-size: 0.9rem; color: var(--pink-soft); }
+  .lesson-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .status-saved { font-size: 0.7rem; color: var(--ok); opacity: 0; transition: opacity 0.3s; }
+  .status-saved.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap lesson-wrap">
+
+  <header class="site-header">
+    <div class="badge">Python · тема 12</div>
+    <h1>Функции</h1>
+    <div class="subtitle">как не повторять код и делать его понятным</div>
+    <button class="btn btn-icon" id="themeToggle" title="сменить тему">◐</button>
+  </header>
+
+  <div class="crumbs">
+    <a href="../index.html">главная</a><span>›</span>
+    <a href="index.html">Python</a><span>›</span>12
+  </div>
+
+  <div class="block block-theory">
+    <div class="block-label">◈ теория</div>
+
+    <p>Ты уже пользовалась функциями: <code>print()</code>, <code>input()</code>, <code>len()</code>, <code>int()</code>. Это <strong>готовые</strong> функции Python. А теперь научимся делать <strong>свои</strong>.</p>
+
+    <h3>Зачем нужны функции</h3>
+    <p>Представь, что нужно несколько раз посчитать площадь прямоугольника. Можно каждый раз писать <code>a * b</code>. А можно один раз сделать функцию и вызывать её.</p>
+
+    <p>Функции дают три вещи:</p>
+    <ul>
+      <li><strong>Не повторяться.</strong> Написал один раз — используешь много;</li>
+      <li><strong>Понятность.</strong> <code>calculate_area(5, 3)</code> читается лучше, чем формула;</li>
+      <li><strong>Исправлять в одном месте.</strong> Если что-то поменять — только в функции, а не в десяти местах.</li>
+    </ul>
+
+    <h3>Как создать функцию</h3>
+    <pre>def greet():
+    print("Привет, мир!")</pre>
+
+    <ul>
+      <li><code>def</code> — ключевое слово, «определить функцию»;</li>
+      <li><code>greet</code> — имя функции;</li>
+      <li><code>()</code> — скобки. Внутри могут быть параметры;</li>
+      <li><code>:</code> — двоеточие;</li>
+      <li>тело — с отступом.</li>
+    </ul>
+
+    <p>Пока функция только <strong>описана</strong>. Чтобы она выполнилась — её надо <strong>вызвать</strong>:</p>
+    <pre>def greet():
+    print("Привет, мир!")
+
+greet()   # вызов
+greet()   # ещё раз
+greet()   # и ещё</pre>
+
+    <h3>Параметры</h3>
+    <p>Параметры — данные, которые функция принимает.</p>
+
+    <pre>def greet(name):
+    print(f"Привет, {name}!")
+
+greet("Аня")
+greet("Макс")
+greet("Лена")</pre>
+
+    <p>Вывод:</p>
+    <pre>Привет, Аня!
+Привет, Макс!
+Привет, Лена!</pre>
+
+    <p>Можно несколько параметров:</p>
+    <pre>def introduce(name, age):
+    print(f"Меня зовут {name}, мне {age} лет")
+
+introduce("Аня", 17)
+introduce("Макс", 18)</pre>
+
+    <h3>return — вернуть значение</h3>
+    <p>Функция может не просто что-то делать, а <strong>вернуть результат</strong>, который можно использовать дальше.</p>
+
+    <pre>def add(a, b):
+    return a + b
+
+result = add(2, 3)
+print(result)   # 5
+
+print(add(10, 20))   # 30</pre>
+
+    <p><strong>Разница между print и return:</strong></p>
+    <ul>
+      <li><code>print</code> — выводит на экран. Значение <em>не возвращается</em>;</li>
+      <li><code>return</code> — возвращает значение из функции. Можно использовать дальше.</li>
+    </ul>
+
+    <pre>def bad_add(a, b):
+    print(a + b)   # выводит, но не возвращает
+
+def good_add(a, b):
+    return a + b   # возвращает
+
+x = bad_add(2, 3)    # выведет 5, но x = None
+y = good_add(2, 3)   # x = 5</pre>
+
+    <p><strong>Запомни:</strong> если функция должна дать результат для дальнейшего использования — используй <code>return</code>.</p>
+
+    <h3>return прерывает функцию</h3>
+    <p>Как только Python встречает <code>return</code> — функция сразу заканчивается.</p>
+
+    <pre>def check_age(age):
+    if age < 0:
+        return "некорректный возраст"
+    if age < 18:
+        return "ребёнок"
+    return "взрослый"
+
+print(check_age(-5))   # некорректный возраст
+print(check_age(15))   # ребёнок
+print(check_age(20))   # взрослый</pre>
+
+    <h3>Значения по умолчанию</h3>
+    <p>Параметр может иметь <strong>значение по умолчанию</strong> — если его не передали, используется оно.</p>
+
+    <pre>def greet(name, greeting="Привет"):
+    print(f"{greeting}, {name}!")
+
+greet("Аня")               # Привет, Аня!
+greet("Аня", "Здравствуй") # Здравствуй, Аня!</pre>
+
+    <p>Параметры со значениями по умолчанию идут <strong>после</strong> обычных.</p>
+
+    <h3>Именованные аргументы</h3>
+    <p>Можно передавать значения по имени — тогда порядок не важен:</p>
+
+    <pre>def introduce(name, age, city):
+    print(f"{name}, {age}, {city}")
+
+introduce(age=17, city="Москва", name="Аня")</pre>
+
+    <h3>Функция без return</h3>
+    <p>Если функция ничего не возвращает — она возвращает <code>None</code> (пустое значение).</p>
+
+    <pre>def show_message():
+    print("Привет")
+
+result = show_message()
+print(result)   # None</pre>
+
+    <h3>Область видимости</h3>
+    <p>Переменные, созданные <strong>внутри функции</strong>, не видны снаружи:</p>
+
+    <pre>def test():
+    x = 10
+    print(x)
+
+test()
+print(x)   # ошибка — x не существует вне функции</pre>
+
+    <p>А переменные снаружи — видны внутри:</p>
+    <pre>y = 5
+
+def test():
+    print(y)   # видит y
+
+test()</pre>
+
+    <p><strong>Правило:</strong> функция не должна зависеть от переменных снаружи. Всё, что ей нужно — передавай через параметры.</p>
+
+    <h3>Возврат нескольких значений</h3>
+    <p>Функция может вернуть несколько значений — через кортеж.</p>
+
+    <pre>def min_max(numbers):
+    return min(numbers), max(numbers)
+
+low, high = min_max([3, 1, 4, 1, 5])
+print(low, high)   # 1 5</pre>
+
+    <h3>Пример: калькулятор</h3>
+    <pre>def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    if b == 0:
+        return "делить на ноль нельзя"
+    return a / b
+
+print(add(5, 3))
+print(subtract(5, 3))
+print(multiply(5, 3))
+print(divide(5, 3))
+print(divide(5, 0))</pre>
+
+    <h3>Пример: проверка пароля</h3>
+    <pre>def is_strong(password):
+    if len(password) < 8:
+        return False
+    if password.isdigit():
+        return False
+    if password.isalpha():
+        return False
+    return True
+
+pwd = input("Пароль: ")
+
+if is_strong(pwd):
+    print("Хороший пароль")
+else:
+    print("Слабый пароль")</pre>
+
+    <p>Обрати внимание на методы строк: <code>isdigit()</code> — только цифры, <code>isalpha()</code> — только буквы.</p>
+
+    <h3>Правила хорошей функции</h3>
+    <ul>
+      <li><strong>Одно дело.</strong> Функция должна делать что-то одно. Не «посчитать и напечатать и сохранить»;</li>
+      <li><strong>Понятное имя.</strong> <code>calculate_area</code> лучше, чем <code>f1</code>;</li>
+      <li><strong>Параметры вместо внешних переменных.</strong> Всё нужное — через аргументы;</li>
+      <li><strong>Не больше 20–30 строк.</strong> Если больше — разбей на несколько функций;</li>
+      <li><strong>return, если нужно значение.</strong> print — только если нужно просто вывести.</li>
+    </ul>
+
+    <h3>Главное из темы</h3>
+    <ul>
+      <li><code>def name():</code> — создать функцию.</li>
+      <li>Функция выполняется только при вызове: <code>name()</code>.</li>
+      <li>Параметры — данные в скобках.</li>
+      <li><code>return</code> — возвращает значение. Прерывает функцию.</li>
+      <li>Без <code>return</code> функция возвращает <code>None</code>.</li>
+      <li>Значения по умолчанию и именованные аргументы — удобные штуки.</li>
+      <li>Внутри функции свои переменные, снаружи их не видно.</li>
+      <li>Хорошая функция делает одно дело и имеет понятное имя.</li>
+    </ul>
+  </div>
+
+  <div class="block block-hw">
+    <div class="block-label">✦ домашка</div>
+
+    <p>Цель: <strong>научиться писать свои функции</strong>.</p>
+
+    <p>Файл <code>functions_practice.py</code>.</p>
+
+    <ul>
+      <li><strong>Задание 1 — приветствие.</strong> Функция <code>greet(name)</code>, которая печатает приветствие. Вызови её три раза с разными именами.
+      </li>
+      <li><strong>Задание 2 — сумма.</strong> Функция <code>add(a, b)</code>, которая <strong>возвращает</strong> сумму. Вызови с разными числами и выведи результаты.
+      </li>
+      <li><strong>Задание 3 — площадь.</strong> Функция <code>area(width, height)</code>, которая возвращает площадь прямоугольника. Вызови с разными данными.
+      </li>
+      <li><strong>Задание 4 — чётное.</strong> Функция <code>is_even(n)</code>, которая возвращает True или False. Вызови и выведи.
+      </li>
+      <li><strong>Задание 5 — максимум.</strong> Функция <code>find_max(numbers)</code>, которая принимает список и возвращает наибольшее число. Вызови с разными списками.
+      </li>
+      <li><strong>Задание 6 — приветствие с умолчанием.</strong> Функция <code>greet(name, greeting="Привет")</code>. Вызови с одним и с двумя аргументами.
+      </li>
+      <li><strong>Задание 7 — калькулятор.</strong> Четыре функции: <code>add</code>, <code>subtract</code>, <code>multiply</code>, <code>divide</code>. Каждая возвращает результат. Функция <code>divide</code> проверяет деление на ноль.
+      </li>
+      <li><strong>Задание 8 — проверка пароля.</strong> Функция <code>is_strong(password)</code>, которая возвращает True, если пароль длиннее 8 символов и содержит и буквы, и цифры. Протестируй с разными паролями.
+      </li>
+      <li><strong>Задание 9 — несколько значений.</strong> Функция <code>min_max(numbers)</code>, которая возвращает два значения. Вызови и распакуй в две переменные.
+      </li>
+      <li><strong>Задание 10 — своя программа.</strong> Сделай программу с функциями. Идеи:
+        <ul>
+          <li>«конвертер валют» — функция переводит рубли в другую валюту по курсу;</li>
+          <li>«проверка e-mail» — функция проверяет, есть ли «@» и «.»;</li>
+          <li>«калькулятор ИМТ» — функция считает индекс массы тела.</li>
+        </ul>
+      </li>
+      <li><strong>Сохрани код</strong> в поле «код».</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-label" style="color: var(--pink-soft);">✎ мои материалы</div>
+
+    <div class="field field-note">
+      <div class="field-label"><span>📝 конспект своими словами</span><span class="status-saved" id="saved-note">сохранено ✓</span></div>
+      <textarea id="in-note" placeholder="что удалось понять, что было непонятно..."></textarea>
+    </div>
+
+    <div class="field field-practice">
+      <div class="field-label"><span>🧪 что получилось на практике</span><span class="status-saved" id="saved-practice">сохранено ✓</span></div>
+      <textarea id="in-practice" placeholder="какие функции написаны, что получилось..."></textarea>
+    </div>
+
+    <div class="field field-code">
+      <div class="field-label"><span>💻 код</span><span class="status-saved" id="saved-code">сохранено ✓</span></div>
+      <textarea id="in-code" placeholder="калькулятор, проверка пароля, свои функции..."></textarea>
+    </div>
+
+    <div class="field field-link">
+      <div class="field-label"><span>🔗 ссылки на материалы</span><span class="status-saved" id="saved-link">сохранено ✓</span></div>
+      <textarea id="in-link" placeholder="ссылки, по одной на строку..."></textarea>
+    </div>
+  </div>
+
+  <label class="done-row">
+    <input type="checkbox" id="done-check">
+    <span class="done-box">✓</span>
+    <span class="done-label">тема пройдена</span>
+  </label>
+
+  <div class="lesson-nav">
+    <a class="btn" href="11-dictionaries.html">← предыдущая</a>
+    <a class="btn" href="13-modules.html">следующая тема →</a>
+  </div>
+
+  <div class="footer"><span class="mark">◈</span> Python · тема 12 <span class="mark">◈</span></div>
+
+</div>
+
+<script src="../_shared/app.js"></script>
+<script>
+  const LESSON_ID = "py-12";
+  const lesson = getLesson(LESSON_ID);
+  const fields = {
+    note: document.getElementById("in-note"),
+    practice: document.getElementById("in-practice"),
+    code: document.getElementById("in-code"),
+    link: document.getElementById("in-link")
+  };
+  Object.entries(fields).forEach(([key, el]) => { if (el) el.value = lesson[key] || ""; });
+  document.getElementById("done-check").checked = !!lesson.done;
+
+  let timers = {};
+  function saveField(key, value) {
+    lesson[key] = value;
+    lesson.modified = new Date().toISOString();
+    if (key === "note" || key === "practice" || key === "code") markActivity("edits", 1);
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(() => {
+      saveState();
+      const status = document.getElementById("saved-" + key);
+      if (status) { status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 1200); }
+    }, 400);
+  }
+  Object.entries(fields).forEach(([key, el]) => { if (!el) return; el.addEventListener("input", () => saveField(key, el.value)); });
+  document.getElementById("done-check").addEventListener("change", e => {
+    lesson.done = e.target.checked;
+    lesson.modified = new Date().toISOString();
+    saveState();
+    toast(lesson.done ? "◦ тема отмечена как пройденная" : "◦ отметка снята");
+  });
+
+  markActivity("lessons", 1);
+</script>
+</body>
+</html>
