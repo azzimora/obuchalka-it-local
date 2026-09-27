@@ -644,7 +644,16 @@
         <label class="field-label">о себе</label>
         <textarea id="userAbout" rows="2" placeholder="пара слов о себе, о цели учёбы..." maxlength="200"></textarea>
       </div>
-
+      <!-- HERO-КАРТИНКА -->
+      <div class="hero-image-block">
+        <div class="hero-image-preview" id="heroPreview"></div>
+        <div class="hero-image-buttons">
+          <button class="btn" id="heroUploadBtn">↑ своя картинка</button>
+          <button class="btn" id="heroResetBtn">↺ картинка темы</button>
+        </div>
+        <div class="hero-image-status" id="heroStatus">используется картинка темы</div>
+        <input type="file" id="heroInput" accept="image/*" style="display:none;">
+      </div>
       <!-- МОИ ССЫЛКИ -->
       <div class="links-block">
         <div class="links-header">
@@ -763,6 +772,151 @@
       <button class="btn" id="btnExportTxt">↓ скачать всё в TXT</button>
     </div>
     <div id="materialsList"></div>
+  </div>
+
+  <!-- МИНИ-ИГРЫ -->
+  <div class="card-block games-block">
+    <div style="font-size: 0.72rem; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 14px;">◈ перемена · мини-игры</div>
+
+    <div class="games-tabs">
+      <button class="game-tab active" data-game="mines">💣 сапёр</button>
+      <button class="game-tab" data-game="snake">🐍 змейка</button>
+      <button class="game-tab" data-game="g2048">🔢 2048</button>
+      <button class="game-tab" data-game="tetris">🟦 тетрис</button>
+      <button class="game-tab" data-game="g15">🧩 пятнашки</button>
+    </div>
+
+    <!-- САПЁР -->
+    <div class="game-panel active" id="panelMines">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>💣 мины: <b id="minesLeft">0</b></span>
+          <span>⏱ <b id="minesTime">00:00</b></span>
+          <span>🏆 рекорд: <b id="minesBest">—</b></span>
+        </div>
+        <div class="game-controls">
+          <select class="game-diff" id="minesDiff">
+            <option value="easy">лёгкий 9×9</option>
+            <option value="medium" selected>средний 12×12</option>
+            <option value="hard">сложный 15×15</option>
+          </select>
+          <button class="game-btn primary" id="minesRestart">↻ заново</button>
+        </div>
+      </div>
+      <div id="minesBoard" class="mines-board"></div>
+    </div>
+
+    <!-- ЗМЕЙКА -->
+    <div class="game-panel" id="panelSnake">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>🍎 счёт: <b id="snakeScore">0</b></span>
+          <span>🏆 рекорд: <b id="snakeBest">0</b></span>
+        </div>
+        <div class="game-controls">
+          <select class="game-diff" id="snakeSpeed">
+            <option value="180">🐢 медленно</option>
+            <option value="120" selected>🙂 обычно</option>
+            <option value="80">⚡ быстро</option>
+          </select>
+          <button class="game-btn primary" id="snakeRestart">↻ заново</button>
+        </div>
+      </div>
+      <div class="snake-wrap">
+        <div class="snake-board">
+          <canvas class="snake-canvas" id="snakeCanvas" width="360" height="360"></canvas>
+          <div class="snake-overlay" id="snakeOverlay">
+            <div><b>пауза</b>жми пробел или стрелки</div>
+          </div>
+        </div>
+        <div class="snake-dpad">
+          <button class="up"    data-dir="up">▲</button>
+          <button class="left"  data-dir="left">◀</button>
+          <button class="right" data-dir="right">▶</button>
+          <button class="down"  data-dir="down">▼</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2048 -->
+    <div class="game-panel" id="panelG2048">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>🎯 счёт: <b id="g2048Score">0</b></span>
+          <span>🏆 рекорд: <b id="g2048Best">0</b></span>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn primary" id="g2048Restart">↻ заново</button>
+        </div>
+      </div>
+      <div class="g2048-wrap">
+        <div class="g2048-board" id="g2048Board"></div>
+      </div>
+    </div>
+
+    <!-- ТЕТРИС -->
+    <div class="game-panel" id="panelTetris">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>🎯 счёт: <b id="tetrisScore">0</b></span>
+          <span>💥 линии: <b id="tetrisLines">0</b></span>
+          <span>🏆 рекорд: <b id="tetrisBest">0</b></span>
+        </div>
+        <div class="game-controls">
+          <select class="game-diff" id="tetrisSpeed">
+            <option value="800">🐢 медленно</option>
+            <option value="600" selected>🙂 обычно</option>
+            <option value="400">⚡ быстро</option>
+            <option value="250">🔥 очень быстро</option>
+          </select>
+          <button class="game-btn primary" id="tetrisRestart">↻ заново</button>
+        </div>
+      </div>
+      <div class="tetris-wrap">
+        <div class="tetris-board-wrap">
+          <canvas class="tetris-canvas" id="tetrisCanvas" width="240" height="480"></canvas>
+          <div class="tetris-overlay" id="tetrisOverlay">
+            <div><b>пауза</b>жми пробел или стрелки</div>
+          </div>
+        </div>
+        <div class="tetris-side">
+          <div class="tetris-next">
+            <div class="tetris-next-label">следующая</div>
+            <canvas id="tetrisNext" width="100" height="100"></canvas>
+          </div>
+          <div class="tetris-info">
+            ← → двигать<br>
+            ↑ / X повернуть<br>
+            ↓ ускорить<br>
+            пробел — пауза
+          </div>
+        </div>
+        <div class="tetris-dpad">
+          <button class="left"  data-action="left">◀</button>
+          <button class="rot"   data-action="rotate">⟳</button>
+          <button class="right" data-action="right">▶</button>
+          <button class="down"  data-action="down">▼</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ПЯТНАШКИ -->
+    <div class="game-panel" id="panelG15">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>👣 ходы: <b id="g15Moves">0</b></span>
+          <span>⏱ <b id="g15Time">00:00</b></span>
+          <span>🏆 рекорд: <b id="g15Best">—</b></span>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn primary" id="g15Restart">↻ заново</button>
+        </div>
+      </div>
+      <div class="g15-wrap">
+        <div class="g15-board" id="g15Board"></div>
+      </div>
+    </div>
+
   </div>
 
   <div class="footer">
@@ -1144,6 +1298,10 @@ function gatherAllData() {
     profile: profile,
     pomodoro: pomoConfig,
     links: links,
+    heroImage: (function() {
+      try { return localStorage.getItem("local-adaptation-hero-image") || ""; }
+      catch { return ""; }
+    })(),
     lessonsMeta: {}
   };
   // на всякий — собираем всё, что есть в localStorage с нашим префиксом
@@ -1219,6 +1377,17 @@ function importBackup(e) {
         links = data.links;
         saveLinksToStorage(links);
         renderLinks();
+      }
+
+            if (data.heroImage !== undefined && replace) {
+        try {
+          if (data.heroImage) {
+            localStorage.setItem("local-adaptation-hero-image", data.heroImage);
+          } else {
+            localStorage.removeItem("local-adaptation-hero-image");
+          }
+        } catch {}
+        if (typeof applyHeroImage === "function") applyHeroImage();
       }
 
       updateStats();

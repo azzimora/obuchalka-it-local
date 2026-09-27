@@ -23,6 +23,7 @@
   --radius: 14px;
   --hero-overlay: rgba(18, 10, 20, 0.55);
   --hero-color-overlay: rgba(255, 142, 199, 0.25);
+  --hero-image: url('https://i.pinimg.com/736x/32/2e/b5/322eb508ae791efc1f0f4657773d19b9.jpg');
 }
 
 /* ── ТЁМНЫЕ ТЕМЫ ── */
@@ -74,6 +75,332 @@
   --hero-overlay: rgba(10, 26, 16, 0.6);
   --hero-color-overlay: rgba(126, 229, 160, 0.2);
 }
+
+/* ── AERO DARK (Windows 7 / Vista glass) ── */
+[data-theme="aero-dark"] {
+  --bg: #071a2e;
+  --bg-soft: #0c243f;
+  --card: rgba(20, 55, 92, 0.55);
+  --card-hover: rgba(30, 75, 120, 0.7);
+  --pink: #6fd6ff;
+  --pink-soft: #a8e6ff;
+  --pink-glow: rgba(111, 214, 255, 0.45);
+  --purple: #7fb2ff;
+  --purple-soft: #b8d4ff;
+  --text: #eaf6ff;
+  --muted: #8fb4d4;
+  --line: rgba(140, 200, 255, 0.28);
+  --ok: #8ff0c8;
+  --warn: #ffd98e;
+  --err: #ff9aae;
+  --hero-overlay: rgba(7, 26, 46, 0.55);
+  --hero-color-overlay: rgba(111, 214, 255, 0.22);
+  --radius: 16px;
+    --hero-image: url('../aero.jpg');
+}
+[data-theme="aero-light"] {
+  --hero-image: url('../aero.jpg');
+}
+[data-theme="dream-dark"] {
+  --hero-image: url('../dream.jpg');
+}
+[data-theme="dream-light"] {
+  --hero-image: url('../dream.jpg');
+
+}
+
+/* ── AERO LIGHT (стеклянный глянец) ── */
+[data-theme="aero-light"] {
+  --bg: #dcecf9;
+  --bg-soft: #c9e0f5;
+  --card: rgba(255, 255, 255, 0.62);
+  --card-hover: rgba(255, 255, 255, 0.85);
+  --pink: #1e7fc4;
+  --pink-soft: #156aa8;
+  --pink-glow: rgba(30, 127, 196, 0.3);
+  --purple: #4a7fd6;
+  --purple-soft: #3563b8;
+  --text: #0d2c47;
+  --muted: #4d7ba3;
+  --line: rgba(120, 180, 230, 0.5);
+  --ok: #2fae7a;
+  --warn: #c9922a;
+  --err: #d4536a;
+  --hero-overlay: rgba(220, 236, 249, 0.45);
+  --hero-color-overlay: rgba(111, 214, 255, 0.2);
+  --radius: 16px;
+}
+
+
+/* ── DREAMCORE DARK (lucid dreams) ── */
+[data-theme="dream-dark"] {
+  --bg: #140b22;
+  --bg-soft: #1d1130;
+  --card: #241741;
+  --card-hover: #2e1d52;
+  --pink: #d9a5ff;
+  --pink-soft: #ecc6ff;
+  --pink-glow: rgba(217, 165, 255, 0.4);
+  --purple: #8fb8ff;
+  --purple-soft: #c2d6ff;
+  --text: #f3ecff;
+  --muted: #a294c2;
+  --line: rgba(217, 165, 255, 0.2);
+  --ok: #b8f0d8;
+  --warn: #ffd6a8;
+  --err: #ff9ab8;
+  --hero-overlay: rgba(20, 11, 34, 0.6);
+  --hero-color-overlay: rgba(217, 165, 255, 0.25);
+}
+
+/* ── DREAMCORE LIGHT (lucid dreams) ── */
+[data-theme="dream-light"] {
+  --bg: #f6f0ff;
+  --bg-soft: #ece2fb;
+  --card: #ffffff;
+  --card-hover: #f3eaff;
+  --pink: #9d5fd4;
+  --pink-soft: #7a3fb0;
+  --pink-glow: rgba(157, 95, 212, 0.25);
+  --purple: #6e88d6;
+  --purple-soft: #4a5fb0;
+  --text: #241338;
+  --muted: #7a689a;
+  --line: rgba(157, 95, 212, 0.25);
+  --ok: #3aae7e;
+  --warn: #c9922a;
+  --err: #d45f7a;
+  --hero-overlay: rgba(246, 240, 255, 0.55);
+  --hero-color-overlay: rgba(157, 95, 212, 0.15);
+}
+
+/* ═══════════════════════════════════════════
+   DREAMCORE — туман, мягкое свечение
+   ═══════════════════════════════════════════ */
+
+[data-theme="dream-dark"] body,
+body[data-theme="dream-dark"] {
+  background-image:
+    radial-gradient(ellipse at 20% 15%, rgba(217, 165, 255, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(143, 184, 255, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 180, 220, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #140b22 0%, #1a1030 60%, #140b22 100%);
+}
+
+[data-theme="dream-light"] body,
+body[data-theme="dream-light"] {
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(217, 165, 255, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 90%, rgba(143, 184, 255, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 200, 230, 0.25) 0%, transparent 60%),
+    linear-gradient(180deg, #f6f0ff 0%, #ece2fb 60%, #e5d8f7 100%);
+}
+
+/* карточки с мягким dream-glow */
+[data-theme="dream-dark"] .card,
+[data-theme="dream-dark"] .card-block,
+[data-theme="dream-dark"] .toc-item,
+[data-theme="dream-dark"] .cabinet-bar,
+[data-theme="dream-dark"] .mat-item,
+[data-theme="dream-dark"] .link-item,
+[data-theme="dream-dark"] .stat {
+  box-shadow:
+    0 0 24px rgba(217, 165, 255, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dream-light"] .card,
+[data-theme="dream-light"] .card-block,
+[data-theme="dream-light"] .toc-item,
+[data-theme="dream-light"] .cabinet-bar,
+[data-theme="dream-light"] .mat-item,
+[data-theme="dream-light"] .link-item,
+[data-theme="dream-light"] .stat {
+  box-shadow:
+    0 0 24px rgba(157, 95, 212, 0.12),
+    0 4px 16px rgba(120, 90, 180, 0.1);
+}
+
+/* заголовок — сиренево-голубой градиент */
+[data-theme="dream-dark"] h1 {
+  background: linear-gradient(90deg, #f3ecff, #d9a5ff 50%, #8fb8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-theme="dream-light"] h1 {
+  background: linear-gradient(90deg, #241338, #9d5fd4 50%, #6e88d6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* прогресс-бар — мечтательный градиент */
+[data-theme="dream-dark"] .progress-fill {
+  background: linear-gradient(90deg, #d9a5ff, #8fb8ff);
+  box-shadow: 0 0 14px rgba(217, 165, 255, 0.6);
+}
+[data-theme="dream-light"] .progress-fill {
+  background: linear-gradient(90deg, #9d5fd4, #6e88d6);
+  box-shadow: 0 0 12px rgba(157, 95, 212, 0.45);
+}
+
+/* календарь — сиреневые уровни */
+[data-theme="dream-dark"] .day.level-1 { background: rgba(217,165,255,0.2); border-color: rgba(217,165,255,0.35); }
+[data-theme="dream-dark"] .day.level-2 { background: rgba(217,165,255,0.45); border-color: rgba(217,165,255,0.6); }
+[data-theme="dream-dark"] .day.level-3 { background: rgba(217,165,255,0.8); border-color: #d9a5ff; }
+[data-theme="dream-dark"] .day.level-4 { background: linear-gradient(135deg, #d9a5ff, #8fb8ff); border-color: #d9a5ff; }
+
+[data-theme="dream-light"] .day.level-1 { background: rgba(157,95,212,0.18); border-color: rgba(157,95,212,0.3); }
+[data-theme="dream-light"] .day.level-2 { background: rgba(157,95,212,0.4); border-color: rgba(157,95,212,0.55); }
+[data-theme="dream-light"] .day.level-3 { background: rgba(157,95,212,0.75); border-color: #9d5fd4; }
+[data-theme="dream-light"] .day.level-4 { background: linear-gradient(135deg, #9d5fd4, #6e88d6); border-color: #9d5fd4; }
+
+/* ═══════════════════════════════════════════
+   AERO 2010 — глянец, стекло, блики
+   ═══════════════════════════════════════════ */
+
+/* фон — глубокий градиент как в Aero-обоях */
+[data-theme="aero-dark"] body,
+body[data-theme="aero-dark"] {
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(111, 214, 255, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 85% 90%, rgba(127, 178, 255, 0.3) 0%, transparent 55%),
+    linear-gradient(180deg, #071a2e 0%, #0a2540 60%, #071a2e 100%);
+}
+
+[data-theme="aero-light"] body,
+body[data-theme="aero-light"] {
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(111, 214, 255, 0.5) 0%, transparent 45%),
+    radial-gradient(circle at 90% 100%, rgba(127, 178, 255, 0.4) 0%, transparent 50%),
+    linear-gradient(180deg, #eaf5ff 0%, #d4e8fa 60%, #c2dcf2 100%);
+}
+
+/* стеклянные панели */
+[data-theme="aero-dark"] .card,
+[data-theme="aero-dark"] .card-block,
+[data-theme="aero-dark"] .toc-item,
+[data-theme="aero-dark"] .progress-panel,
+[data-theme="aero-dark"] .cabinet-bar,
+[data-theme="aero-dark"] .btn,
+[data-theme="aero-dark"] .stat,
+[data-theme="aero-dark"] .back-btn,
+[data-theme="aero-dark"] .pomo-widget-btn,
+[data-theme="aero-dark"] .theme-panel,
+[data-theme="aero-dark"] .pomo-widget-panel,
+[data-theme="aero-dark"] .mat-item,
+[data-theme="aero-dark"] .link-item {
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.0) 46%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="aero-light"] .card,
+[data-theme="aero-light"] .card-block,
+[data-theme="aero-light"] .toc-item,
+[data-theme="aero-light"] .progress-panel,
+[data-theme="aero-light"] .cabinet-bar,
+[data-theme="aero-light"] .btn,
+[data-theme="aero-light"] .stat,
+[data-theme="aero-light"] .back-btn,
+[data-theme="aero-light"] .pomo-widget-btn,
+[data-theme="aero-light"] .theme-panel,
+[data-theme="aero-light"] .pomo-widget-panel,
+[data-theme="aero-light"] .mat-item,
+[data-theme="aero-light"] .link-item {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.45) 48%,
+    rgba(255, 255, 255, 0.25) 49%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(120, 160, 200, 0.3),
+    0 4px 20px rgba(80, 130, 180, 0.18);
+}
+
+/* мягкий глянцевый hover */
+[data-theme="aero-dark"] .card:hover,
+[data-theme="aero-dark"] .toc-item:hover,
+[data-theme="aero-dark"] .cabinet-bar:hover,
+[data-theme="aero-dark"] .btn:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 6px 24px rgba(111, 214, 255, 0.35);
+}
+
+[data-theme="aero-light"] .card:hover,
+[data-theme="aero-light"] .toc-item:hover,
+[data-theme="aero-light"] .cabinet-bar:hover,
+[data-theme="aero-light"] .btn:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(120, 160, 200, 0.4),
+    0 6px 26px rgba(80, 150, 220, 0.35);
+}
+
+/* кнопки с более выраженным стеклом */
+[data-theme="aero-dark"] .btn,
+[data-theme="aero-light"] .btn {
+  border-radius: 12px;
+}
+
+/* градиентный заголовок — голубое стекло */
+[data-theme="aero-dark"] h1 {
+  background: linear-gradient(90deg, #eaf6ff, #6fd6ff 60%, #a8e6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-theme="aero-light"] h1 {
+  background: linear-gradient(90deg, #0d2c47, #1e7fc4 60%, #4a7fd6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* активный кружок темы — голубое свечение */
+[data-theme="aero-dark"] .theme-color.active,
+[data-theme="aero-light"] .theme-color.active {
+  box-shadow: 0 0 14px rgba(111, 214, 255, 0.75);
+}
+
+/* прогресс-бар — как Aero-полоска */
+[data-theme="aero-dark"] .progress-fill {
+  background: linear-gradient(90deg, #6fd6ff, #7fb2ff);
+  box-shadow: 0 0 12px rgba(111, 214, 255, 0.7);
+}
+[data-theme="aero-light"] .progress-fill {
+  background: linear-gradient(90deg, #1e7fc4, #4a7fd6);
+  box-shadow: 0 0 12px rgba(30, 127, 196, 0.5);
+}
+
+/* календарь — голубые уровни */
+[data-theme="aero-dark"] .day.level-1 { background: rgba(111,214,255,0.2); border-color: rgba(111,214,255,0.35); }
+[data-theme="aero-dark"] .day.level-2 { background: rgba(111,214,255,0.45); border-color: rgba(111,214,255,0.6); }
+[data-theme="aero-dark"] .day.level-3 { background: rgba(111,214,255,0.8); border-color: #6fd6ff; }
+[data-theme="aero-dark"] .day.level-4 { background: linear-gradient(135deg, #6fd6ff, #7fb2ff); border-color: #6fd6ff; }
+
+[data-theme="aero-light"] .day.level-1 { background: rgba(30,127,196,0.18); border-color: rgba(30,127,196,0.3); }
+[data-theme="aero-light"] .day.level-2 { background: rgba(30,127,196,0.4); border-color: rgba(30,127,196,0.55); }
+[data-theme="aero-light"] .day.level-3 { background: rgba(30,127,196,0.75); border-color: #1e7fc4; }
+[data-theme="aero-light"] .day.level-4 { background: linear-gradient(135deg, #1e7fc4, #4a7fd6); border-color: #1e7fc4; }
 
 /* ── СВЕТЛЫЕ ТЕМЫ ── */
 [data-theme="pink-light"] {
@@ -193,7 +520,7 @@ body.page-hero .site-header {
   background-image:
     linear-gradient(var(--hero-overlay), var(--hero-overlay)),
     linear-gradient(var(--hero-color-overlay), var(--hero-color-overlay)),
-    url('https://i.pinimg.com/736x/4e/39/49/4e3949a45ccb55bab29787f1284b888f.jpg');
+    var(--hero-image, url('https://i.pinimg.com/736x/32/2e/b5/322eb508ae791efc1f0f4657773d19b9.jpg'));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -341,6 +668,8 @@ body.page-hero .theme-panel {
 .theme-color[data-color="red"]    { background: linear-gradient(135deg, #ff7a8a, #ff8e7a); }
 .theme-color[data-color="yellow"] { background: linear-gradient(135deg, #ffd166, #ffb347); }
 .theme-color[data-color="green"]  { background: linear-gradient(135deg, #7ee5a0, #5cd4b8); }
+.theme-color[data-color="aero"]   { background: linear-gradient(135deg, #6fd6ff, #7fb2ff 50%, #b8d4ff); box-shadow: inset 0 1px 2px rgba(255,255,255,0.8); }
+.theme-color[data-color="dream"] { background: linear-gradient(135deg, #d9a5ff, #8fb8ff 60%, #ffc8e6); box-shadow: inset 0 1px 2px rgba(255,255,255,0.6); }
 
 .theme-modes {
   display: flex;
@@ -902,4 +1231,1172 @@ body.page-hero .theme-panel {
     width: calc(100vw - 32px);
     max-width: 300px;
   }
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════
+   AERO — плавающие пузыри на фоне
+   ═══════════════════════════════════════════ */
+
+.aero-bubbles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aero-bubble {
+  position: absolute;
+  bottom: -180px;
+  border-radius: 50%;
+  /* стеклянный пузырь: блик сверху-слева, тень снизу-справа */
+  background:
+    radial-gradient(circle at 30% 25%,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(255, 255, 255, 0.25) 12%,
+      rgba(180, 225, 255, 0.12) 35%,
+      rgba(140, 200, 255, 0.05) 60%,
+      transparent 72%),
+    radial-gradient(circle at 70% 80%,
+      rgba(120, 190, 255, 0.18) 0%,
+      transparent 55%);
+  border: 1px solid rgba(200, 235, 255, 0.35);
+  box-shadow:
+    inset -6px -8px 18px rgba(120, 180, 255, 0.25),
+    inset 6px 8px 22px rgba(255, 255, 255, 0.35),
+    0 0 24px rgba(140, 200, 255, 0.25);
+  animation: aero-rise linear infinite;
+  will-change: transform, opacity;
+}
+
+/* маленький глянцевый блик-«зайчик» внутри пузыря */
+.aero-bubble::before {
+  content: "";
+  position: absolute;
+  top: 14%;
+  left: 22%;
+  width: 26%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.5) 40%,
+    transparent 75%);
+  filter: blur(1px);
+  transform: rotate(-25deg);
+}
+
+/* едва заметный второй блик снизу */
+.aero-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 18%;
+  right: 22%;
+  width: 14%;
+  height: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 255, 255, 0.55) 0%,
+    transparent 70%);
+  filter: blur(2px);
+}
+
+@keyframes aero-rise {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.85);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--bubble-opacity, 0.55);
+  }
+  50% {
+    transform: translateY(-55vh) translateX(var(--drift, 20px)) scale(1);
+  }
+  90% {
+    opacity: var(--bubble-opacity, 0.55);
+  }
+  100% {
+    transform: translateY(-115vh) translateX(calc(var(--drift, 20px) * -1)) scale(1.05);
+    opacity: 0;
+  }
+}
+
+/* лёгкое покачивание вбок — как в воде */
+.aero-bubble.sway {
+  animation: aero-rise linear infinite, aero-sway ease-in-out infinite alternate;
+}
+
+@keyframes aero-sway {
+  from { margin-left: -14px; }
+  to   { margin-left: 14px; }
+}
+
+/* в светлых темах пузыри чуть плотнее */
+[data-theme="aero-light"] .aero-bubble {
+  border-color: rgba(120, 180, 230, 0.45);
+  box-shadow:
+    inset -6px -8px 18px rgba(120, 180, 230, 0.3),
+    inset 6px 8px 22px rgba(255, 255, 255, 0.7),
+    0 0 22px rgba(120, 180, 230, 0.3);
+}
+
+/* отключаем анимацию для тех, кто просил уменьшить движение */
+@media (prefers-reduced-motion: reduce) {
+  .aero-bubble { animation: none; opacity: 0; }
+}
+
+/* ── тумблер пузырей в панели темы ── */
+.theme-toggle-bubbles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.theme-toggle-bubbles:hover {
+  border-color: var(--pink);
+  color: var(--pink-soft);
+}
+
+.theme-toggle-bubbles .bubbles-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+
+.theme-toggle-bubbles.on .bubbles-dot {
+  background: radial-gradient(circle at 30% 30%,
+    #ffffff 0%, #b8e6ff 40%, #6fd6ff 100%);
+  border-color: var(--pink);
+  box-shadow: 0 0 10px var(--pink-glow);
+}
+
+.theme-toggle-bubbles .bubbles-label { flex: 1; }
+
+.theme-toggle-bubbles .bubbles-state {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.theme-toggle-bubbles.on .bubbles-state { color: var(--pink); }
+
+
+/* ═══════════════════════════════════════════
+   DREAMCORE 95 — мухоморы, глаза, радуга, шум
+   ═══════════════════════════════════════════ */
+
+/* ── слой для «странностей» ── */
+.dream-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── радуга сверху ── */
+.dream-rainbow {
+  position: absolute;
+  top: -40%;
+  left: -10%;
+  width: 120%;
+  height: 80%;
+  background:
+    radial-gradient(ellipse at 50% 100%,
+      rgba(255, 150, 220, 0.35) 0%,
+      rgba(200, 180, 255, 0.3) 15%,
+      rgba(150, 210, 255, 0.25) 30%,
+      rgba(170, 255, 210, 0.2) 45%,
+      rgba(255, 250, 170, 0.15) 60%,
+      rgba(255, 190, 170, 0.1) 75%,
+      transparent 90%);
+  filter: blur(40px);
+  opacity: 0.7;
+  animation: dream-rainbow-pulse 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes dream-rainbow-pulse {
+  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  50% { opacity: 0.85; transform: translateX(20px); }
+}
+
+[data-theme="dream-light"] .dream-rainbow {
+  opacity: 0.9;
+  filter: blur(30px);
+}
+
+/* ── мухоморы 🍄 ── */
+.dream-mushroom {
+  position: absolute;
+  bottom: -220px;
+  background-image: url("../muhomori.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: dream-mushroom-rise linear infinite;
+  filter:
+    drop-shadow(0 0 12px rgba(217, 165, 255, 0.5))
+    drop-shadow(0 0 24px rgba(255, 150, 220, 0.3));
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* ── облако ☁️ — плавает и размытое ── */
+.dream-floatcloud {
+  position: absolute;
+  background-image: url("../cloud.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: dream-cloud-float linear infinite;
+  filter: blur(6px) drop-shadow(0 0 18px rgba(217, 165, 255, 0.4));
+  opacity: 0;
+  will-change: transform, opacity;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+[data-theme="dream-light"] .dream-floatcloud {
+  filter: blur(4px) drop-shadow(0 0 14px rgba(157, 95, 212, 0.35));
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+@keyframes dream-cloud-float {
+  0% {
+    transform: translateX(-30vw) translateY(0) scale(0.9);
+    opacity: 0;
+  }
+  12% { opacity: var(--cloud-alpha, 0.55); }
+  50% {
+    transform: translateX(35vw) translateY(-4vh) scale(1.05);
+  }
+  88% { opacity: var(--cloud-alpha, 0.55); }
+  100% {
+    transform: translateX(130vw) translateY(-8vh) scale(1);
+    opacity: 0;
+  }
+}
+
+.dream-floatcloud.sway {
+  animation: dream-cloud-float linear infinite,
+             dream-cloud-bob ease-in-out infinite alternate;
+}
+
+@keyframes dream-cloud-bob {
+  from { margin-top: -20px; }
+  to   { margin-top: 20px; }
+}
+
+[data-theme="dream-light"] .dream-mushroom {
+  filter:
+    drop-shadow(0 0 10px rgba(157, 95, 212, 0.4))
+    drop-shadow(0 0 20px rgba(255, 180, 230, 0.35));
+}
+
+@keyframes dream-mushroom-rise {
+  0% {
+    transform: translateY(0) rotate(-8deg) scale(0.8);
+    opacity: 0;
+  }
+  10% { opacity: var(--dream-op, 0.55); }
+  50% {
+    transform: translateY(-60vh) rotate(8deg) scale(1);
+  }
+  90% { opacity: var(--dream-op, 0.55); }
+  100% {
+    transform: translateY(-125vh) rotate(-8deg) scale(1.05);
+    opacity: 0;
+  }
+}
+
+/* лёгкое покачивание */
+.dream-mushroom.sway {
+  animation: dream-mushroom-rise linear infinite,
+             dream-sway ease-in-out infinite alternate;
+}
+
+@keyframes dream-sway {
+  from { margin-left: -20px; }
+  to   { margin-left: 20px; }
+}
+
+/* ── глаза 👁 ── */
+.dream-eye {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%,
+      #1a0b2e 0%,
+      #1a0b2e 22%,
+      #d9a5ff 23%,
+      #8fb8ff 45%,
+      #ffffff 60%,
+      #d9a5ff 100%);
+  box-shadow:
+    0 0 14px rgba(217, 165, 255, 0.7),
+    0 0 30px rgba(143, 184, 255, 0.4),
+    inset 0 0 8px rgba(0, 0, 0, 0.6);
+  animation: dream-eye-blink 6s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+.dream-eye::before {
+  /* зрачок */
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 0%, #1a0b2e 60%, #2d1450 100%);
+  transform: translate(calc(-50% + var(--eye-x, 0px)), calc(-50% + var(--eye-y, 0px)));
+  transition: transform 0.4s ease-out;
+}
+
+.dream-eye::after {
+  /* блик */
+  content: "";
+  position: absolute;
+  top: 22%; left: 30%;
+  width: 22%; height: 16%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  filter: blur(1px);
+  transform: rotate(-20deg);
+}
+
+.dream-eye.visible { opacity: 0.85; }
+
+[data-theme="dream-light"] .dream-eye {
+  box-shadow:
+    0 0 14px rgba(157, 95, 212, 0.6),
+    0 0 30px rgba(110, 136, 214, 0.4),
+    inset 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes dream-eye-blink {
+  0%, 40%, 44%, 48%, 100% { transform: scaleY(1); }
+  42%, 46% { transform: scaleY(0.05); }
+}
+
+/* ── дымка / облачка ☁️ ── */
+.dream-cloud {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(217, 165, 255, 0.2) 40%,
+    transparent 75%);
+  filter: blur(30px);
+  animation: dream-cloud-drift linear infinite;
+  pointer-events: none;
+}
+
+[data-theme="dream-light"] .dream-cloud {
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(217, 165, 255, 0.35) 40%,
+    transparent 75%);
+}
+
+@keyframes dream-cloud-drift {
+  0% {
+    transform: translateX(-30vw) translateY(0);
+    opacity: 0;
+  }
+  15% { opacity: var(--cloud-op, 0.6); }
+  85% { opacity: var(--cloud-op, 0.6); }
+  100% {
+    transform: translateX(130vw) translateY(-8vh);
+    opacity: 0;
+  }
+}
+
+/* ── VHS-шум и сканлайны поверх фона ── */
+.dream-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.5) 3px,
+      transparent 4px
+    );
+  mix-blend-mode: overlay;
+  animation: dream-noise-shift 0.4s steps(3) infinite;
+}
+
+[data-theme="dream-light"] .dream-noise {
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+}
+
+@keyframes dream-noise-shift {
+  0%   { transform: translateY(0); }
+  33%  { transform: translateY(-2px); }
+  66%  { transform: translateY(1px); }
+  100% { transform: translateY(0); }
+}
+
+/* ── вспышка вокруг карточек при наведении ── */
+[data-theme="dream-dark"] .card-block:hover,
+[data-theme="dream-dark"] .card:hover,
+[data-theme="dream-dark"] .mat-item:hover,
+[data-theme="dream-dark"] .toc-item:hover {
+  animation: dream-glow-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes dream-glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(217, 165, 255, 0.35),
+      0 0 40px rgba(143, 184, 255, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 32px rgba(217, 165, 255, 0.6),
+      0 0 60px rgba(143, 184, 255, 0.35);
+  }
+}
+
+[data-theme="dream-light"] .card-block:hover,
+[data-theme="dream-light"] .card:hover,
+[data-theme="dream-light"] .mat-item:hover,
+[data-theme="dream-light"] .toc-item:hover {
+  animation: dream-glow-pulse-light 2.4s ease-in-out infinite;
+}
+
+@keyframes dream-glow-pulse-light {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(157, 95, 212, 0.25),
+      0 0 40px rgba(110, 136, 214, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(157, 95, 212, 0.5),
+      0 0 55px rgba(110, 136, 214, 0.3);
+  }
+}
+
+/* лёгкое мерцание текста заголовка */
+[data-theme="dream-dark"] h1,
+[data-theme="dream-light"] h1 {
+  animation: dream-title-flicker 6s ease-in-out infinite;
+}
+
+@keyframes dream-title-flicker {
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  47%      { opacity: 1; filter: brightness(1); }
+  48%      { opacity: 0.85; filter: brightness(1.4); }
+  49%      { opacity: 1; filter: brightness(1); }
+  78%      { opacity: 1; filter: brightness(1); }
+  79%      { opacity: 0.9; filter: brightness(1.3); }
+  80%      { opacity: 1; filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dream-mushroom,
+  .dream-cloud,
+  .dream-floatcloud,   /* ← добавь */
+  .dream-eye,
+  .dream-rainbow,
+  .dream-noise,
+  .dream-whisper,      /* ← и это */
+  [data-theme="dream-dark"] h1,
+  [data-theme="dream-light"] h1 {
+    animation: none !important;
+  }
+  .dream-eye { opacity: 0.5; }
+}
+
+
+/* ═══════════════════════════════════════════
+   HERO-КАРТИНКА — своя или из темы
+   ═══════════════════════════════════════════ */
+
+.hero-image-block {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+}
+
+.hero-image-preview {
+  width: 100%;
+  height: 90px;
+  border-radius: 10px;
+  background-color: var(--bg);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.hero-image-preview:hover { border-color: var(--pink); }
+
+.hero-image-preview::after {
+  content: "превью";
+  position: absolute;
+  bottom: 6px; right: 8px;
+  font-size: 0.62rem;
+  color: var(--muted);
+  background: var(--card);
+  padding: 1px 6px;
+  border-radius: 4px;
+  opacity: 0.8;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hero-image-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hero-image-buttons .btn {
+  flex: 1;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.hero-image-status {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
+
+.hero-image-status.custom { color: var(--pink-soft); }
+
+/* ═══════════════════════════════════════════
+   DREAMCORE — всплывающие надписи 💬
+   ═══════════════════════════════════════════ */
+
+.dream-whisper {
+  position: absolute;
+  font-family: 'Courier New', monospace;
+  color: #ecc6ff;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow:
+    0 0 8px rgba(217, 165, 255, 0.9),
+    0 0 22px rgba(143, 184, 255, 0.5),
+    0 0 40px rgba(217, 165, 255, 0.3);
+  animation: dream-whisper-appear linear forwards;
+  transform: rotate(var(--rot, 0deg));
+  z-index: 1;
+}
+
+[data-theme="dream-light"] .dream-whisper {
+  color: #6b3fb0;
+  text-shadow:
+    0 0 6px rgba(157, 95, 212, 0.6),
+    0 0 18px rgba(110, 136, 214, 0.35);
+}
+
+.dream-whisper.glitch {
+  color: #ff9ad5;
+  text-shadow:
+    2px 0 #6fd6ff,
+    -2px 0 #d9a5ff,
+    0 0 10px rgba(255, 154, 213, 0.8);
+  animation:
+    dream-whisper-appear linear forwards,
+    dream-whisper-glitch 0.4s steps(2) infinite;
+}
+
+@keyframes dream-whisper-appear {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--rot, 0deg)) scale(0.85);
+    filter: blur(6px);
+  }
+  20% {
+    opacity: 0.95;
+    transform: rotate(var(--rot, 0deg)) scale(1);
+    filter: blur(0);
+  }
+  75% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--rot, 0deg)) scale(1.05);
+    filter: blur(2px);
+  }
+}
+
+@keyframes dream-whisper-glitch {
+  0%, 100% { transform: translate(0, 0) rotate(var(--rot, 0deg)); }
+  50%      { transform: translate(1px, -1px) rotate(var(--rot, 0deg)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dream-whisper { animation: none; opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════
+   МИНИ-ИГРЫ — сапёр и змейка
+   ═══════════════════════════════════════════ */
+
+.games-block {
+  margin-top: 24px;
+}
+
+.games-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 12px;
+}
+
+.game-tab {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 7px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.game-tab:hover {
+  border-color: var(--pink);
+  color: var(--pink-soft);
+}
+
+.game-tab.active {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #1a0f1d;
+  border-color: var(--pink);
+  font-weight: 600;
+}
+
+.game-panel { display: none; }
+.game-panel.active { display: block; }
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.game-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.game-stats b {
+  color: var(--pink);
+  font-variant-numeric: tabular-nums;
+}
+
+.game-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.game-diff {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.game-diff:focus { border-color: var(--pink); }
+
+.game-btn {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: var(--pink-soft);
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.game-btn:hover {
+  border-color: var(--pink);
+  background: var(--card-hover);
+  box-shadow: 0 0 10px var(--pink-glow);
+}
+
+.game-btn.primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #1a0f1d;
+  border-color: var(--pink);
+  font-weight: 600;
+}
+
+/* ── сапёр ── */
+.mines-board {
+  display: grid;
+  gap: 3px;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.mines-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, border-color 0.15s;
+  font-family: inherit;
+  padding: 0;
+  line-height: 1;
+}
+
+.mines-cell:hover:not(.opened):not(.flag) {
+  background: var(--card-hover);
+  border-color: var(--pink);
+  transform: translateY(-1px);
+}
+
+.mines-cell.opened {
+  background: var(--bg);
+  border-color: var(--line);
+  cursor: default;
+  color: var(--muted);
+}
+
+.mines-cell.flag {
+  background: linear-gradient(135deg, var(--pink-glow), var(--card));
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.mines-cell.mine {
+  background: linear-gradient(135deg, var(--err), var(--card));
+  border-color: var(--err);
+  color: #fff;
+}
+
+.mines-cell.wrong-flag {
+  background: var(--bg);
+  color: var(--err);
+  border-color: var(--err);
+}
+
+/* числа в сапёре — цветные как в классике, но через тему */
+.mines-cell.n1 { color: #7ec8ff; }
+.mines-cell.n2 { color: #7ee5a0; }
+.mines-cell.n3 { color: #ff8ec7; }
+.mines-cell.n4 { color: #b47cff; }
+.mines-cell.n5 { color: #ffd166; }
+.mines-cell.n6 { color: #5cd4b8; }
+.mines-cell.n7 { color: #e0b3ff; }
+.mines-cell.n8 { color: var(--text); }
+
+/* ── змейка ── */
+.snake-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.snake-board {
+  position: relative;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  touch-action: none;
+}
+
+.snake-canvas {
+  display: block;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.snake-overlay {
+  position: absolute;
+  inset: 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text);
+  text-align: center;
+  font-size: 0.95rem;
+  padding: 20px;
+}
+
+.snake-overlay.show { display: flex; }
+
+.snake-overlay b {
+  font-size: 1.4rem;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.snake-dpad {
+  display: none;
+  grid-template-columns: repeat(3, 46px);
+  grid-template-rows: repeat(3, 46px);
+  gap: 4px;
+  justify-content: center;
+}
+
+.snake-dpad button {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--pink-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-family: inherit;
+  transition: all 0.15s;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.snake-dpad button:active {
+  background: var(--card-hover);
+  border-color: var(--pink);
+  box-shadow: 0 0 12px var(--pink-glow);
+  transform: scale(0.94);
+}
+
+.snake-dpad .up    { grid-column: 2; grid-row: 1; }
+.snake-dpad .left  { grid-column: 1; grid-row: 2; }
+.snake-dpad .right { grid-column: 3; grid-row: 2; }
+.snake-dpad .down  { grid-column: 2; grid-row: 3; }
+
+@media (max-width: 700px) {
+  .mines-cell { width: 26px; height: 26px; font-size: 0.82rem; border-radius: 5px; }
+  .snake-dpad { display: grid; }
+  .game-stats { font-size: 0.78rem; gap: 12px; }
+}
+
+@media (max-width: 400px) {
+  .mines-cell { width: 22px; height: 22px; font-size: 0.75rem; }
+}
+
+/* ═══════════════════════════════════════════
+   МИНИ-ИГРЫ — 2048, тетрис, пятнашки
+   ═══════════════════════════════════════════ */
+
+/* ── 2048 ── */
+.g2048-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.g2048-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  width: min(360px, 90vw);
+  aspect-ratio: 1;
+  touch-action: none;
+}
+
+.g2048-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 4vw, 1.4rem);
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--text);
+  transition: all 0.15s;
+  font-variant-numeric: tabular-nums;
+}
+
+/* уровни — от прозрачного к яркому градиенту */
+.g2048-cell.v2    { background: var(--card); color: var(--pink-soft); }
+.g2048-cell.v4    { background: var(--card-hover); color: var(--pink-soft); }
+.g2048-cell.v8    { background: linear-gradient(135deg, var(--pink-glow), var(--card)); color: var(--pink); }
+.g2048-cell.v16   { background: linear-gradient(135deg, var(--pink-glow), var(--card-hover)); color: var(--pink); }
+.g2048-cell.v32   { background: linear-gradient(135deg, var(--pink-glow), var(--pink-glow)); color: var(--text); }
+.g2048-cell.v64   { background: linear-gradient(135deg, var(--pink), var(--purple)); color: #1a0f1d; box-shadow: 0 0 12px var(--pink-glow); }
+.g2048-cell.v128  { background: linear-gradient(135deg, var(--pink), var(--purple)); color: #1a0f1d; box-shadow: 0 0 16px var(--pink-glow); font-size: clamp(0.8rem, 3.4vw, 1.2rem); }
+.g2048-cell.v256  { background: linear-gradient(135deg, var(--pink), var(--purple)); color: #1a0f1d; box-shadow: 0 0 18px var(--pink-glow); font-size: clamp(0.8rem, 3.4vw, 1.2rem); }
+.g2048-cell.v512  { background: linear-gradient(135deg, var(--purple), var(--pink)); color: #1a0f1d; box-shadow: 0 0 22px var(--pink-glow); font-size: clamp(0.75rem, 3.2vw, 1.15rem); }
+.g2048-cell.v1024 { background: linear-gradient(135deg, var(--purple), var(--pink)); color: #1a0f1d; box-shadow: 0 0 26px var(--pink-glow); font-size: clamp(0.7rem, 3vw, 1rem); }
+.g2048-cell.v2048 { background: linear-gradient(135deg, var(--pink), var(--purple)); color: #1a0f1d; box-shadow: 0 0 32px var(--pink-glow); font-size: clamp(0.7rem, 3vw, 1rem); }
+.g2048-cell.vbig  { background: linear-gradient(135deg, var(--purple), var(--pink)); color: #1a0f1d; box-shadow: 0 0 34px var(--pink-glow); font-size: clamp(0.65rem, 2.8vw, 0.95rem); }
+
+.g2048-cell.pop { animation: g2048-pop 0.18s ease-out; }
+@keyframes g2048-pop {
+  0%   { transform: scale(0.6); }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* ── тетрис ── */
+.tetris-wrap {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.tetris-board-wrap {
+  position: relative;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  touch-action: none;
+}
+
+.tetris-canvas {
+  display: block;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.tetris-overlay {
+  position: absolute;
+  inset: 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text);
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+}
+
+.tetris-overlay.show { display: flex; }
+.tetris-overlay b { font-size: 1.3rem; color: var(--pink); display: block; margin-bottom: 4px; }
+
+.tetris-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 130px;
+}
+
+.tetris-next {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+
+.tetris-next-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.tetris-next canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+.tetris-info {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.tetris-info b { color: var(--pink); font-variant-numeric: tabular-nums; }
+
+.tetris-dpad {
+  display: none;
+  grid-template-columns: repeat(3, 46px);
+  grid-template-rows: repeat(3, 46px);
+  gap: 4px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.tetris-dpad button {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--pink-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all 0.15s;
+}
+
+.tetris-dpad button:active {
+  background: var(--card-hover);
+  border-color: var(--pink);
+  box-shadow: 0 0 12px var(--pink-glow);
+  transform: scale(0.94);
+}
+
+.tetris-dpad .left  { grid-column: 1; grid-row: 2; }
+.tetris-dpad .rot   { grid-column: 2; grid-row: 2; color: var(--pink); }
+.tetris-dpad .right { grid-column: 3; grid-row: 2; }
+.tetris-dpad .down  { grid-column: 2; grid-row: 3; }
+
+@media (max-width: 700px) {
+  .tetris-dpad { display: grid; }
+  .tetris-side { min-width: 100px; }
+}
+
+/* ── пятнашки ── */
+.g15-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.g15-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  width: min(360px, 90vw);
+  aspect-ratio: 1;
+}
+
+.g15-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: clamp(1rem, 4.5vw, 1.5rem);
+  background: linear-gradient(135deg, var(--card), var(--card-hover));
+  border: 1px solid var(--line);
+  color: var(--pink-soft);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.g15-tile:hover {
+  border-color: var(--pink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--pink-glow);
+}
+
+.g15-tile.empty {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+.g15-tile.solved {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #1a0f1d;
+  box-shadow: 0 0 14px var(--pink-glow);
 }
