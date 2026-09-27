@@ -185,9 +185,8 @@ function setTheme(theme) {
     removeDreamLayer();
   }
   applyHeroImage();
+  invalidateThemeColorCache(); // ← сброс кэша цветов для canvas-игр
 }
-
-
 
 function parseTheme(theme) {
   const [color, mode] = theme.split("-");
@@ -226,7 +225,7 @@ function createThemePanel() {
 
   const panel = document.createElement("div");
   panel.className = "theme-panel";
-    panel.innerHTML = `
+  panel.innerHTML = `
     <div class="theme-panel-title">цвет</div>
     <div class="theme-colors">
       ${THEME_COLORS.map(c => `<button class="theme-color" data-color="${c}" title="${c}"></button>`).join("")}
@@ -244,7 +243,8 @@ function createThemePanel() {
     </button>
   `;
   wrap.appendChild(panel);
-    const bubblesBtn = panel.querySelector("#bubblesToggle");
+
+  const bubblesBtn = panel.querySelector("#bubblesToggle");
   function refreshBubbles() {
     const on = bubblesEnabled();
     bubblesBtn.classList.toggle("on", on);
@@ -281,15 +281,12 @@ function createThemePanel() {
     });
   });
 
+  // ── FIX: один обработчик на кнопку, без вложенного addEventListener ──
   btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    refreshActive();
-    btn.addEventListener("click", (e) => {
     e.stopPropagation();
     refreshActive();
     refreshBubbles();
     panel.classList.toggle("open");
-  });
   });
 
   document.addEventListener("click", (e) => {
@@ -474,10 +471,9 @@ function calcPomoNow() {
       const newMode = state.mode === "work" ? "break" : "work";
       const newTotal = (newMode === "work" ? cfg.work : cfg.break) * 60;
 
-      // записать помидор
+      // записать помидор — ОДНИМ вызовом, а не двумя
       if (state.mode === "work") {
-        markActivity("pomos", 1);
-        markActivity("minutes", cfg.work);
+        bumpActivityToday(cfg.work);
       }
 
       const newState = {
@@ -515,6 +511,17 @@ function calcPomoNow() {
     total,
     config: cfg
   };
+}
+
+/* ── FIX: один вызов вместо двух markActivity подряд ── */
+function bumpActivityToday(minutes) {
+  const today = todayKey();
+  if (!activity[today]) {
+    activity[today] = { lessons: 0, pomos: 0, minutes: 0, edits: 0 };
+  }
+  activity[today].pomos = (activity[today].pomos || 0) + 1;
+  activity[today].minutes = (activity[today].minutes || 0) + minutes;
+  saveActivity(activity);
 }
 
 function startPomo() {
@@ -599,9 +606,7 @@ function initPomodoroWidget() {
   const bigTimeEl = document.getElementById("pomoWidgetBigTime");
   const modeEl = document.getElementById("pomoWidgetMode");
 
-  let tickInterval = null;
-  let lastMode = null;
-
+  // ── FIX: один интервал вместо двух ──
   function render() {
     const s = calcPomoNow();
 
@@ -616,13 +621,6 @@ function initPomodoroWidget() {
     modeEl.textContent = s.mode === "work" ? "работа" : "перерыв";
 
     wrap.classList.toggle("running", s.running);
-
-    if (s.running && !tickInterval) {
-      tickInterval = setInterval(render, 1000);
-    } else if (!s.running && tickInterval) {
-      clearInterval(tickInterval);
-      tickInterval = null;
-    }
   }
 
   btn.addEventListener("click", (e) => {
@@ -660,9 +658,8 @@ function initPomodoroWidget() {
     if (!wrap.contains(e.target)) panel.classList.remove("open");
   });
 
-  // начальный рендер
+  // начальный рендер + один общий тик каждую секунду
   render();
-  // тик каждую секунду, даже если таймер стоит — чтобы поймать «время вышло»
   setInterval(render, 1000);
 }
 
@@ -684,6 +681,28 @@ function playBeep() {
       osc.stop(start + 0.7);
     });
   } catch {}
+}
+
+/* ═══════════════════════════════════════════
+   КЭШ ЦВЕТОВ ТЕМЫ ДЛЯ CANVAS-ИГР
+   ═══════════════════════════════════════════ */
+
+let _themeColorCache = null;
+
+function getThemeColors() {
+  if (_themeColorCache) return _themeColorCache;
+  const styles = getComputedStyle(document.documentElement);
+  _themeColorCache = {
+    pink:   styles.getPropertyValue("--pink").trim()    || "#ff8ec7",
+    purple: styles.getPropertyValue("--purple").trim()  || "#c77dff",
+    bgSoft: styles.getPropertyValue("--bg-soft").trim() || "#1a0f1e",
+    line:   styles.getPropertyValue("--line").trim()    || "rgba(255,142,199,0.15)",
+  };
+  return _themeColorCache;
+}
+
+function invalidateThemeColorCache() {
+  _themeColorCache = null;
 }
 
 /* ═══════════════════════════════════════════
@@ -844,10 +863,11 @@ function initHeroImageUI() {
   refresh();
 }
 
-
 /* ═══════════════════════════════════════════
    DREAMCORE — мухоморы, глаза, радуга, облака, надписи
    ═══════════════════════════════════════════ */
+
+let _dreamEyesRAF = null; // ← FIX: храним id rAF-цикла
 
 function initDreamLayer() {
   if (!bubblesEnabled()) return;
@@ -918,7 +938,11 @@ function initDreamLayer() {
     layer.appendChild(e);
     eyes.push(e);
 
-    setTimeout(() => e.classList.add("visible"), 800 + i * 500);
+    setTimeout(() => {
+      // если слой уже удалили — не трогаем
+      if (!document.querySelector(".dream-layer")) return;
+      e.classList.add("visible");
+    }, 800 + i * 500);
   }
 
   // зрачки следят за курсором
@@ -929,7 +953,12 @@ function initDreamLayer() {
     mouseY = e.clientY;
   });
 
+  // ── FIX: rAF-цикл с проверкой, что слой ещё существует ──
   function updateEyes() {
+    if (!document.querySelector(".dream-layer")) {
+      _dreamEyesRAF = null;
+      return;
+    }
     eyes.forEach(e => {
       const r = e.getBoundingClientRect();
       const cx = r.left + r.width / 2;
@@ -943,9 +972,9 @@ function initDreamLayer() {
       e.style.setProperty("--eye-x", shiftX + "px");
       e.style.setProperty("--eye-y", shiftY + "px");
     });
-    requestAnimationFrame(updateEyes);
+    _dreamEyesRAF = requestAnimationFrame(updateEyes);
   }
-  requestAnimationFrame(updateEyes);
+  _dreamEyesRAF = requestAnimationFrame(updateEyes);
 
   // ── дымка / мягкие облачка (CSS-градиенты) ──
   const cloudCount = isMobile ? 2 : 3;
@@ -1022,6 +1051,8 @@ const DREAM_WHISPERS = [
   "hello again",
 ];
 
+let _dreamWhispersTimer = null; // ← FIX: храним id setInterval
+
 function initDreamWhispers(layer, isMobile) {
   const interval = isMobile ? 4500 : 2800;
 
@@ -1059,9 +1090,10 @@ function initDreamWhispers(layer, isMobile) {
   setTimeout(spawnWhisper, 1200);
 
   // и потом регулярно
-  const id = setInterval(() => {
+  _dreamWhispersTimer = setInterval(() => {
     if (!document.querySelector(".dream-layer")) {
-      clearInterval(id);
+      clearInterval(_dreamWhispersTimer);
+      _dreamWhispersTimer = null;
       return;
     }
     spawnWhisper();
@@ -1071,8 +1103,17 @@ function initDreamWhispers(layer, isMobile) {
 function removeDreamLayer() {
   const layer = document.querySelector(".dream-layer");
   if (layer) layer.remove();
-}
 
+  // ── FIX: гасим rAF и interval ──
+  if (_dreamEyesRAF !== null) {
+    cancelAnimationFrame(_dreamEyesRAF);
+    _dreamEyesRAF = null;
+  }
+  if (_dreamWhispersTimer !== null) {
+    clearInterval(_dreamWhispersTimer);
+    _dreamWhispersTimer = null;
+  }
+}
 
 /* ── Инициализация ── */
 function initApp() {
@@ -1193,8 +1234,8 @@ function startMines() {
   const diff = document.getElementById("minesDiff").value;
   const { size, mines } = MINES_PRESETS[diff] || MINES_PRESETS.medium;
 
-  clearInterval(minesTimerId);
-  minesTimerId = null;
+  // ── FIX: гарантированно гасим старый таймер ──
+  stopMinesTimer();
 
   minesState = {
     size,
@@ -1379,6 +1420,7 @@ function revealAllMines() {
 }
 
 function startMinesTimer() {
+  stopMinesTimer(); // ← FIX: не копим таймеры
   minesState.seconds = 0;
   updateMinesStats();
   minesTimerId = setInterval(() => {
@@ -1629,12 +1671,12 @@ function drawSnake() {
   if (!snakeState) return;
   const { ctx, canvas, cell, snake, food } = snakeState;
 
-  // получаем цвета из CSS-переменных
-  const styles = getComputedStyle(document.documentElement);
-  const pink   = styles.getPropertyValue("--pink").trim()   || "#ff8ec7";
-  const purple = styles.getPropertyValue("--purple").trim() || "#c77dff";
-  const bgSoft = styles.getPropertyValue("--bg-soft").trim()|| "#1a0f1e";
-  const line   = styles.getPropertyValue("--line").trim()   || "rgba(255,142,199,0.15)";
+  // ── FIX: цвета из кэша, а не getComputedStyle на каждом кадре ──
+  const colors = getThemeColors();
+  const pink   = colors.pink;
+  const purple = colors.purple;
+  const bgSoft = colors.bgSoft;
+  const line   = colors.line;
 
   // фон
   ctx.fillStyle = bgSoft;
@@ -1764,14 +1806,6 @@ function showSnakeOverlay(show, title, subtitle) {
     ov.classList.remove("show");
   }
 }
-
-/* ── подключаем игры в initApp ── */
-const _origInitApp = initApp;
-initApp = function() {
-  _origInitApp();
-  initGames();
-};
-
 
 /* ═══════════════════════════════════════════
    2048
@@ -2243,11 +2277,11 @@ function drawTetris() {
   const canvas = document.getElementById("tetrisCanvas");
   if (!canvas || !tetrisState) return;
   const ctx = canvas.getContext("2d");
-  const styles = getComputedStyle(document.documentElement);
 
-  const bgSoft = styles.getPropertyValue("--bg-soft").trim() || "#1a0f1e";
-  const line   = styles.getPropertyValue("--line").trim() || "rgba(255,142,199,0.15)";
-  const pink   = styles.getPropertyValue("--pink").trim() || "#ff8ec7";
+  // ── FIX: цвета из кэша ──
+  const colors = getThemeColors();
+  const bgSoft = colors.bgSoft;
+  const line   = colors.line;
 
   const cell = Math.floor(canvas.width / TETRIS_COLS);
 
@@ -2303,8 +2337,10 @@ function drawTetrisNext() {
   const canvas = document.getElementById("tetrisNext");
   if (!canvas || !tetrisState) return;
   const ctx = canvas.getContext("2d");
-  const styles = getComputedStyle(document.documentElement);
-  const bgSoft = styles.getPropertyValue("--bg-soft").trim() || "#1a0f1e";
+
+  // ── FIX: цвета из кэша ──
+  const colors = getThemeColors();
+  const bgSoft = colors.bgSoft;
 
   ctx.fillStyle = bgSoft;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -2375,7 +2411,13 @@ function saveG15Best(b) {
 }
 
 function startG15() {
+  // ── FIX: гасим оба возможных таймера ──
   clearInterval(g15TimerId);
+  g15TimerId = null;
+  if (g15State && g15State.timer) {
+    clearInterval(g15State.timer);
+    g15State.timer = null;
+  }
 
   // решаемое состояние: перемешать из выигрышного, делая только валидные ходы
   const tiles = Array.from({ length: 15 }, (_, i) => i + 1).concat([0]);
@@ -2413,7 +2455,7 @@ function startG15() {
 
 function startG15Timer() {
   clearInterval(g15TimerId);
-  g15State.timer = setInterval(() => {
+  g15TimerId = setInterval(() => {
     if (!g15State || g15State.won) return;
     g15State.seconds++;
     updateG15Stats();
@@ -2470,7 +2512,11 @@ function tryG15Move(idx) {
 
   if (isG15Solved()) {
     g15State.won = true;
+    // ── FIX: гасим оба таймера ──
     clearInterval(g15State.timer);
+    g15State.timer = null;
+    clearInterval(g15TimerId);
+    g15TimerId = null;
     saveG15Record(g15State.moves, g15State.seconds);
     updateG15Best();
     toast(`◦ 🎉 пятнашки собраны за ${g15State.moves} ходов!`);
